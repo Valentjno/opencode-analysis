@@ -1,0 +1,160 @@
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { selectGaps } from './gaps.mjs'
+import { mergeResearch } from './store.mjs'
+import { search } from './search.mjs'
+import { fetchPage } from './fetch-page.mjs'
+import { extract } from './extract.mjs'
+import { verifyCandidate } from './verify.mjs'
+import { normalizeValue } from './registry.mjs'
+import { redact } from './redact.mjs'
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..')
+
+export async function runResearch({
+  snapshot,
+  research,
+  overrides,
+  fetchImpl = fetch,
+  chatImpl = fetch,
+  maxModels = 5,
+  maxPerModel = 3,
+  now = new Date().toISOString(),
+} = {}) {
+  const gaps = selectGaps({ snapshot, research, overrides, now, maxModels, maxPerModel })
+  const accepted = []
+  const reasons = {}
+
+  const reject = (reason) => {
+    reasons[reason] = (reasons[reason] ?? 0) + 1
+  }
+
+  for (const gap of gaps) {
+    try {
+      const results = await search({ model: gap.model, benchmark: gap.benchmark, fetchImpl })
+      let handled = false
+      for (const result of results.slice(0, 3)) {
+        const page = await fetchPage(result.url, { fetchImpl })
+        if (!page) {
+          reject('fetch-failed')
+          continue
+        }
+        const withUrl = { ...page, sourceUrl: result.url }
+
+        const profiles = ['auto:smart', 'auto:spread', 'auto:reasoning']
+        const candidates = []
+        for (const profile of profiles) {
+          if (candidates.length >= 2) break
+          const value = await extract({
+            model: gap.model, benchmark: gap.benchmark, page: withUrl, profile, fetchImpl: chatImpl,
+          })
+          if (!value) {
+            reject('malformed-extraction')
+            continue
+          }
+          if (candidates.some((item) => item.provider === value.provider)) continue
+          candidates.push(value)
+        }
+
+        if (candidates.length < 2) {
+          reject('single-source')
+          continue
+        }
+
+        const normalized = candidates.map((item) => ({
+          ...item,
+          value: normalizeValue(gap.benchmark.id, item.value, item.unit) ?? item.value,
+        }))
+        const verdict = verifyCandidate({
+          candidate: normalized[0],
+          other: normalized[1],
+          model: gap.model,
+          benchmark: gap.benchmark,
+          pageText: page.text,
+          pageHash: page.hash,
+          now,
+        })
+        if (verdict.status !== 'verified') {
+          reject(verdict.status)
+          continue
+        }
+        accepted.push(verdict.entry)
+        handled = true
+        break
+      }
+      if (!handled && accepted.length === 0 && Object.keys(reasons).length === 0) reject('no-source')
+    } catch (error) {
+      reject('error')
+      console.warn(redact(`Research failed for ${gap.model.id}/${gap.benchmark.id}: ${error.message}`))
+    }
+  }
+
+  const feed = mergeResearch({ previous: research, overrides, candidates: accepted, now })
+  const rejected = Object.values(reasons).reduce((sum, count) => sum + count, 0)
+  feed.run = {
+    status: accepted.length ? 'ok' : 'partial',
+    modelsConsidered: snapshot?.models?.length ?? 0,
+    modelsResearched: gaps.length,
+    accepted: accepted.length,
+    rejected,
+    reasons,
+  }
+  return feed
+}
+
+function parseArgs(argv) {
+  const args = {}
+  for (let index = 0; index < argv.length; index += 1) {
+    if (argv[index].startsWith('--')) {
+      const key = argv[index].slice(2)
+      const next = argv[index + 1]
+      if (next && !next.startsWith('--')) {
+        args[key] = next
+        index += 1
+      } else args[key] = true
+    }
+  }
+  return args
+}
+
+export async function main() {
+  const args = parseArgs(process.argv.slice(2))
+  const [snapshot, research, overrides] = await Promise.all([
+    readFile(path.join(ROOT, 'public', 'data', 'latest.json'), 'utf8').then(JSON.parse),
+    readFile(path.join(ROOT, 'public', 'data', 'research.json'), 'utf8').then(JSON.parse).catch(() => null),
+    readFile(path.join(ROOT, 'data', 'research-overrides.json'), 'utf8').then(JSON.parse).catch(() => ({ entries: [] })),
+  ])
+
+  const feed = await runResearch({
+    snapshot,
+    research: research ?? {
+      schemaVersion: 1,
+      generatedAt: new Date().toISOString(),
+      run: { status: 'ok', modelsConsidered: 0, modelsResearched: 0, accepted: 0, rejected: 0, reasons: {} },
+      models: [],
+    },
+    overrides,
+    maxModels: Number(args['max-models'] ?? args.maxModels ?? 5),
+    maxPerModel: 3,
+  })
+
+  console.log(
+    `Research: ${feed.run.accepted} accepted, ${feed.run.rejected} rejected, ${feed.run.modelsResearched} pairs.`,
+  )
+  if (args['dry-run']) return
+
+  const output = path.join(ROOT, 'public', 'data', 'research.json')
+  await mkdir(path.dirname(output), { recursive: true })
+  const temporary = `${output}.tmp`
+  await writeFile(temporary, `${JSON.stringify(feed, null, 2)}\n`, 'utf8')
+  await rename(temporary, output)
+}
+
+const invokedDirectly = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+if (invokedDirectly) {
+  main().catch((error) => {
+    console.error(redact(error?.message ?? String(error)))
+    process.exitCode = 1
+  })
+}
