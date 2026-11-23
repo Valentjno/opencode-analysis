@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci
+      - run: npm install
       - name: Fetch upstream data and write snapshot
         run: npm run refresh
       - name: Commit changes only when data changed

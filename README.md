@@ -61,7 +61,7 @@ No runtime API calls, no database, no environment variables.
 ## Local development
 
 ```bash
-npm ci
+npm install
 npm run refresh     # regenerate data (network required)
 npm run validate    # check the published JSON files
 npm test            # 32 unit tests
