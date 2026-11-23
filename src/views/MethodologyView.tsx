@@ -148,6 +148,18 @@ export function MethodologyView({ snapshot }: Props) {
           <li>This site does not read your account or tell you how much allowance you have left.</li>
         </ul>
 
+        <h2>External benchmarks</h2>
+        <p>
+          When Artificial Analysis publishes no Intelligence Index for a model, a separate CI job may
+          find missing benchmark values on official vendor sources. A value is shown only when an
+          exact quote naming the model, benchmark and number is found on the page and two different
+          providers selected by the router agree on the number. These values are labeled “External
+          benchmarks — not Artificial Analysis”, carry a source link and retrieval date, and never
+          feed the Intelligence Index, the five recommendations, or the Pareto frontier. If AA later
+          publishes an Index or the same benchmark, the external value is hidden. Human corrections
+          are kept in a separate locked file and shown as “Manual review”.
+        </p>
+
         <h2>Credits</h2>
         <p>
           Model data and allowances come from{' '}

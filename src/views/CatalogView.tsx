@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ArrowDown } from 'lucide-react'
-import type { Snapshot } from '../lib/types'
+import type { ResearchFeed, Snapshot } from '../lib/types'
 import {
   DEFAULT_FILTERS,
   defaultDirection,
@@ -18,10 +18,11 @@ import { StatsBar } from '../components/StatsBar'
 
 interface Props {
   snapshot: Snapshot
+  research: ResearchFeed | null
   onOpen: (id: string) => void
 }
 
-export function CatalogView({ snapshot, onOpen }: Props) {
+export function CatalogView({ snapshot, research, onOpen }: Props) {
   const [filters, setFilters] = useState<CatalogFilters>(DEFAULT_FILTERS)
   const models = snapshot.models
 
@@ -120,7 +121,7 @@ export function CatalogView({ snapshot, onOpen }: Props) {
             onChange={changeFilters}
           />
           <div id="catalog-table">
-            <ModelTable models={shown} filters={filters} onSort={onSort} onOpen={onOpen} />
+            <ModelTable models={shown} filters={filters} research={research} onSort={onSort} onOpen={onOpen} />
           </div>
         </div>
       </section>

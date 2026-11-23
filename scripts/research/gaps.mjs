@@ -1,8 +1,8 @@
 import { coreBenchmarks, sourceForVendor } from './registry.mjs'
 import { overrideEntries } from './store.mjs'
 
-export function selectGaps({ snapshot, research, overrides, now, maxModels = 5, maxPerModel = 3 }) {
-  const existing = existingPairs(research, overrides, now)
+export function selectGaps({ snapshot, research, overrides, _now, maxModels = 5, maxPerModel = 3 }) {
+  const existing = existingPairs(research, overrides)
   const models = (snapshot?.models ?? []).filter((model) => {
     if (typeof model.aa?.intelligenceIndex === 'number') return false
     if (!sourceForVendor(model.canonicalId)) return false
@@ -42,7 +42,7 @@ function reportedByAA(model, benchmark) {
   return [benchmark.label, ...benchmark.aliases].some((label) => label in evals)
 }
 
-function existingPairs(research, overrides, now) {
+function existingPairs(research, overrides) {
   const models = new Map()
   const add = (entry, modelId) => {
     if (entry.status !== 'verified' || entry.stale || entry.supersededByAA) return

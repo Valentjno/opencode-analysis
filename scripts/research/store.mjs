@@ -13,7 +13,8 @@ export function overrideEntries(overrides) {
 }
 
 function stripModelId(entry) {
-  const { modelId, ...rest } = entry
+  const rest = { ...entry }
+  delete rest.modelId
   return rest
 }
 

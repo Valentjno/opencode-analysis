@@ -7,12 +7,14 @@ import {
   initials,
 } from '../lib/format'
 import { privacyLabel } from '../lib/privacy'
+import { hasExternal } from '../lib/benchmarks'
 import { PrivacyBadge } from './PrivacyBadge'
 import type { CatalogFilters, SortKey } from '../lib/filters'
-import type { Model } from '../lib/types'
+import type { Model, ResearchFeed } from '../lib/types'
 
 interface Props {
   models: Model[]
+  research: ResearchFeed | null
   filters: CatalogFilters
   onSort: (key: SortKey) => void
   onOpen: (id: string) => void
@@ -41,7 +43,7 @@ function ScoreCell({ model }: { model: Model }) {
   )
 }
 
-export function ModelTable({ models, filters, onSort, onOpen }: Props) {
+export function ModelTable({ models, research, filters, onSort, onOpen }: Props) {
   if (models.length === 0) {
     return (
       <div className="empty-state">
@@ -98,6 +100,9 @@ export function ModelTable({ models, filters, onSort, onOpen }: Props) {
                     </span>
                     <span style={{ minWidth: 0 }}>
                       <span className="model-name">{model.name}</span>
+                      {hasExternal(research, model) && (
+                        <span className="badge badge-accent" style={{ marginLeft: 6 }}>EXT</span>
+                      )}
                       <span className="model-sub">{model.id}</span>
                     </span>
                   </span>
@@ -136,6 +141,9 @@ export function ModelTable({ models, filters, onSort, onOpen }: Props) {
                 </span>
                 <span style={{ minWidth: 0 }}>
                   <span className="model-name">{model.name}</span>
+                  {hasExternal(research, model) && (
+                    <span className="badge badge-accent" style={{ marginLeft: 6 }}>EXT</span>
+                  )}
                   <span className="model-sub">{model.vendor} · {formatAccess(model.access)}</span>
                 </span>
               </span>

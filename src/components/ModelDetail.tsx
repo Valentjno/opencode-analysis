@@ -15,10 +15,14 @@ import {
 import { privacyLabel } from '../lib/privacy'
 import type { Model } from '../lib/types'
 import { PrivacyBadge } from './PrivacyBadge'
+import { ExternalBenchmarks } from './ExternalBenchmarks'
+import { formatBenchmark } from '../lib/benchmarks'
+import type { ResearchFeed } from '../lib/types'
 import { ScoreBar } from './ScoreBar'
 
 interface Props {
   model: Model
+  research: ResearchFeed | null
   onClose: () => void
 }
 
@@ -42,7 +46,7 @@ function Section({ index, title, children }: { index: string; title: string; chi
   )
 }
 
-export function ModelDetail({ model, onClose }: Props) {
+export function ModelDetail({ model, research, onClose }: Props) {
   const closeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -122,17 +126,39 @@ export function ModelDetail({ model, onClose }: Props) {
                 )}
                 <div style={{ marginTop: 16 }}>
                   {Object.entries(model.aa.evals).map(([label, value]) => (
-                    <ScoreBar key={label} label={label} value={value} digits={2} />
+                    <div className="detail-row" key={label}>
+                      <span className="detail-label">{label}</span>
+                      <span className="detail-value">{formatBenchmark(label, value)}</span>
+                    </div>
                   ))}
                 </div>
               </>
             ) : (
-              <p className="prose muted">
-                Not published. Artificial Analysis has no Intelligence Index for this model, so it is
-                shown without a score. It is still listed because OpenCode offers it in Go or for free.
-              </p>
+              <>
+                <p className="prose muted">
+                  Not published. Artificial Analysis has no Intelligence Index for this model, so it is
+                  shown without a score. It is still listed because OpenCode offers it in Go or for free.
+                </p>
+                {model.aa && Object.keys(model.aa.evals).length > 0 && (
+                  <>
+                    <p className="meta" style={{ marginTop: 14 }}>
+                      AA eval scores; no AA Intelligence Index published
+                    </p>
+                    <div style={{ marginTop: 6 }}>
+                      {Object.entries(model.aa.evals).map(([label, value]) => (
+                        <div className="detail-row" key={label}>
+                          <span className="detail-label">{label}</span>
+                          <span className="detail-value">{formatBenchmark(label, value)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
             )}
           </Section>
+
+          <ExternalBenchmarks feed={research} model={model} />
 
           {model.aa && (
             <Section index="02" title="Capabilities & speed">

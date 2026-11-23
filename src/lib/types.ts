@@ -183,3 +183,37 @@ export interface ChangeFeed {
   baseline: boolean;
   events: ChangeEvent[];
 }
+
+/** External benchmark research published by the CI job. */
+export interface ResearchEntry {
+  benchmarkId: string
+  label: string
+  value: number
+  unit: string
+  sourceUrl: string
+  sourceTitle: string
+  quote: string
+  retrievedAt: string
+  sourceHash: string
+  method: string
+  confidence: 'high' | 'medium' | 'low'
+  modelsUsed: string[]
+  status: 'verified' | 'conflict' | 'single-source'
+  stale: boolean
+  supersededByAA: boolean
+  locked?: boolean
+}
+
+export interface ResearchFeed {
+  schemaVersion: number
+  generatedAt: string
+  run: {
+    status: 'ok' | 'partial' | 'failed'
+    modelsConsidered: number
+    modelsResearched: number
+    accepted: number
+    rejected: number
+    reasons: Record<string, number>
+  }
+  models: Array<{ id: string; name: string; benchmarks: ResearchEntry[] }>
+}

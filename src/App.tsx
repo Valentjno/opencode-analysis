@@ -4,9 +4,9 @@ import { Layout, type Route } from './components/Layout'
 import { ModelDetail } from './components/ModelDetail'
 import { StaleBanner } from './components/StaleBanner'
 import { CatalogView } from './views/CatalogView'
-import { isStale, loadChanges, loadSnapshot, modelById } from './lib/data'
+import { isStale, loadChanges, loadResearch, loadSnapshot, modelById } from './lib/data'
 import { useTheme } from './lib/theme'
-import type { ChangeFeed, Snapshot } from './lib/types'
+import type { ChangeFeed, ResearchFeed, Snapshot } from './lib/types'
 
 const ValueView = lazy(() =>
   import('./views/ValueView').then((module) => ({ default: module.ValueView })),
@@ -52,6 +52,7 @@ function currentHash(): string {
 export default function App() {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null)
   const [changes, setChanges] = useState<ChangeFeed | null>(null)
+  const [research, setResearch] = useState<ResearchFeed | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [hash, setHash] = useState(currentHash)
   const previousRoute = useRef<Route>('catalog')
@@ -59,11 +60,12 @@ export default function App() {
 
   useEffect(() => {
     let active = true
-    Promise.all([loadSnapshot(), loadChanges()])
-      .then(([data, feed]) => {
+    Promise.all([loadSnapshot(), loadChanges(), loadResearch()])
+      .then(([data, feed, external]) => {
         if (!active) return
         setSnapshot(data)
         setChanges(feed)
+        setResearch(external)
       })
       .catch((cause: unknown) => {
         if (!active) return
@@ -130,12 +132,12 @@ export default function App() {
       <>
         {isStale(snapshot.generatedAt) && <StaleBanner generatedAt={snapshot.generatedAt} />}
         <Suspense fallback={<div className="section"><p className="meta">Loading view…</p></div>}>
-          {route === 'catalog' && <CatalogView snapshot={snapshot} onOpen={openModel} />}
+          {route === 'catalog' && <CatalogView snapshot={snapshot} research={research} onOpen={openModel} />}
           {route === 'value' && <ValueView snapshot={snapshot} onOpen={openModel} />}
           {route === 'changes' && <ChangesView feed={changes} onOpen={openModel} />}
           {route === 'about' && <MethodologyView snapshot={snapshot} />}
         </Suspense>
-        {selected && <ModelDetail model={selected} onClose={closeModel} />}
+        {selected && <ModelDetail model={selected} research={research} onClose={closeModel} />}
       </>
     )
   }

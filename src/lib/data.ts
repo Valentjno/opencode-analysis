@@ -1,4 +1,4 @@
-import type { ChangeFeed, Model, Snapshot } from './types';
+import type { ChangeFeed, Model, ResearchFeed, Snapshot } from './types';
 
 export const STALE_AFTER_MS = 13 * 60 * 60 * 1000;
 const BASE = import.meta.env.BASE_URL ?? '/';
@@ -29,6 +29,16 @@ export async function loadSnapshot(): Promise<Snapshot> {
 export async function loadChanges(): Promise<ChangeFeed | null> {
   try {
     const feed = await fetchJson<ChangeFeed>('changes.json');
+    if (feed?.schemaVersion !== 1) return null;
+    return feed;
+  } catch {
+    return null;
+  }
+}
+
+export async function loadResearch(): Promise<ResearchFeed | null> {
+  try {
+    const feed = await fetchJson<ResearchFeed>('research.json');
     if (feed?.schemaVersion !== 1) return null;
     return feed;
   } catch {
