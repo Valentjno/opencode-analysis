@@ -1,0 +1,107 @@
+name: Research benchmarks
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_models:
+        description: Maximum models to research in this run
+        required: false
+        default: '5'
+      dry_run:
+        description: Run without writing or committing research.json
+        required: false
+        default: 'false'
+  # Enabled after the first manual smoke test:
+  # schedule:
+  #   - cron: '30 */12 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: data-write
+  cancel-in-progress: false
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    environment: research
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      FREE_LLM_HOME: ${{ runner.temp }}/free-llm
+      ROUTER_LOG: ${{ runner.temp }}/free-llm-router.log
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install project dependencies
+        run: npm install
+
+      - name: Install pinned Free-LLM Router
+        run: npm install github:nejib1/Free-LLM#85864c4d0f29b74db442b296087862b96f4d84a1
+
+      - name: Verify pinned catalog checksum
+        run: echo "8e2d013cf5c490876efafb84a5a60689406dcd302815b599934fa335a10e87dc  data/vendor/free-llm-catalog.json" | sha256sum -c -
+
+      - name: Prepare ephemeral router home
+        run: |
+          mkdir -p "$FREE_LLM_HOME"
+          cp data/vendor/free-llm-catalog.json "$FREE_LLM_HOME/catalog.json"
+          touch "$FREE_LLM_HOME/catalog.json"
+          cat > "$FREE_LLM_HOME/config.json" <<'JSON'
+          {"version":1,"log_requests":false,"catalog":{"url":"https://free-llm.com/catalog.json","refresh_hours":8760},"providers":{}}
+          JSON
+
+      - name: Start router
+        env:
+          FREE_LLM_API_KEY: ${{ secrets.FREE_LLM_API_KEY }}
+          FREE_LLM_MASTER_KEY: ${{ secrets.FREE_LLM_MASTER_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          ./node_modules/.bin/free-llm start --daemon > "$ROUTER_LOG" 2>&1
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4000/health > /dev/null 2>&1; then break; fi
+            sleep 0.5
+          done
+          curl -fsS http://127.0.0.1:4000/health > /dev/null
+
+      - name: Run research
+        env:
+          FREE_LLM_API_KEY: ${{ secrets.FREE_LLM_API_KEY }}
+        run: |
+          MAX_MODELS="${{ github.event.inputs.max_models || '5' }}"
+          DRY="${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}"
+          npm run research -- --max-models "$MAX_MODELS" $DRY
+
+      - name: Validate research feed
+        if: github.event.inputs.dry_run != 'true'
+        run: npm run validate:research
+
+      - name: Stop router and remove secrets
+        if: always()
+        run: |
+          ./node_modules/.bin/free-llm stop > /dev/null 2>&1 || true
+          rm -rf "$FREE_LLM_HOME" "$ROUTER_LOG"
+
+      - name: Commit research data
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/data/research.json
+          git pull --rebase
+          if git diff --cached --quiet; then
+            echo "No research changes."
+          else
+            git commit -m "data: refresh external benchmark research"
+            git push
+          fi

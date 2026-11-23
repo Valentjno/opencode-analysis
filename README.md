@@ -88,3 +88,17 @@ private option requires no training, zero retention, and an Intelligence Index
 of at least 30; when nothing qualifies, the site says so instead of inventing a
 pick. A model that trains on requests is never presented as equivalent to one
 that does not.
+
+## External benchmark research
+
+A CI job can fill benchmark gaps for models that have no Artificial Analysis
+Intelligence Index. It uses the [Free-LLM Router](https://free-llm.com/router)
+as the only model gateway, verifies each value against an exact quote on an
+official source, and publishes only verified values in a separate
+`public/data/research.json` layer. External values never feed the headline
+Intelligence Index, the recommendations, or the Pareto frontier.
+
+See [docs/research-setup.md](docs/research-setup.md) for the protected GitHub
+environment, the free provider keys, and the rotation policy. Model data and
+allowances come from OpenCode; benchmark data comes from Artificial Analysis.
+This project is independent and not endorsed by either.
