@@ -47,7 +47,7 @@ export async function runResearch({
         }
         const withUrl = { ...page, sourceUrl: result.url }
 
-        const profiles = ['auto:smart', 'auto:spread', 'auto:reasoning']
+        const profiles = ['auto:smart', 'auto:spread', 'auto:reasoning', 'auto:coding', 'auto:long', 'auto:fast']
         const candidates = []
         for (const profile of profiles) {
           if (candidates.length >= 2) break

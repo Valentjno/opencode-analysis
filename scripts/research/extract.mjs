@@ -23,9 +23,14 @@ export async function extract({ model, benchmark, page, profile, fetchImpl = fet
     fetchImpl,
   })
 
+  let payload = text.trim()
+  if (payload.startsWith('```')) payload = payload.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim()
+  const start = payload.indexOf('{')
+  const end = payload.lastIndexOf('}')
+  if (start === -1 || end <= start) return null
   let parsed
   try {
-    parsed = JSON.parse(text)
+    parsed = JSON.parse(payload.slice(start, end + 1))
   } catch {
     return null
   }

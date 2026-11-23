@@ -52,6 +52,12 @@ describe('router client and extraction', () => {
     expect(result).toMatchObject({ value: 93.5, unit: '%', provider: 'groq-cloud' })
   })
 
+  it('parses JSON wrapped in a markdown code fence', async () => {
+    const fenced = '```json\n' + content + '\n```'
+    const result = await extract({ model, benchmark, page, profile: 'auto:smart', fetchImpl: async () => reply({ text: fenced }) })
+    expect(result).toMatchObject({ value: 93.5 })
+  })
+
   it('includes the redacted provider error detail on a 400', async () => {
     const bad = {
       ok: false, status: 400,
