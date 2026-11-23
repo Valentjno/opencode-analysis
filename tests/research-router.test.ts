@@ -39,6 +39,7 @@ describe('router client and extraction', () => {
     })
     expect(captured.temperature).toBe(0)
     expect(captured.model).toBe('auto:smart')
+    expect(captured.response_format).toBeUndefined()
   })
 
   it('reads the provider from the router response header', async () => {

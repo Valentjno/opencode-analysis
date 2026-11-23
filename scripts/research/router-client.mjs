@@ -27,7 +27,6 @@ export async function chat({
           model: profile,
           messages,
           temperature: 0,
-          response_format: { type: 'json_object' },
           max_tokens: 600,
         }),
         signal: AbortSignal.timeout(TIMEOUT_MS),
