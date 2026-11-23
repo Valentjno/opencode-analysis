@@ -256,12 +256,18 @@ GitHub Actions (12h, after refresh)
 
 - Base URL: `http://127.0.0.1:4000/v1`.
 - Auth: `FREE_LLM_API_KEY`.
-- Primary model: `auto:smart`; conflict adjudication: `auto:reasoning`.
-- Optional exact pairs for independence:
-  `google-ai-studio/<gemini-model>` and `groq-cloud/<model>`; if a pair is
-  unavailable, fall back to `auto` and rely on quote verification.
-- `temperature: 0`, `max_tokens` bounded, JSON-only response, no tools.
+- The orchestrator talks **only** to the router. It never calls provider APIs
+  and never hardcodes a provider’s model id, base URL, or key.
+- Extraction uses router profiles: first `auto:smart`, then `auto:spread`
+  (which rotates providers), then `auto:reasoning`. No model list to maintain.
+- The router reports the chosen provider in the `x-free-llm-provider` response
+  header. The client reads it and, if the second call used the same provider,
+  retries with the next profile. If no distinct provider is available, the
+  candidate is `single-source` and is not published.
+- `temperature: 0`, bounded `max_tokens`, JSON-only response, no tools.
 - One retry on 429/5xx with backoff; no infinite retries.
+- Exact `provider/model` strings are supported only as a manual debugging
+  override, never as the normal path.
 
 ### 7.3 Search
 
@@ -488,7 +494,9 @@ Rules:
 - Core eight benchmarks; 5 models / 3 benchmarks / 15 pairs per run.
 - Vendor-specific official sources only; AA excluded as evidence.
 - DDG HTML + official pages; no paid search dependency.
-- Free-LLM Router and its catalog pinned; `auto:smart` + `auto:reasoning`.
+- Free-LLM Router and its catalog pinned; orchestrator uses only `auto:*`
+  profiles (`auto:smart`, `auto:spread`, `auto:reasoning`) and the provider
+  response header, never provider-specific model IDs.
 - Two independent providers required for `verified`; single-source values are
   not published.
 - Verified-only publication; conflicts stay in the run summary.
