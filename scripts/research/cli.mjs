@@ -152,7 +152,7 @@ export async function main() {
   })
 
   console.log(
-    `Research: ${feed.run.accepted} accepted, ${feed.run.rejected} rejected, ${feed.run.modelsResearched} pairs.`,
+    `Research: ${feed.run.accepted} accepted, ${feed.run.rejected} rejected, ${feed.run.modelsResearched} pairs. Reasons: ${JSON.stringify(feed.run.reasons)}`,
   )
   if (args['dry-run']) return
 
