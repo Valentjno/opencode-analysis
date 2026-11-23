@@ -7,7 +7,7 @@ import { makeModel } from './fixtures/dataset'
 
 const model = makeModel('kimi-k3', { name: 'Kimi K3', canonicalId: 'moonshotai/kimi-k3' })
 const benchmark = benchmarkById('gpqa-diamond')
-const page = { text: 'Kimi K3 results: GPQA Diamond 93.5%.', hash: 'sha256:abc' }
+const page = { text: 'Kimi K3 results: GPQA Diamond 93.5%.', hash: 'sha256:abc', sourceUrl: 'https://github.com/MoonshotAI/Kimi-K3' }
 const content = JSON.stringify({
   value: 93.5, unit: '%', quote: 'Kimi K3 results: GPQA Diamond 93.5%.',
   sourceUrl: 'https://github.com/MoonshotAI/Kimi-K3',
@@ -77,6 +77,23 @@ describe('router client and extraction', () => {
     const loose = 'value: 93.5, unit: %, quote: "Kimi K3 results: GPQA Diamond 93.5%.", sourceUrl: https://github.com/MoonshotAI/Kimi-K3'
     const result = await extract({ model, benchmark, page, profile: 'auto:smart', fetchImpl: async () => reply({ text: loose }) })
     expect(result).toMatchObject({ value: 93.5, quote: 'Kimi K3 results: GPQA Diamond 93.5%.' })
+  })
+
+  it('recovers a value from prose by quoting the page itself', async () => {
+    const richPage = { ...page, text: 'Kimi K3 model card. GPQA Diamond: 93.5%. Other score: 12%.' }
+    const result = await extract({
+      model, benchmark, page: richPage, profile: 'auto:smart',
+      fetchImpl: async () => reply({ text: 'The score is 93.5, based on the model card.' }),
+    })
+    expect(result).toMatchObject({ value: 93.5, quote: 'Kimi K3 model card. GPQA Diamond: 93.5%.' })
+  })
+
+  it('rejects prose when the page does not contain a matching quote', async () => {
+    const result = await extract({
+      model, benchmark, page, profile: 'auto:smart',
+      fetchImpl: async () => reply({ text: 'The score is 77.7, trust me.' }),
+    })
+    expect(result).toBeNull()
   })
 
   it('includes the redacted provider error detail on a 400', async () => {

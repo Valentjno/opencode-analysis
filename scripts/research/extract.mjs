@@ -1,5 +1,30 @@
 import { chat } from './router-client.mjs'
 
+const norm = (text) => String(text ?? '').replace(/\s+/g, ' ').trim().toLowerCase()
+
+function quoteFromPage(text, model, benchmark, value) {
+  const names = [model.name, model.id, model.canonicalId?.split('/').pop()]
+    .filter(Boolean)
+    .map(norm)
+  const labels = [benchmark.label, ...benchmark.aliases].map(norm)
+  const forms = new Set([String(value), String(Number((value / 100).toFixed(4)))])
+  const sentences = String(text ?? '').split(/(?<=[.!?])\s+/)
+  for (let size = 1; size <= 3; size += 1) {
+    for (let index = 0; index <= sentences.length - size; index += 1) {
+      const window = sentences.slice(index, index + size).join(' ').trim()
+      const normalized = norm(window)
+      if (
+        names.some((name) => normalized.includes(name)) &&
+        labels.some((label) => normalized.includes(label)) &&
+        [...forms].some((form) => normalized.includes(form))
+      ) {
+        return window
+      }
+    }
+  }
+  return null
+}
+
 const SYSTEM = `You are a strict data extractor. You will receive a page text delimited by <page_text> tags.
 
 RULES:
@@ -51,17 +76,33 @@ export async function extract({ model, benchmark, page, profile, fetchImpl = fet
     }
   }
   if (!parsed) {
-    const valueMatch = payload.match(/(?:"value"|value)\s*[:=]\s*([0-9]+(?:\.[0-9]+)?)/i)
+    const valueMatch = payload.match(/(?:"value"|value|score)\s*[:=]?\s*([0-9]+(?:\.[0-9]+)?)/i)
     const quoteMatch = payload.match(/(?:"quote"|quote)\s*[:=]\s*"([^"]+)"/i)
     const urlMatch = payload.match(/https:\/\/[^\s"',}]+/i)
-    if (!valueMatch || !quoteMatch || !urlMatch) return null
-    parsed = {
-      value: Number(valueMatch[1]),
-      unit: (payload.match(/(?:"unit"|unit)\s*[:=]\s*"?([^"\s,}]+)/i)?.[1]) ?? '%',
-      quote: quoteMatch[1],
-      sourceUrl: urlMatch[0],
+    if (valueMatch && quoteMatch && urlMatch) {
+      parsed = {
+        value: Number(valueMatch[1]),
+        unit: (payload.match(/(?:"unit"|unit)\s*[:=]\s*"?([^"\s,}]+)/i)?.[1]) ?? '%',
+        quote: quoteMatch[1],
+        sourceUrl: urlMatch[0],
+      }
+    } else {
+      const numberMatch = payload.match(/[0-9]+(?:\.[0-9]+)?/)
+      if (numberMatch) {
+        const value = Number(numberMatch[0])
+        const quote = quoteFromPage(page.text, model, benchmark, value)
+        if (quote) {
+          parsed = {
+            value,
+            unit: quote.includes('%') ? '%' : 'raw',
+            quote,
+            sourceUrl: page.sourceUrl,
+          }
+        }
+      }
     }
   }
+  if (!parsed) return null
   if (
     typeof parsed.value !== 'number' ||
     !Number.isFinite(parsed.value) ||
