@@ -89,5 +89,8 @@ export async function search({ model, benchmark, fetchImpl = fetch }) {
     if (!url || !officialUrlAllowed(url, model.canonicalId)) return
     results.push({ url, title: $(element).text().trim() })
   })
+  if (results.length === 0) {
+    return fallbackUrls(model).filter((result) => officialUrlAllowed(result.url, model.canonicalId)).slice(0, 10)
+  }
   return results.slice(0, 10)
 }

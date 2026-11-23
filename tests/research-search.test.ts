@@ -53,6 +53,15 @@ describe('safe search and fetch', () => {
     })).toBeNull()
   })
 
+  it('falls back to official URLs when DDG has no usable results', async () => {
+    const results = await search({
+      model, benchmark,
+      fetchImpl: async () => response({ text: '<html><body>No results here</body></html>' }),
+    })
+    expect(results.length).toBeGreaterThan(0)
+    expect(results[0].url).toContain('github.com')
+  })
+
   it('requires exact hostname and first path segment for official sources', () => {
     const id = 'moonshotai/kimi-k3'
     expect(officialUrlAllowed('https://evil-moonshot.cn/model', id)).toBe(false)
