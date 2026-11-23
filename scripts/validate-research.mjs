@@ -19,10 +19,10 @@ function validator() {
   return validate
 }
 
-function knownModelIds() {
+function snapshotIndex() {
   try {
     const snapshot = JSON.parse(readFileSync(path.join(ROOT, 'public', 'data', 'latest.json'), 'utf8'))
-    return new Set(snapshot.models.map((model) => model.id))
+    return new Map(snapshot.models.map((model) => [model.id, model.canonicalId]))
   } catch {
     return null
   }
@@ -38,7 +38,8 @@ export function validateResearch(feed) {
   }
   if (!feed || typeof feed !== 'object' || !Array.isArray(feed.models)) return errors
 
-  const ids = knownModelIds()
+  const indexed = snapshotIndex()
+  const ids = indexed ? new Set(indexed.keys()) : null
   const denied = new Set(deniedHosts())
 
   for (const model of feed.models) {
@@ -46,7 +47,8 @@ export function validateResearch(feed) {
       errors.push(`research: unknown model id "${model.id}" is not in latest.json.`)
     }
     const seen = new Set()
-    const source = sourceForVendor(model.id)
+    const canonicalId = indexed?.get(model.id) ?? null
+    const source = sourceForVendor(canonicalId)
 
     for (const entry of model.benchmarks ?? []) {
       const label = `${model.id}/${entry.benchmarkId}`

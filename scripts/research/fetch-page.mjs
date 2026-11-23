@@ -4,24 +4,45 @@ import { isPrivateUrl } from './search.mjs'
 const MAX_BYTES = 2 * 1024 * 1024
 const TIMEOUT_MS = 20_000
 const MAX_REDIRECTS = 3
+const REDIRECT_CODES = new Set([301, 302, 303, 307, 308])
 
 function contentTypeAllowed(response) {
   const type = (response.headers?.get?.('content-type') ?? '').toLowerCase()
   return type.includes('text/html') || type.includes('text/plain')
 }
 
-export async function fetchPage(url, { fetchImpl = fetch, maxBytes = MAX_BYTES, timeoutMs = TIMEOUT_MS } = {}) {
+export async function fetchPage(url, {
+  fetchImpl = fetch,
+  maxBytes = MAX_BYTES,
+  timeoutMs = TIMEOUT_MS,
+  allowedUrl = null,
+} = {}) {
   let current = url
-  for (let redirects = 0; redirects <= MAX_REDIRECTS; redirects += 1) {
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop += 1) {
     let response
     try {
       response = await fetchImpl(current, {
         headers: { 'user-agent': 'OpenCodeAnalysisResearch/1.0', accept: 'text/html,text/plain' },
         signal: AbortSignal.timeout(timeoutMs),
-        redirect: 'follow',
+        redirect: 'manual',
       })
     } catch {
       return null
+    }
+
+    if (REDIRECT_CODES.has(response.status)) {
+      const location = response.headers?.get?.('location')
+      if (!location) return null
+      let next
+      try {
+        next = new URL(location, current).toString()
+      } catch {
+        return null
+      }
+      if (!next.startsWith('https://') || isPrivateUrl(next)) return null
+      if (allowedUrl && !allowedUrl(next)) return null
+      current = next
+      continue
     }
 
     const finalUrl = response.url || current

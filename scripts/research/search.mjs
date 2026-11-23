@@ -29,10 +29,14 @@ export function officialUrlAllowed(url, canonicalId) {
   const source = sourceForVendor(canonicalId)
   if (!source) return false
 
-  const hostAllowed = source.hosts.some((host) => parsed.hostname.toLowerCase().endsWith(host))
+  const hostAllowed = source.hosts.some(
+    (host) => parsed.hostname.toLowerCase() === host || parsed.hostname.toLowerCase().endsWith(`.${host}`),
+  )
+  const segments = parsed.pathname.split('/').filter(Boolean)
   const orgAllowed =
     (parsed.hostname === 'github.com' || parsed.hostname === 'huggingface.co' || parsed.hostname === 'www.github.com') &&
-    source.orgs.some((org) => parsed.pathname.toLowerCase().includes(`/${org.toLowerCase()}/`))
+    segments.length > 0 &&
+    source.orgs.some((org) => segments[0].toLowerCase() === org.toLowerCase())
   return hostAllowed || orgAllowed
 }
 

@@ -22,6 +22,11 @@ describe('research validator', () => {
     bad.models[0].benchmarks.push({ ...bad.models[0].benchmarks[0] })
     expect(validateResearch(bad).some((e) => e.includes('duplicate'))).toBe(true)
   })
+  it('rejects a non-official source for a real model', () => {
+    const bad = structuredClone(ok)
+    bad.models[0].benchmarks[0].sourceUrl = 'https://evil.example.com/kimi-k3'
+    expect(validateResearch(bad).some((e) => e.includes('official'))).toBe(true)
+  })
   it('rejects a non-https source', () => {
     const bad = structuredClone(ok)
     bad.models[0].benchmarks[0].sourceUrl = 'http://example.com'

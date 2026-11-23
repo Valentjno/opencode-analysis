@@ -53,6 +53,31 @@ describe('safe search and fetch', () => {
     })).toBeNull()
   })
 
+  it('requires exact hostname and first path segment for official sources', () => {
+    const id = 'moonshotai/kimi-k3'
+    expect(officialUrlAllowed('https://evil-moonshot.cn/model', id)).toBe(false)
+    expect(officialUrlAllowed('https://github.com/attacker/moonshotai/notes', id)).toBe(false)
+    expect(officialUrlAllowed('https://github.com/MoonshotAI/Kimi-K3', id)).toBe(true)
+  })
+
+  it('follows redirects manually and rejects a private location before fetching it', async () => {
+    let calls = 0
+    let redirectOption = ''
+    const page = await fetchPage('https://example.test/redirect', {
+      fetchImpl: async (_url, init) => {
+        calls += 1
+        redirectOption = init.redirect
+        return {
+          ok: false, status: 302,
+          headers: { get: (name) => (name.toLowerCase() === 'location' ? 'http://127.0.0.1:4000/admin' : null) },
+        }
+      },
+    })
+    expect(page).toBeNull()
+    expect(calls).toBe(1)
+    expect(redirectOption).toBe('manual')
+  })
+
   it('excludes AA as evidence', () => {
     expect(officialUrlAllowed('https://artificialanalysis.ai/models/kimi-k3', 'moonshotai/kimi-k3')).toBe(false)
   })

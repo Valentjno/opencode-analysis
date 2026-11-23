@@ -2,7 +2,8 @@ import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { selectGaps } from './gaps.mjs'
-import { mergeResearch } from './store.mjs'
+import { applyOverrides, markStale, mergeResearch } from './store.mjs'
+import { officialUrlAllowed } from './search.mjs'
 import { search } from './search.mjs'
 import { fetchPage } from './fetch-page.mjs'
 import { extract } from './extract.mjs'
@@ -22,7 +23,8 @@ export async function runResearch({
   maxPerModel = 3,
   now = new Date().toISOString(),
 } = {}) {
-  const gaps = selectGaps({ snapshot, research, overrides, now, maxModels, maxPerModel })
+  const prepared = applyOverrides(markStale(research, now), overrides, snapshot)
+  const gaps = selectGaps({ snapshot, research: prepared, overrides, now, maxModels, maxPerModel })
   const accepted = []
   const reasons = {}
 
@@ -35,7 +37,10 @@ export async function runResearch({
       const results = await search({ model: gap.model, benchmark: gap.benchmark, fetchImpl })
       let handled = false
       for (const result of results.slice(0, 3)) {
-        const page = await fetchPage(result.url, { fetchImpl })
+        const page = await fetchPage(result.url, {
+          fetchImpl,
+          allowedUrl: (next) => officialUrlAllowed(next, gap.model.canonicalId),
+        })
         if (!page) {
           reject('fetch-failed')
           continue
@@ -54,7 +59,7 @@ export async function runResearch({
             continue
           }
           if (candidates.some((item) => item.provider === value.provider)) continue
-          candidates.push(value)
+          candidates.push({ ...value, sourceUrl: result.url })
         }
 
         if (candidates.length < 2) {
@@ -62,10 +67,17 @@ export async function runResearch({
           continue
         }
 
-        const normalized = candidates.map((item) => ({
-          ...item,
-          value: normalizeValue(gap.benchmark.id, item.value, item.unit) ?? item.value,
-        }))
+        const normalized = []
+        for (const item of candidates) {
+          const value = normalizeValue(gap.benchmark.id, item.value, item.unit)
+          if (value === null) {
+            reject('out-of-range')
+            normalized.length = 0
+            break
+          }
+          normalized.push({ ...item, value })
+        }
+        if (normalized.length < 2) continue
         const verdict = verifyCandidate({
           candidate: normalized[0],
           other: normalized[1],
@@ -90,7 +102,7 @@ export async function runResearch({
     }
   }
 
-  const feed = mergeResearch({ previous: research, overrides, candidates: accepted, now })
+  const feed = mergeResearch({ previous: prepared, overrides, candidates: accepted, now })
   const rejected = Object.values(reasons).reduce((sum, count) => sum + count, 0)
   feed.run = {
     status: accepted.length ? 'ok' : 'partial',

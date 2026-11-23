@@ -15,5 +15,8 @@ describe('research CI security', () => {
     expect(workflow).toContain('85864c4d0f29b74db442b296087862b96f4d84a1')
     expect(workflow).toMatch(/sha256|checksum/i)
     expect(workflow).not.toContain('pull_request')
+    expect(workflow.indexOf('git pull --rebase')).toBeLessThan(workflow.indexOf('git add public/data/research.json'))
+    const refresh = await readFile('.github/workflows/refresh.yml', 'utf8')
+    expect(refresh).toContain('group: data-write')
   })
 })
