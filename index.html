@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <meta
+      name="description"
+      content="An independent OpenCode dashboard: every Go and free model, Artificial Analysis scores, real allowances, privacy terms, and a daily recommendation."
+    />
+    <title>OpenCode Model Radar</title>
+    <script>
+      // Apply the stored theme before first paint so there is no flash.
+      ;(() => {
+        try {
+          const stored = localStorage.getItem('oar-theme')
+          const choice = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'dark'
+          const dark =
+            choice === 'dark' ||
+            (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+          document.documentElement.dataset.themeChoice = choice
+        } catch {
+          document.documentElement.dataset.theme = 'dark'
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

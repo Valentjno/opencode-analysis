@@ -1,0 +1,785 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencode-analysis.pages.dev/contracts/dataset.schema.json",
+  "title": "OpenCode Model Radar dataset",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "plans",
+    "sources",
+    "stats",
+    "recommendations",
+    "models"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+    },
+    "plans": {
+      "type": "object",
+      "required": [
+        "go",
+        "goPlus"
+      ],
+      "properties": {
+        "go": {
+          "$ref": "#/$defs/plan"
+        },
+        "goPlus": {
+          "$ref": "#/$defs/plan"
+        }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "required": [
+        "opencodeGo",
+        "opencodeAll",
+        "goPage",
+        "artificialAnalysis"
+      ],
+      "properties": {
+        "opencodeGo": {
+          "$ref": "#/$defs/source"
+        },
+        "opencodeAll": {
+          "$ref": "#/$defs/source"
+        },
+        "goPage": {
+          "$ref": "#/$defs/source"
+        },
+        "artificialAnalysis": {
+          "$ref": "#/$defs/source"
+        }
+      }
+    },
+    "stats": {
+      "type": "object",
+      "required": [
+        "total",
+        "go",
+        "free",
+        "both",
+        "rated",
+        "unrated",
+        "private",
+        "trains",
+        "limitedRegions"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "go": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "free": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "both": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unrated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "private": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "trains": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "limitedRegions": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "recommendations": {
+      "type": "object",
+      "required": [
+        "planner",
+        "builder",
+        "medium",
+        "cheapest",
+        "private"
+      ],
+      "properties": {
+        "planner": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/recommendation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "builder": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/recommendation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "medium": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/recommendation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cheapest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/recommendation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "private": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/recommendation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "models": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/model"
+      }
+    }
+  },
+  "$defs": {
+    "plan": {
+      "type": "object",
+      "required": [
+        "name",
+        "price"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "price": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "url",
+        "ok"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sitemapSlugs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "matched": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rated": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "nullableNumber": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableBoolean": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "model": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "canonicalId",
+        "vendor",
+        "description",
+        "family",
+        "openWeights",
+        "releaseDate",
+        "lastUpdated",
+        "knowledge",
+        "access",
+        "pricing",
+        "context",
+        "maxOutput",
+        "modalities",
+        "capabilities",
+        "go",
+        "privacy",
+        "aaSlug",
+        "aa",
+        "aaStatus"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonicalId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "vendor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "family": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "openWeights": {
+          "type": "boolean"
+        },
+        "releaseDate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lastUpdated": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "knowledge": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "access": {
+          "$ref": "#/$defs/access"
+        },
+        "pricing": {
+          "$ref": "#/$defs/pricing"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "maxOutput": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "modalities": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "input": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "output": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "capabilities": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "go": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/goAccess"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "privacy": {
+          "$ref": "#/$defs/privacy"
+        },
+        "aaSlug": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "aa": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/aaProfile"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "aaStatus": {
+          "enum": [
+            "rated",
+            "unrated",
+            "missing",
+            "stale",
+            "error"
+          ]
+        }
+      }
+    },
+    "access": {
+      "type": "object",
+      "required": [
+        "go",
+        "free",
+        "limitedRegions"
+      ],
+      "properties": {
+        "go": {
+          "type": "boolean"
+        },
+        "free": {
+          "type": "boolean"
+        },
+        "limitedRegions": {
+          "type": "boolean"
+        }
+      }
+    },
+    "pricing": {
+      "type": "object",
+      "required": [
+        "input",
+        "output",
+        "cacheRead",
+        "blended"
+      ],
+      "properties": {
+        "input": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "output": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "cacheRead": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "blended": {
+          "$ref": "#/$defs/nullableNumber"
+        }
+      }
+    },
+    "goAccess": {
+      "type": "object",
+      "required": [
+        "monthly",
+        "requests5h",
+        "featured"
+      ],
+      "properties": {
+        "monthly": {
+          "type": "object",
+          "required": [
+            "go",
+            "goPlus",
+            "goTeams"
+          ],
+          "properties": {
+            "go": {
+              "$ref": "#/$defs/nullableNumber"
+            },
+            "goPlus": {
+              "$ref": "#/$defs/nullableNumber"
+            },
+            "goTeams": {
+              "$ref": "#/$defs/nullableNumber"
+            }
+          }
+        },
+        "requests5h": {
+          "type": "object",
+          "required": [
+            "go",
+            "goPlus",
+            "goUnlimited",
+            "goPlusUnlimited"
+          ],
+          "properties": {
+            "go": {
+              "$ref": "#/$defs/nullableNumber"
+            },
+            "goPlus": {
+              "$ref": "#/$defs/nullableNumber"
+            },
+            "goUnlimited": {
+              "type": "boolean"
+            },
+            "goPlusUnlimited": {
+              "type": "boolean"
+            }
+          }
+        },
+        "featured": {
+          "type": "boolean"
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "required": [
+        "training",
+        "zdr",
+        "retentionDays",
+        "limitedRegions",
+        "source",
+        "note"
+      ],
+      "properties": {
+        "training": {
+          "$ref": "#/$defs/nullableBoolean"
+        },
+        "zdr": {
+          "$ref": "#/$defs/nullableBoolean"
+        },
+        "retentionDays": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "limitedRegions": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "aaProfile": {
+      "type": "object",
+      "required": [
+        "slug",
+        "url",
+        "variant",
+        "suffix",
+        "effort",
+        "releaseDate",
+        "deprecated",
+        "deprecatedTo",
+        "intelligenceIndex",
+        "capabilities",
+        "evals",
+        "omniscience",
+        "contextWindow",
+        "outputSpeed",
+        "timeToFirstToken",
+        "costPerTask",
+        "aaPrice",
+        "isOpenWeights"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://artificialanalysis\\.ai/models/"
+        },
+        "variant": {
+          "type": "string",
+          "minLength": 1
+        },
+        "suffix": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "effort": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "releaseDate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deprecated": {
+          "type": "boolean"
+        },
+        "deprecatedTo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "intelligenceIndex": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "evals": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "omniscience": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "contextWindow": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "outputSpeed": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "timeToFirstToken": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "costPerTask": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "aaPrice": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "input",
+                "output"
+              ],
+              "properties": {
+                "input": {
+                  "$ref": "#/$defs/nullableNumber"
+                },
+                "output": {
+                  "$ref": "#/$defs/nullableNumber"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "isOpenWeights": {
+          "type": "boolean"
+        }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "required": [
+        "slot",
+        "title",
+        "modelId",
+        "rule",
+        "reason",
+        "caveat",
+        "intelligenceIndex",
+        "blendedPrice",
+        "monthlyGo"
+      ],
+      "properties": {
+        "slot": {
+          "enum": [
+            "planner",
+            "builder",
+            "medium",
+            "cheapest",
+            "private"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "modelId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "caveat": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "intelligenceIndex": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "blendedPrice": {
+          "$ref": "#/$defs/nullableNumber"
+        },
+        "monthlyGo": {
+          "$ref": "#/$defs/nullableNumber"
+        }
+      }
+    }
+  }
+}

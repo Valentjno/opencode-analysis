@@ -1,0 +1,74 @@
+{
+  "deepseek-v4.1-flash-free": {
+    "training": false,
+    "zdr": true,
+    "retentionDays": 0,
+    "note": "Provider follows a zero-retention policy and does not train on requests."
+  },
+  "hy4-flash-free": {
+    "training": false,
+    "zdr": true,
+    "retentionDays": 0,
+    "note": "Provider follows a zero-retention policy and does not train on requests."
+  },
+  "mimo-v2.6-flash-free": {
+    "training": false,
+    "zdr": true,
+    "retentionDays": null,
+    "note": "No training exception is listed; OpenCode is collecting feedback during the free period."
+  },
+  "qwen4-max-free": {
+    "training": null,
+    "zdr": null,
+    "retentionDays": null,
+    "note": "Not documented yet. Check the OpenCode privacy page before sending sensitive data."
+  },
+  "big-pickle": {
+    "training": true,
+    "zdr": false,
+    "retentionDays": null,
+    "note": "Stealth model: during the free period, collected data may be used to improve the model."
+  },
+  "tidepool-alpha-free": {
+    "training": true,
+    "zdr": false,
+    "retentionDays": null,
+    "note": "Stealth model: data is retained and used to improve the model during the free period."
+  },
+  "iceman-free": {
+    "training": true,
+    "zdr": false,
+    "retentionDays": null,
+    "note": "Stealth model: data is retained and used to improve the model during the free period."
+  },
+  "iceman-contributor-free": {
+    "training": true,
+    "zdr": false,
+    "retentionDays": null,
+    "note": "Contributor model: data is retained and used to improve the model during the free period."
+  },
+  "flint-40b-free": {
+    "training": true,
+    "zdr": false,
+    "retentionDays": 30,
+    "note": "Collected data may be used to improve the model and is retained for 30 days."
+  },
+  "nemotron-3.5-lightning-free": {
+    "training": true,
+    "zdr": false,
+    "retentionDays": null,
+    "note": "NVIDIA trial endpoint: do not submit personal or confidential data."
+  },
+  "nemotron-3.5-super-vl-free": {
+    "training": true,
+    "zdr": false,
+    "retentionDays": null,
+    "note": "NVIDIA trial endpoint: do not submit personal or confidential data."
+  },
+  "beam-free": {
+    "training": false,
+    "zdr": false,
+    "retentionDays": 30,
+    "note": "No training, but inputs are retained for 30 days for safety."
+  }
+}
