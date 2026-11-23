@@ -9,6 +9,8 @@ export function makeModel(
   overrides: {
     name?: string
     vendor?: string
+    canonicalId?: string | null
+    evals?: Record<string, number>
     ii?: number | null
     price?: number | null
     monthlyGo?: number | null
@@ -24,7 +26,7 @@ export function makeModel(
   return {
     id,
     name: overrides.name ?? id,
-    canonicalId: `vendor/${id}`,
+    canonicalId: overrides.canonicalId !== undefined ? overrides.canonicalId : `vendor/${id}`,
     vendor: overrides.vendor ?? 'Vendor',
     description: '',
     family: null,
@@ -79,7 +81,7 @@ export function makeModel(
       deprecatedTo: null,
       intelligenceIndex: overrides.ii ?? null,
       capabilities: {},
-      evals: {},
+      evals: overrides.evals ?? {},
       omniscience: null,
       contextWindow: null,
       outputSpeed: null,
