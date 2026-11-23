@@ -43,6 +43,13 @@ jobs:
       - name: Install pinned Free-LLM Router
         run: npm install github:nejib1/Free-LLM#85864c4d0f29b74db442b296087862b96f4d84a1
 
+      - name: Check secret presence
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: echo "gemini=${#GEMINI_API_KEY} groq=${#GROQ_API_KEY} openrouter=${#OPENROUTER_API_KEY}"
+
       - name: Verify pinned catalog checksum
         run: echo "8e2d013cf5c490876efafb84a5a60689406dcd302815b599934fa335a10e87dc  data/vendor/free-llm-catalog.json" | sha256sum -c -
 
