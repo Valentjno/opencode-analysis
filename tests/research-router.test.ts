@@ -52,6 +52,21 @@ describe('router client and extraction', () => {
     expect(result).toMatchObject({ value: 93.5, unit: '%', provider: 'groq-cloud' })
   })
 
+  it('instructs the model to answer with JSON only or a null sentinel', async () => {
+    let captured
+    await extract({
+      model, benchmark, page, profile: 'auto:smart',
+      fetchImpl: async (_url, options) => {
+        captured = JSON.parse(options.body)
+        return reply()
+      },
+    })
+    const system = captured.messages[0].content
+    expect(system).toContain('ONLY a single JSON object')
+    expect(system).toContain('"value": null')
+    expect(system).toContain('verbatim')
+  })
+
   it('parses JSON wrapped in a markdown code fence', async () => {
     const fenced = '```json\n' + content + '\n```'
     const result = await extract({ model, benchmark, page, profile: 'auto:smart', fetchImpl: async () => reply({ text: fenced }) })
