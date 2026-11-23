@@ -1,0 +1,10 @@
+[
+  { "id": "gpqa-diamond", "label": "GPQA Diamond", "unit": "%", "scale": "fraction", "max": 100, "higherIsBetter": true, "aliases": ["GPQA", "GPQA-D"] },
+  { "id": "hle", "label": "Humanity's Last Exam", "unit": "%", "scale": "fraction", "max": 100, "higherIsBetter": true, "aliases": ["HLE", "Humanity's Last Exam"] },
+  { "id": "scicode", "label": "SciCode", "unit": "%", "scale": "fraction", "max": 100, "higherIsBetter": true, "aliases": [] },
+  { "id": "terminal-bench-2.1", "label": "Terminal-Bench 2.1", "unit": "%", "scale": "fraction", "max": 100, "higherIsBetter": true, "aliases": ["Terminal Bench 2.1", "Terminal-Bench 2"] },
+  { "id": "ifbench", "label": "IFBench", "unit": "%", "scale": "fraction", "max": 100, "higherIsBetter": true, "aliases": [] },
+  { "id": "tau2", "label": "Tau2", "unit": "%", "scale": "fraction", "max": 100, "higherIsBetter": true, "aliases": ["Tau 2"] },
+  { "id": "mmmu-pro", "label": "MMMU-Pro", "unit": "%", "scale": "fraction", "max": 100, "higherIsBetter": true, "aliases": ["MMMU Pro"] },
+  { "id": "frontiercode-2.0", "label": "FrontierCode 2.0", "unit": "raw", "scale": "raw", "max": null, "higherIsBetter": true, "aliases": ["FrontierCode 2"] }
+]

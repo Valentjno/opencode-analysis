@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opencode-analysis.pages.dev/contracts/research.schema.json",
+  "title": "OpenCode Model Radar external benchmark research",
+  "type": "object",
+  "required": ["schemaVersion", "generatedAt", "run", "models"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "generatedAt": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+    },
+    "run": {
+      "type": "object",
+      "required": ["status", "modelsConsidered", "modelsResearched", "accepted", "rejected", "reasons"],
+      "properties": {
+        "status": { "enum": ["ok", "partial", "failed"] },
+        "modelsConsidered": { "type": "integer", "minimum": 0 },
+        "modelsResearched": { "type": "integer", "minimum": 0 },
+        "accepted": { "type": "integer", "minimum": 0 },
+        "rejected": { "type": "integer", "minimum": 0 },
+        "reasons": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
+      }
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "benchmarks"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "benchmarks": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/entry" }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": [
+        "benchmarkId", "label", "value", "unit", "sourceUrl", "sourceTitle",
+        "quote", "retrievedAt", "sourceHash", "method", "confidence",
+        "modelsUsed", "status", "stale", "supersededByAA"
+      ],
+      "properties": {
+        "benchmarkId": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "value": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1 },
+        "sourceUrl": { "type": "string", "pattern": "^https://" },
+        "sourceTitle": { "type": "string" },
+        "quote": { "type": "string", "minLength": 20 },
+        "retrievedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,3})?Z$"
+        },
+        "sourceHash": { "type": "string", "pattern": "^sha256:" },
+        "method": { "type": "string", "minLength": 1 },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "modelsUsed": { "type": "array", "items": { "type": "string" } },
+        "status": { "enum": ["verified", "conflict", "single-source"] },
+        "stale": { "type": "boolean" },
+        "supersededByAA": { "type": "boolean" },
+        "locked": { "type": "boolean" }
+      }
+    }
+  }
+}

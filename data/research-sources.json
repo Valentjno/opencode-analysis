@@ -1,0 +1,13 @@
+{
+  "deniedHosts": ["artificialanalysis.ai", "www.artificialanalysis.ai"],
+  "vendors": {
+    "moonshotai": { "vendor": "Moonshot AI", "hosts": ["moonshot.cn", "moonshot.ai", "kimi.com"], "orgs": ["moonshotai", "MoonshotAI"] },
+    "tencent": { "vendor": "Tencent", "hosts": ["tencent.com", "cloud.tencent.com", "hunyuan.tencent.com"], "orgs": ["tencent", "Tencent", "Tencent-Hunyuan"] },
+    "alibaba": { "vendor": "Alibaba", "hosts": ["alibabacloud.com", "qwenlm.github.io"], "orgs": ["QwenLM", "alibaba", "Alibaba-NLP"] },
+    "meta": { "vendor": "Meta", "hosts": ["ai.meta.com", "about.fb.com"], "orgs": ["facebookresearch", "meta-llama", "pytorch"] },
+    "meituan": { "vendor": "Meituan", "hosts": ["meituan.com"], "orgs": ["meituan", "Meituan"] },
+    "stepfun": { "vendor": "StepFun", "hosts": ["stepfun.com", "platform.stepfun.com"], "orgs": ["StepFun", "stepfun-ai"] },
+    "recursive": { "vendor": "Recursive", "hosts": ["recursive.ai"], "orgs": ["recursive", "Recursive-AI"] },
+    "z-ai": { "vendor": "Z.ai", "hosts": ["z.ai", "bigmodel.cn"], "orgs": ["zai-org", "THUDM"] }
+  }
+}
