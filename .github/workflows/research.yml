@@ -29,10 +29,6 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: write
-    env:
-      FREE_LLM_HOME: ${{ runner.temp }}/free-llm
-      ROUTER_LOG: ${{ runner.temp }}/free-llm-router.log
-
     steps:
       - uses: actions/checkout@v4
 
@@ -51,6 +47,9 @@ jobs:
         run: echo "8e2d013cf5c490876efafb84a5a60689406dcd302815b599934fa335a10e87dc  data/vendor/free-llm-catalog.json" | sha256sum -c -
 
       - name: Prepare ephemeral router home
+        env:
+          FREE_LLM_HOME: ${{ runner.temp }}/free-llm
+          ROUTER_LOG: ${{ runner.temp }}/free-llm-router.log
         run: |
           mkdir -p "$FREE_LLM_HOME"
           cp data/vendor/free-llm-catalog.json "$FREE_LLM_HOME/catalog.json"
@@ -61,6 +60,8 @@ jobs:
 
       - name: Start router
         env:
+          FREE_LLM_HOME: ${{ runner.temp }}/free-llm
+          ROUTER_LOG: ${{ runner.temp }}/free-llm-router.log
           FREE_LLM_API_KEY: ${{ secrets.FREE_LLM_API_KEY }}
           FREE_LLM_MASTER_KEY: ${{ secrets.FREE_LLM_MASTER_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -76,6 +77,8 @@ jobs:
 
       - name: Run research
         env:
+          FREE_LLM_HOME: ${{ runner.temp }}/free-llm
+          ROUTER_LOG: ${{ runner.temp }}/free-llm-router.log
           FREE_LLM_API_KEY: ${{ secrets.FREE_LLM_API_KEY }}
         run: |
           MAX_MODELS="${{ github.event.inputs.max_models || '5' }}"
@@ -87,6 +90,9 @@ jobs:
         run: npm run validate:research
 
       - name: Stop router and remove secrets
+        env:
+          FREE_LLM_HOME: ${{ runner.temp }}/free-llm
+          ROUTER_LOG: ${{ runner.temp }}/free-llm-router.log
         if: always()
         run: |
           ./node_modules/.bin/free-llm stop > /dev/null 2>&1 || true
