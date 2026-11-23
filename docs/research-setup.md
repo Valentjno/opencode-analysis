@@ -90,3 +90,21 @@ Use dedicated keys for this job. If a key is suspected leaked, revoke it at the
 provider, rotate the matching GitHub secret, and re-run the workflow. The router
 pins each key to its provider host on first use and refuses to send it
 elsewhere.
+
+## Current live status
+
+The dry runs on GitHub-hosted runners complete successfully but currently accept
+zero values: Google AI Studio rejects the key from the runner's IP range
+(`Invalid Auth key`), and the other free models either hit quota limits or
+return prose that fails the quote verification. The schedule is therefore left
+commented out and no `research.json` is published.
+
+The same pipeline was verified locally with the same keys, so the blocker is the
+providers' treatment of CI egress IPs, not the orchestrator. Options are:
+
+- add a free provider whose tier allows GitHub Actions IPs;
+- run the research job on a self-hosted runner;
+- keep research as a local maintainer tool and commit the result manually.
+
+Verification is deliberately strict: if a model will not provide an exact quote
+naming the model, benchmark and number, no value is published.
