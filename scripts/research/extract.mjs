@@ -27,11 +27,15 @@ export async function extract({ model, benchmark, page, profile, fetchImpl = fet
   if (payload.startsWith('```')) payload = payload.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim()
   const start = payload.indexOf('{')
   const end = payload.lastIndexOf('}')
-  if (start === -1 || end <= start) return null
-  let parsed
-  try {
-    parsed = JSON.parse(payload.slice(start, end + 1))
-  } catch {
+  let parsed = null
+  if (start !== -1 && end > start) {
+    try {
+      parsed = JSON.parse(payload.slice(start, end + 1))
+    } catch {
+      parsed = null
+    }
+  }
+  if (!parsed) {
     const valueMatch = payload.match(/(?:"value"|value)\s*[:=]\s*([0-9]+(?:\.[0-9]+)?)/i)
     const quoteMatch = payload.match(/(?:"quote"|quote)\s*[:=]\s*"([^"]+)"/i)
     const urlMatch = payload.match(/https:\/\/[^\s"',}]+/i)
