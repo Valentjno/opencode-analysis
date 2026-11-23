@@ -38,7 +38,13 @@ export async function chat({
     }
 
     if (!response.ok) {
-      lastError = new Error(redact(`Router returned HTTP ${response.status}`))
+      let detail = ''
+      try {
+        detail = String(await response.text()).slice(0, 300)
+      } catch {
+        detail = ''
+      }
+      lastError = new Error(redact(`Router returned HTTP ${response.status}: ${detail}`))
       if (attempt === 0 && (response.status === 429 || response.status >= 500)) continue
       break
     }

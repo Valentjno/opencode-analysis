@@ -96,7 +96,7 @@ jobs:
         if: always()
         run: |
           ./node_modules/.bin/free-llm stop > /dev/null 2>&1 || true
-          rm -rf "$FREE_LLM_HOME" "$ROUTER_LOG"
+          rm -rf "$FREE_LLM_HOME" "$ROUTER_LOG" || true
 
       - name: Commit research data
         if: github.event.inputs.dry_run != 'true'

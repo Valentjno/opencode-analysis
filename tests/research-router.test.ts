@@ -52,6 +52,15 @@ describe('router client and extraction', () => {
     expect(result).toMatchObject({ value: 93.5, unit: '%', provider: 'groq-cloud' })
   })
 
+  it('includes the redacted provider error detail on a 400', async () => {
+    const bad = {
+      ok: false, status: 400,
+      headers: { get: () => null },
+      text: async () => '{"error":{"message":"bad request detail"}}',
+    }
+    await expect(chat({ profile: 'auto:smart', messages: [], fetchImpl: async () => bad })).rejects.toThrow('bad request detail')
+  })
+
   it('returns null on malformed JSON and retries once on 429', async () => {
     expect(await extract({
       model, benchmark, page, profile: 'auto:smart',
