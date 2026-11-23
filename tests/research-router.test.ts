@@ -58,6 +58,12 @@ describe('router client and extraction', () => {
     expect(result).toMatchObject({ value: 93.5 })
   })
 
+  it('parses loosely formatted extraction text', async () => {
+    const loose = 'value: 93.5, unit: %, quote: "Kimi K3 results: GPQA Diamond 93.5%.", sourceUrl: https://github.com/MoonshotAI/Kimi-K3'
+    const result = await extract({ model, benchmark, page, profile: 'auto:smart', fetchImpl: async () => reply({ text: loose }) })
+    expect(result).toMatchObject({ value: 93.5, quote: 'Kimi K3 results: GPQA Diamond 93.5%.' })
+  })
+
   it('includes the redacted provider error detail on a 400', async () => {
     const bad = {
       ok: false, status: 400,

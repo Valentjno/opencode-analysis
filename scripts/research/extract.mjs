@@ -32,7 +32,16 @@ export async function extract({ model, benchmark, page, profile, fetchImpl = fet
   try {
     parsed = JSON.parse(payload.slice(start, end + 1))
   } catch {
-    return null
+    const valueMatch = payload.match(/(?:"value"|value)\s*[:=]\s*([0-9]+(?:\.[0-9]+)?)/i)
+    const quoteMatch = payload.match(/(?:"quote"|quote)\s*[:=]\s*"([^"]+)"/i)
+    const urlMatch = payload.match(/https:\/\/[^\s"',}]+/i)
+    if (!valueMatch || !quoteMatch || !urlMatch) return null
+    parsed = {
+      value: Number(valueMatch[1]),
+      unit: (payload.match(/(?:"unit"|unit)\s*[:=]\s*"?([^"\s,}]+)/i)?.[1]) ?? '%',
+      quote: quoteMatch[1],
+      sourceUrl: urlMatch[0],
+    }
   }
   if (
     typeof parsed.value !== 'number' ||
