@@ -16,6 +16,7 @@ describe('research CI security', () => {
     expect(workflow).toMatch(/sha256|checksum/i)
     expect(workflow).not.toContain('pull_request')
     expect(workflow.indexOf('git pull --rebase')).toBeLessThan(workflow.indexOf('git add public/data/research.json'))
+    expect(workflow).toMatch(/"google-ai-studio"\s*:\s*\{[^}]*"enabled"\s*:\s*false/)
     expect(workflow).toContain('KILO_API_KEY')
     expect(workflow).toContain('REQUESTY_API_KEY')
     expect(workflow).toContain('CLOUDFLARE_API_TOKEN')
