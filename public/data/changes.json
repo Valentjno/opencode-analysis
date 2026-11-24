@@ -1,6 +1,21 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-23T13:42:24.901Z",
+  "updatedAt": "2026-11-24T08:19:23.334Z",
   "baseline": false,
-  "events": []
+  "events": [
+    {
+      "at": "2026-11-24T08:19:23.334Z",
+      "type": "added",
+      "id": "hungerg-free",
+      "name": "HungerG Free",
+      "message": "HungerG Free was added to Go."
+    },
+    {
+      "at": "2026-11-24T08:19:23.334Z",
+      "type": "removed",
+      "id": "qwen4-max-free",
+      "name": "Qwen4 Max Free",
+      "message": "Qwen4 Max Free was removed."
+    }
+  ]
 }
