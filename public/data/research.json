@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-24T14:18:28.635Z",
+  "run": {
+    "status": "ok",
+    "modelsConsidered": 39,
+    "modelsResearched": 12,
+    "accepted": 1,
+    "rejected": 88,
+    "reasons": {
+      "page-missing-benchmark": 28,
+      "fetch-failed": 33,
+      "malformed-extraction": 15,
+      "error": 10,
+      "quote-mismatch": 2
+    }
+  },
+  "models": [
+    {
+      "id": "kimi-k3.1-pro",
+      "name": "Kimi K3.1 Pro",
+      "benchmarks": [
+        {
+          "benchmarkId": "gpqa-diamond",
+          "label": "GPQA Diamond",
+          "value": 94.2,
+          "unit": "%",
+          "sourceUrl": "https://huggingface.co/moonshotai/kimi-k3.1-pro/raw/main/README.md",
+          "sourceTitle": "Kimi K3.1 Pro",
+          "quote": "GPQA-Diamond | 94.2 | 93.7 | 96.1 | 93.9 | 92.2 | 91.7",
+          "retrievedAt": "2026-11-24T14:18:28.635Z",
+          "sourceHash": "sha256:861dc0e65c5d8e735306238e3e23af55f8d215f232f49814df1b2153125e99c0",
+          "method": "two-provider+quote",
+          "confidence": "high",
+          "modelsUsed": [
+            "groq-cloud",
+            "kilo-gateway"
+          ],
+          "status": "verified",
+          "stale": false,
+          "supersededByAA": false,
+          "locked": false
+        }
+      ]
+    }
+  ]
+}
