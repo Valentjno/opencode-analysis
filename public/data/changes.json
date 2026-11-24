@@ -1,8 +1,188 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T16:29:35.588Z",
+  "updatedAt": "2026-11-24T21:54:32.740Z",
   "baseline": false,
   "events": [
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "gemini-4-argon",
+      "name": "Gemini 4 Argon",
+      "message": "Gemini 4 Argon Intelligence Index changed from 50.41 to 50.51.",
+      "field": "aa.intelligenceIndex",
+      "from": 50.41,
+      "to": 50.51
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "kimi-k3.1-pro",
+      "name": "Kimi K3.1 Pro",
+      "message": "Kimi K3.1 Pro Intelligence Index changed from 46.45 to 46.55.",
+      "field": "aa.intelligenceIndex",
+      "from": 46.45,
+      "to": 46.55
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "qwen4-max",
+      "name": "Qwen4 Max",
+      "message": "Qwen4 Max Intelligence Index changed from 42.89 to 42.79.",
+      "field": "aa.intelligenceIndex",
+      "from": 42.89,
+      "to": 42.79
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "claude-haiku-5-5",
+      "name": "Claude Haiku 5.5",
+      "message": "Claude Haiku 5.5 Intelligence Index changed from 36.48 to 36.54.",
+      "field": "aa.intelligenceIndex",
+      "from": 36.48,
+      "to": 36.54
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "grok-4.7",
+      "name": "Grok 4.7",
+      "message": "Grok 4.7 Intelligence Index changed from 35.49 to 35.37.",
+      "field": "aa.intelligenceIndex",
+      "from": 35.49,
+      "to": 35.37
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "hy4",
+      "name": "Hy4",
+      "message": "Hy4 Intelligence Index changed from 34.56 to 34.57.",
+      "field": "aa.intelligenceIndex",
+      "from": 34.56,
+      "to": 34.57
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "hy4-preview",
+      "name": "Hy4 preview",
+      "message": "Hy4 preview Intelligence Index changed from 34.56 to 34.57.",
+      "field": "aa.intelligenceIndex",
+      "from": 34.56,
+      "to": 34.57
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "qwen3.8-max",
+      "name": "Qwen3.8 Max",
+      "message": "Qwen3.8 Max Intelligence Index changed from 33.65 to 33.69.",
+      "field": "aa.intelligenceIndex",
+      "from": 33.65,
+      "to": 33.69
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "deepseek-v4.1-flash",
+      "name": "DeepSeek V4.1 Flash 1017",
+      "message": "DeepSeek V4.1 Flash 1017 Intelligence Index changed from 32.59 to 32.4.",
+      "field": "aa.intelligenceIndex",
+      "from": 32.59,
+      "to": 32.4
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "deepseek-v4.1-flash-free",
+      "name": "DeepSeek V4.1 Flash Free",
+      "message": "DeepSeek V4.1 Flash Free Intelligence Index changed from 32.59 to 32.4.",
+      "field": "aa.intelligenceIndex",
+      "from": 32.59,
+      "to": 32.4
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "glm-5.3",
+      "name": "GLM-5.3",
+      "message": "GLM-5.3 Intelligence Index changed from 31.65 to 31.55.",
+      "field": "aa.intelligenceIndex",
+      "from": 31.65,
+      "to": 31.55
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "mimo-v2.6-pro",
+      "name": "MiMo-V2.6-Pro",
+      "message": "MiMo-V2.6-Pro Intelligence Index changed from 29.89 to 29.94.",
+      "field": "aa.intelligenceIndex",
+      "from": 29.89,
+      "to": 29.94
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "step-5-preview",
+      "name": "Step 5 Preview",
+      "message": "Step 5 Preview Intelligence Index changed from 28.53 to 28.52.",
+      "field": "aa.intelligenceIndex",
+      "from": 28.53,
+      "to": 28.52
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "glm-5.3-flash",
+      "name": "GLM-5.3-Flash",
+      "message": "GLM-5.3-Flash Intelligence Index changed from 27.8 to 27.74.",
+      "field": "aa.intelligenceIndex",
+      "from": 27.8,
+      "to": 27.74
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "mimo-v2.6-flash",
+      "name": "MiMo-V2.6-Flash",
+      "message": "MiMo-V2.6-Flash Intelligence Index changed from 26.73 to 26.83.",
+      "field": "aa.intelligenceIndex",
+      "from": 26.73,
+      "to": 26.83
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "mimo-v2.6-flash-free",
+      "name": "MiMo-V2.6-Flash Free",
+      "message": "MiMo-V2.6-Flash Free Intelligence Index changed from 26.73 to 26.83.",
+      "field": "aa.intelligenceIndex",
+      "from": 26.73,
+      "to": 26.83
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "minimax-m3",
+      "name": "MiniMax-M3",
+      "message": "MiniMax-M3 Intelligence Index changed from 18.88 to 19.05.",
+      "field": "aa.intelligenceIndex",
+      "from": 18.88,
+      "to": 19.05
+    },
+    {
+      "at": "2026-11-24T21:54:32.740Z",
+      "type": "score",
+      "id": "beam-free",
+      "name": "Beam Free",
+      "message": "Beam Free Intelligence Index changed from 17.73 to 17.66.",
+      "field": "aa.intelligenceIndex",
+      "from": 17.73,
+      "to": 17.66
+    },
     {
       "at": "2026-11-24T16:29:35.588Z",
       "type": "rated",
