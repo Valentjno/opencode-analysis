@@ -12,8 +12,8 @@ on:
         required: false
         default: 'false'
   # Enabled after the first manual smoke test:
-  # schedule:
-  #   - cron: '30 */12 * * *'
+  schedule:
+    - cron: '30 */12 * * *'
 
 permissions:
   contents: read

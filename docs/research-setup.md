@@ -144,8 +144,9 @@ model card:
 - MMMU-Pro: 84.1 from `MMMU-Pro | 84.1 | ...`, confirmed by the same two
   providers.
 
-The CI run has not yet been repeated after these fixes. The schedule stays
-commented out until a green run writes a verified `research.json`.
+The first successful CI run wrote `public/data/research.json` with a verified
+value: Kimi K3.1 Pro — GPQA Diamond 94.2, confirmed by `groq-cloud` and
+`kilo-gateway`. The schedule is now enabled at `30 */12 * * *`.
 
 ## 7. Rotation and revocation
 
