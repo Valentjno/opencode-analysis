@@ -55,12 +55,25 @@ function fallbackUrls(model) {
   const source = sourceForVendor(model.canonicalId)
   if (!source) return []
   const urls = []
+
+  // Prefer the model's own page: model cards carry the benchmark tables.
+  if (typeof model.canonicalId === 'string' && model.canonicalId.includes('/')) {
+    const id = model.canonicalId.replace(/^\/+|\/+$/g, '')
+    urls.push(`https://huggingface.co/${id}`)
+    urls.push(`https://huggingface.co/${id}/blob/main/README.md`)
+    urls.push(`https://github.com/${id}`)
+    urls.push(`https://github.com/${id}/blob/main/README.md`)
+  }
   for (const org of source.orgs) {
     urls.push(`https://github.com/${org}`)
     urls.push(`https://huggingface.co/${org}`)
   }
   for (const host of source.hosts) urls.push(`https://${host}`)
-  return urls.map((url) => ({ url, title: `${model.name} official source` }))
+
+  const unique = [...new Set(urls)]
+  return unique
+    .filter((url) => officialUrlAllowed(url, model.canonicalId))
+    .map((url) => ({ url, title: `${model.name} official source` }))
 }
 
 export async function search({ model, benchmark, fetchImpl = fetch }) {

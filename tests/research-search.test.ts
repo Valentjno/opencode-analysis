@@ -59,7 +59,7 @@ describe('safe search and fetch', () => {
       fetchImpl: async () => response({ text: '<html><body>No results here</body></html>' }),
     })
     expect(results.length).toBeGreaterThan(0)
-    expect(results[0].url).toContain('github.com')
+    expect(results.some((r) => r.url === 'https://huggingface.co/moonshotai/kimi-k3')).toBe(true)
   })
 
   it('requires exact hostname and first path segment for official sources', () => {
