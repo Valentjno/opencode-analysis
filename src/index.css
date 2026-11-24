@@ -1387,3 +1387,67 @@ details.table-disclosure summary:hover {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Analysis workspace */
+.analysis-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1080px) {
+  .analysis-layout {
+    grid-template-columns: 180px 1fr;
+  }
+}
+
+.analysis-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  align-self: start;
+}
+
+@media (min-width: 1080px) {
+  .analysis-rail {
+    position: sticky;
+    top: 80px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}
+
+.analysis-rail-link {
+  padding: 6px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+.analysis-rail-link:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.analysis-rail-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.chart-note {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}

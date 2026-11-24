@@ -142,17 +142,7 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
   }, [filtered, costAxis])
 
   return (
-    <section className="section" aria-labelledby="analysis-heading">
-      <div className="section-head">
-        <h2 className="section-title" id="analysis-heading">
-          <span className="section-index">[02]</span> Analysis
-        </h2>
-        <p className="section-note">
-          Non-dominated models on intelligence versus cost. Higher intelligence and lower cost (or
-          higher allowance) is better. Unrated models cannot be placed on the intelligence axis.
-        </p>
-      </div>
-
+    <div className="analysis-layout">
       <nav className="analysis-rail" aria-label="Analysis categories">
         {SECTIONS.map((s) => (
           <button key={s.id} type="button" className="analysis-rail-link" onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
@@ -160,8 +150,18 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
           </button>
         ))}
       </nav>
+      <section className="section" aria-labelledby="analysis-heading">
+        <div className="section-head">
+          <h2 className="section-title" id="analysis-heading">
+            <span className="section-index">[02]</span> Analysis
+          </h2>
+          <p className="section-note">
+            Non-dominated models on intelligence versus cost. Higher intelligence and lower cost (or
+            higher allowance) is better. Unrated models cannot be placed on the intelligence axis.
+          </p>
+        </div>
 
-      <div className="stack" style={{ marginTop: 16 }}>
+        <div className="stack" style={{ marginTop: 16 }}>
         <FilterBar
           filters={filters}
           vendors={vendors}
@@ -343,6 +343,7 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
         </div>
       </div>
     </section>
+  </div>
   )
 }
 
