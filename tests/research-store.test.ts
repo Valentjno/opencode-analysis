@@ -32,11 +32,19 @@ const entry = {
 }
 
 describe('gap selection and research store', () => {
-  it('skips rated and no-identity models', () => {
-    const rated = makeModel('rated', { ii: 60 })
+  it('researches a rated model for benchmarks AA does not have', () => {
+    const rated = makeModel('rated', { ii: 60, canonicalId: 'moonshotai/rated', evals: {} })
+    const gaps = selectGaps({
+      snapshot: { models: [rated] }, research: empty, overrides: empty, now: NOW,
+    })
+    expect(gaps.length).toBeGreaterThan(0)
+    expect(gaps[0].model.id).toBe('rated')
+  })
+
+  it('skips models with no vendor identity', () => {
     const noIdentity = makeModel('big-pickle', { vendor: 'opencode', canonicalId: null, ii: null })
     const gaps = selectGaps({
-      snapshot: { models: [rated, noIdentity] }, research: empty, overrides: empty, now: NOW,
+      snapshot: { models: [noIdentity] }, research: empty, overrides: empty, now: NOW,
     })
     expect(gaps.map((gap) => gap.model.id)).toEqual([])
   })
@@ -67,13 +75,21 @@ describe('gap selection and research store', () => {
     expect(feed.models[0].name).toBe('Kimi K3')
   })
 
+  it('does not mark an external value superseded when AA lacks that benchmark', () => {
+    const feed = mergeResearch({ previous: empty, overrides: empty, candidates: [entry], now: NOW })
+    const eligible = makeModel('kimi-k3', { ii: null, canonicalId: 'moonshotai/kimi-k3' })
+    const ratedSnapshot = { models: [{ ...eligible, aa: { intelligenceIndex: 50, evals: {} } }] }
+    const result = applyOverrides(feed, empty, ratedSnapshot)
+    expect(result.models[0].benchmarks[0].supersededByAA).toBe(false)
+  })
+
   it('marks entries stale after 30 days and superseded when AA has an index', () => {
     const feed = mergeResearch({ previous: empty, overrides: empty, candidates: [entry], now: NOW })
     const old = markStale(feed, Date.parse(NOW) + 31 * DAY)
     expect(old.models[0].benchmarks[0].stale).toBe(true)
 
     const eligible = makeModel('kimi-k3', { ii: null, canonicalId: 'moonshotai/kimi-k3' })
-    const ratedSnapshot = { models: [{ ...eligible, aa: { intelligenceIndex: 50 } }] }
+    const ratedSnapshot = { models: [{ ...eligible, aa: { intelligenceIndex: 50, evals: { 'GPQA Diamond': 0.9 } } }] }
     const superseded = applyOverrides(feed, empty, ratedSnapshot)
     expect(superseded.models[0].benchmarks[0].supersededByAA).toBe(true)
   })

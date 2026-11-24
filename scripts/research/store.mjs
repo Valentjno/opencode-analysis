@@ -96,10 +96,9 @@ export function applyOverrides(feed, overrides, snapshot) {
   if (snapshot?.models) {
     for (const model of next.models) {
       const source = snapshot.models.find((item) => item.id === model.id)
-      const hasIndex = typeof source?.aa?.intelligenceIndex === 'number'
       for (const entry of model.benchmarks) {
         const aaHasBenchmark = source?.aa?.evals && entry.label in source.aa.evals
-        entry.supersededByAA = hasIndex || Boolean(aaHasBenchmark)
+        entry.supersededByAA = Boolean(aaHasBenchmark)
       }
     }
   }

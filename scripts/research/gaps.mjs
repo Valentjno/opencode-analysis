@@ -4,7 +4,6 @@ import { overrideEntries } from './store.mjs'
 export function selectGaps({ snapshot, research, overrides, _now, maxModels = 5, maxPerModel = 3 }) {
   const existing = existingPairs(research, overrides)
   const models = (snapshot?.models ?? []).filter((model) => {
-    if (typeof model.aa?.intelligenceIndex === 'number') return false
     if (!sourceForVendor(model.canonicalId)) return false
     return true
   })

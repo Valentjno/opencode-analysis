@@ -147,7 +147,7 @@ describe('research orchestrator', () => {
       confidence: 'high', modelsUsed: [], status: 'verified', stale: false, supersededByAA: false,
     }
     const research = { ...emptyFeed, models: [{ id: 'kimi-k3', name: 'Kimi K3', benchmarks: [entry] }] }
-    const rated = { models: [makeModel('kimi-k3', { name: 'Kimi K3', canonicalId: 'moonshotai/kimi-k3', ii: 50 })] }
+    const rated = { models: [makeModel('kimi-k3', { name: 'Kimi K3', canonicalId: 'moonshotai/kimi-k3', ii: 50, evals: { 'GPQA Diamond': 0.9 } })] }
     const feed = await runResearch({
       snapshot: rated, research, overrides: { entries: [] }, maxModels: 1, maxPerModel: 1, availableModels, now: NOW,
       fetchImpl: async () => htmlResponse('https://example.test', ''),

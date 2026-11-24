@@ -97,8 +97,9 @@ verified value cleanly, uncomment the `schedule:` block in
 ## 5. What the job does
 
 1. Reads `latest.json`, `research.json`, and the locked manual overrides.
-2. Picks up to 15 gaps from eligible models: no numeric AA Index, a canonical
-   vendor identity, and no existing verified value for that benchmark.
+2. Picks up to 15 gaps from eligible models: a canonical vendor identity, and no
+   existing verified value for that benchmark. AA-rated models are included for
+   core benchmarks AA does not already report.
 3. Tries the raw model card first:
    `huggingface.co/{id}/raw/main/README.md`,
    `raw.githubusercontent.com/{id}/main/README.md`,

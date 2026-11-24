@@ -489,8 +489,11 @@ Rules:
 - CI research job, not local-only.
 - Keys are GitHub environment secrets; no key in repo, logs, artifacts, or site.
 - External values are separate from AA and never feed picks/Pareto.
-- Only models without an AA Index are eligible; the 3 models with no canonical
-  vendor identity are skipped.
+- Models are eligible whether or not AA has rated them, as long as AA lacks the
+  specific core benchmark and the model has a canonical vendor identity. The 3
+  models with no canonical vendor identity are skipped. External values are
+  superseded only when AA actually publishes that same benchmark (not merely
+  when the model has any AA index).
 - Core eight benchmarks; 5 models / 3 benchmarks / 15 pairs per run.
 - Vendor-specific official sources only; AA excluded as evidence.
 - DDG HTML + official pages; no paid search dependency.
@@ -582,3 +585,20 @@ guessed, and the following changes replace the earlier `auto:*` design:
 Locally verified against the real Kimi K3.1 Pro card: GPQA Diamond 94.2 and
 MMMU-Pro 84.1, each confirmed by `groq-cloud` and `kilo-gateway`. Google AI
 Studio remains disabled; Groq and Kilo are the two required providers.
+
+## 19. Revision 2026-11-24 (2) — eligibility for rated models
+
+The first CI runs produced zero published values because every unrated model
+lacked a public page for a missing core benchmark. Eligibility is widened:
+
+- A model is eligible if it has a canonical vendor identity, regardless of
+  whether AA has rated it. Gaps are generated only for core benchmarks AA does
+  not already report (`reportedByAA`), so a fully covered model produces no
+  gaps and is naturally skipped.
+- `supersededByAA` is now set per benchmark: an external value is hidden only
+  when AA actually publishes that same benchmark. A rated model's external value
+  for a genuinely missing benchmark stays visible.
+
+This lets rated models such as Kimi K3.1 Pro contribute an external value for
+GPQA Diamond (which AA lacks) while still hiding it the moment AA publishes
+GPQA Diamond for that model.
