@@ -1,7 +1,7 @@
 import { redact } from './redact.mjs'
 
 const ROUTER_URL = 'http://127.0.0.1:4000/v1/chat/completions'
-const TIMEOUT_MS = 20_000
+const TIMEOUT_MS = 60_000
 
 export function providerFromResponse(response) {
   return response?.headers?.get?.('x-free-llm-provider') ?? null

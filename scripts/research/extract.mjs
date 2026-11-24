@@ -50,7 +50,7 @@ export async function extract({ model, benchmark, page, profile, fetchImpl = fet
     `Benchmark: ${benchmark.label}`,
     `Page URL: ${page.sourceUrl ?? ''}`,
     '<page_text>',
-    page.text.slice(0, 30_000),
+    page.text.slice(0, 12_000),
     '</page_text>',
   ].join('\n')
 
