@@ -32,26 +32,26 @@ const entry = {
 }
 
 describe('gap selection and research store', () => {
-  it('researches a rated model for benchmarks AA does not have', () => {
+  it('researches a rated model for benchmarks AA does not have', async () => {
     const rated = makeModel('rated', { ii: 60, canonicalId: 'moonshotai/rated', evals: {} })
-    const gaps = selectGaps({
+    const gaps = await selectGaps({
       snapshot: { models: [rated] }, research: empty, overrides: empty, now: NOW,
     })
     expect(gaps.length).toBeGreaterThan(0)
     expect(gaps[0].model.id).toBe('rated')
   })
 
-  it('skips models with no vendor identity', () => {
+  it('skips models with no vendor identity', async () => {
     const noIdentity = makeModel('big-pickle', { vendor: 'opencode', canonicalId: null, ii: null })
-    const gaps = selectGaps({
+    const gaps = await selectGaps({
       snapshot: { models: [noIdentity] }, research: empty, overrides: empty, now: NOW,
     })
     expect(gaps.map((gap) => gap.model.id)).toEqual([])
   })
 
-  it('caps pairs and skips benchmarks already in AA', () => {
+  it('caps pairs and skips benchmarks already in AA', async () => {
     const model = makeModel('m', { ii: null, canonicalId: 'moonshotai/m', evals: { 'GPQA Diamond': 0.9 } })
-    const gaps = selectGaps({
+    const gaps = await selectGaps({
       snapshot: { models: [model] }, research: empty, overrides: empty, now: NOW,
     })
     expect(gaps.some((gap) => gap.benchmark.id === 'gpqa-diamond')).toBe(false)

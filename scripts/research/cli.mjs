@@ -35,7 +35,7 @@ export async function runResearch({
   now = new Date().toISOString(),
 } = {}) {
   const prepared = applyOverrides(markStale(research, now), overrides, snapshot)
-  const gaps = selectGaps({ snapshot, research: prepared, overrides, now, maxModels, maxPerModel })
+  const gaps = await selectGaps({ snapshot, research: prepared, overrides, now, maxModels, maxPerModel, fetchImpl })
   const accepted = []
   const reasons = {}
 

@@ -1,7 +1,10 @@
 import { coreBenchmarks, sourceForVendor } from './registry.mjs'
 import { overrideEntries } from './store.mjs'
+import { officialUrlAllowed, search } from './search.mjs'
+import { fetchPage } from './fetch-page.mjs'
+import { mentionsBenchmark } from './context.mjs'
 
-export function selectGaps({ snapshot, research, overrides, _now, maxModels = 5, maxPerModel = 3 }) {
+export async function selectGaps({ snapshot, research, overrides, _now, maxModels = 5, maxPerModel = 3, fetchImpl = null }) {
   const existing = existingPairs(research, overrides)
   const models = (snapshot?.models ?? []).filter((model) => {
     if (!sourceForVendor(model.canonicalId)) return false
@@ -27,10 +30,35 @@ export function selectGaps({ snapshot, research, overrides, _now, maxModels = 5,
       modelGaps.push({
         model,
         benchmark,
-        reason: 'No AA Intelligence Index and no verified external value for this benchmark.',
+        reason: 'No AA value for this benchmark and no verified external value.',
       })
     }
-    if (modelGaps.length) usedModels += 1
+    if (!modelGaps.length) continue
+
+    // Preflight: only spend LLM budget on models that have a reachable official
+    // page mentioning at least one of their missing benchmarks. Without this,
+    // fictional or pageless models consume every slot and the useful ones are
+    // never reached.
+    if (fetchImpl) {
+      let reachable = false
+      for (const gap of modelGaps) {
+        const results = await search({ model: gap.model, benchmark: gap.benchmark, fetchImpl })
+        for (const result of results.slice(0, 6)) {
+          const page = await fetchPage(result.url, {
+            fetchImpl,
+            allowedUrl: (next) => officialUrlAllowed(next, gap.model.canonicalId),
+          })
+          if (page && mentionsBenchmark(page.text, gap.benchmark)) {
+            reachable = true
+            break
+          }
+        }
+        if (reachable) break
+      }
+      if (!reachable) continue
+    }
+
+    usedModels += 1
     gaps.push(...modelGaps)
   }
   return gaps
