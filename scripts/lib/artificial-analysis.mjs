@@ -113,7 +113,7 @@ export function extractAAModel(html, slug) {
   for (const model of flat) {
     if (!model || typeof model !== 'object') continue;
     const modelSlug = model.slug ?? model.release?.slug;
-    if (modelSlug !== slug) continue;
+    if (model.slug !== slug && model.release?.slug !== slug) continue;
     const key = model.id ?? `${modelSlug}:${model.suffix ?? ''}`;
     if (seen.has(key)) continue;
     seen.add(key);
@@ -132,6 +132,19 @@ export function extractAAModel(html, slug) {
   };
 
   const model = matches.sort((a, b) => score(b) - score(a))[0];
+
+  const variants = matches
+    .map((entry) => ({
+      slug: entry.slug ?? null,
+      name: entry.name ?? null,
+      suffix: entry.suffix ?? null,
+      effort: entry.effort?.label ?? null,
+      intelligenceIndex:
+        typeof entry.intelligenceIndex === 'number' ? round(entry.intelligenceIndex, 2) : null,
+      deprecated: entry.deprecated === true,
+      chartDefaultSelected: entry.chartDefaultSelected === true,
+    }))
+    .sort((a, b) => (b.intelligenceIndex ?? -1) - (a.intelligenceIndex ?? -1));
 
   const capabilities = {};
   for (const [key, label] of Object.entries(CAPABILITY_LABELS)) {
@@ -165,16 +178,74 @@ export function extractAAModel(html, slug) {
     releaseDate: model.releaseDate ?? null,
     deprecated: model.deprecated === true,
     deprecatedTo: model.release?.deprecatedTo ?? null,
+    variants,
     intelligenceIndex:
       typeof model.intelligenceIndex === 'number' ? round(model.intelligenceIndex, 2) : null,
     capabilities,
     evals,
     omniscience: typeof model.omniscience === 'number' ? round(model.omniscience, 2) : null,
     contextWindow: model.contextWindowTokens ?? null,
-    outputSpeed: typeof model.outputSpeed === 'number' ? round(model.outputSpeed, 1) : null,
+    outputSpeed:
+      typeof model.headline?.outputSpeed === 'number'
+        ? round(model.headline.outputSpeed, 1)
+        : typeof model.outputSpeed === 'number'
+          ? round(model.outputSpeed, 1)
+          : null,
     timeToFirstToken:
-      typeof model.timeToFirstToken === 'number' ? round(model.timeToFirstToken, 2) : null,
+      typeof model.headline?.timeToFirstToken === 'number'
+        ? round(model.headline.timeToFirstToken, 2)
+        : typeof model.timeToFirstToken === 'number'
+          ? round(model.timeToFirstToken, 2)
+          : null,
+    timeToFirstAnswerToken:
+      typeof model.headline?.timeToFirstAnswerToken === 'number'
+        ? round(model.headline.timeToFirstAnswerToken, 2)
+        : typeof model.timeToFirstAnswerToken === 'number'
+          ? round(model.timeToFirstAnswerToken, 2)
+          : null,
+    timePerIntelligenceTask:
+      typeof model.intelligenceIndexTimePerTask === 'number'
+        ? round(model.intelligenceIndexTimePerTask, 2)
+        : null,
     costPerTask: costPerTask === null ? null : round(costPerTask, 4),
+    costPerIntelligenceTask:
+      typeof model.intelligenceIndexCostPerTask?.cost?.total === 'number'
+        ? round(model.intelligenceIndexCostPerTask.cost.total, 4)
+        : null,
+    intelligenceIndexCost: model.intelligenceIndexCost ?? null,
+    intelligenceIndexOutputTokensPerTask: model.intelligenceIndexOutputTokensPerTask ?? null,
+    canonicalTokens: model.canonicalIntelligenceIndexTokenCount ?? null,
+    openness: model.openness ?? null,
+    opennessIndex:
+      typeof model.openness?.opennessIndex === 'number'
+        ? round(model.openness.opennessIndex, 2)
+        : null,
+    parameters: typeof model.parameters === 'number' ? model.parameters : null,
+    activeParameters:
+      typeof model.inferenceParametersActiveBillions === 'number'
+        ? model.inferenceParametersActiveBillions
+        : null,
+    licenseName: model.licenseName ?? null,
+    licenseUrl: model.licenseUrl ?? null,
+    weightsSourceUrl: model.modelWeightsSourceUrl ?? null,
+    openSourceCategorization: model.openSourceCategorization ?? null,
+    performanceDataSource: model.performanceDataSource ?? null,
+    priceDataSource: model.priceDataSource ?? null,
+    priceBlended: {
+      blended0To3To1:
+        typeof model.price1mBlended0To3To1 === 'number' ? model.price1mBlended0To3To1 : null,
+      blended7To2To1:
+        typeof model.price1mBlended7To2To1 === 'number' ? model.price1mBlended7To2To1 : null,
+      blended0To1To1:
+        typeof model.price1mBlended0To1To1 === 'number' ? model.price1mBlended0To1To1 : null,
+      blended100To1To1:
+        typeof model.price1mBlended100To1To1 === 'number' ? model.price1mBlended100To1To1 : null,
+      blended0To100To1:
+        typeof model.price1mBlended0To100To1 === 'number' ? model.price1mBlended0To100To1 : null,
+    },
+    cacheHitPrice: typeof model.cacheHitPrice === 'number' ? model.cacheHitPrice : null,
+    cacheHitDiscountPercent:
+      typeof model.cacheHitDiscountPercent === 'number' ? model.cacheHitDiscountPercent : null,
     aaPrice:
       model.price1mInputTokens !== null && model.price1mInputTokens !== undefined
         ? {

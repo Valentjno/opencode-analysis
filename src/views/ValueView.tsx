@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import type { Snapshot } from '../lib/types'
+import type { Snapshot, ResearchFeed } from '../lib/types'
 import { priceFrontier, allowanceFrontier, unlimitedRequestModels } from '../lib/pareto'
 import { formatMonthly, formatPrice, formatScore } from '../lib/format'
 import { ValueChart, type ValueMode } from '../components/ValueChart'
@@ -7,10 +7,11 @@ import { DataTable } from '../components/DataTable'
 
 interface Props {
   snapshot: Snapshot
+  research?: ResearchFeed | null
   onOpen: (id: string) => void
 }
 
-export function ValueView({ snapshot, onOpen }: Props) {
+export function ValueView({ snapshot, research: _research, onOpen }: Props) {
   const [mode, setMode] = useState<ValueMode>('price')
   const models = snapshot.models
 

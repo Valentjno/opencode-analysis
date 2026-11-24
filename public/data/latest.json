@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-24T08:19:23.334Z",
+  "generatedAt": "2026-11-24T16:29:35.588Z",
   "plans": {
     "go": {
       "name": "Go",
@@ -20,7 +20,7 @@
     "opencodeAll": {
       "url": "https://opencode.ai/inference/v1/models",
       "ok": true,
-      "count": 82
+      "count": 83
     },
     "goPage": {
       "url": "https://opencode.ai/console/go",
@@ -32,7 +32,7 @@
       "ok": true,
       "sitemapSlugs": 545,
       "matched": 31,
-      "rated": 24
+      "rated": 26
     }
   },
   "stats": {
@@ -40,8 +40,8 @@
     "go": 31,
     "free": 12,
     "both": 4,
-    "rated": 24,
-    "unrated": 15,
+    "rated": 26,
+    "unrated": 13,
     "private": 24,
     "trains": 9,
     "limitedRegions": 3
@@ -74,7 +74,7 @@
       "title": "Best for medium tasks",
       "modelId": "muse-spark-1.3-contributor",
       "rule": "Highest Intelligence Index among models at or below the median blended price of rated models.",
-      "reason": "36.62 Intelligence Index at $0.125 blended, at or below the rated median of $0.35625.",
+      "reason": "36.62 Intelligence Index at $0.125 blended, at or below the rated median of $0.48750000000000004.",
       "caveat": "OpenCode lists this model as training on requests. Do not send sensitive data.",
       "intelligenceIndex": 36.62,
       "blendedPrice": 0.125,
@@ -218,6 +218,26 @@
         "releaseDate": "2026-09-30",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "gemini-4-argon",
+            "name": "Gemini 4 Argon (High)",
+            "suffix": "High",
+            "effort": "high",
+            "intelligenceIndex": 50.41,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "gemini-4-argon-medium",
+            "name": "Gemini 4 Argon (Medium)",
+            "suffix": "Medium",
+            "effort": "medium",
+            "intelligenceIndex": 47.6,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 50.41,
         "capabilities": {
           "Finance & Accounting": 55.92,
@@ -249,9 +269,58 @@
         },
         "omniscience": 46.1,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 82.8,
+        "timeToFirstToken": 35.93,
+        "timeToFirstAnswerToken": 35.93,
+        "timePerIntelligenceTask": 1405.62,
         "costPerTask": 9.9466,
+        "costPerIntelligenceTask": 9.9466,
+        "intelligenceIndexCost": {
+          "total": 7620.221037891417,
+          "input": 5353.636557891417,
+          "nonCacheInput": 106.247484,
+          "cacheRead": 1308.5160310583467,
+          "cacheWrite": 3938.8730428330705,
+          "output": 2266.58448,
+          "reasoning": 1592.6697,
+          "answer": 673.9147800000001
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 68300.86793708248,
+          "answer": 48067.16113075121,
+          "output": 116368.02906783369
+        },
+        "canonicalTokens": {
+          "input": 7553860287,
+          "output": 113329224,
+          "answer": 33695739,
+          "reasoning": 79633485
+        },
+        "openness": null,
+        "opennessIndex": null,
+        "parameters": null,
+        "activeParameters": null,
+        "licenseName": null,
+        "licenseUrl": null,
+        "weightsSourceUrl": null,
+        "openSourceCategorization": "proprietary",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Google"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Google"
+        },
+        "priceBlended": {
+          "blended0To3To1": 8,
+          "blended7To2To1": 2.94,
+          "blended0To1To1": 12,
+          "blended100To1To1": 0.43137254901960786,
+          "blended0To100To1": 4.158415841584159
+        },
+        "cacheHitPrice": 0.2,
+        "cacheHitDiscountPercent": 0.95,
         "aaPrice": {
           "input": 4,
           "output": 20
@@ -363,6 +432,17 @@
         "releaseDate": "2026-10-23",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "kimi-k3-1-pro",
+            "name": "Kimi K3.1 Pro",
+            "suffix": null,
+            "effort": "max",
+            "intelligenceIndex": 46.45,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          }
+        ],
         "intelligenceIndex": 46.45,
         "capabilities": {
           "Finance & Accounting": 53.34,
@@ -393,9 +473,64 @@
         },
         "omniscience": 29.87,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 33.7,
+        "timeToFirstToken": 3.63,
+        "timeToFirstAnswerToken": 140.23,
+        "timePerIntelligenceTask": 2141.89,
         "costPerTask": 3.6812,
+        "costPerIntelligenceTask": 3.6812,
+        "intelligenceIndexCost": {
+          "total": 3152.800614059493,
+          "input": 2021.012864059493,
+          "nonCacheInput": 35.794538,
+          "cacheRead": 1333.4202786600565,
+          "cacheWrite": 651.7980473994363,
+          "output": 1131.78775,
+          "reasoning": 865.23064,
+          "answer": 266.55711
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 44229.755230085815,
+          "answer": 28009.215001429086,
+          "output": 72238.9702315149
+        },
+        "canonicalTokens": {
+          "input": 7010897686,
+          "output": 113178775,
+          "answer": 26655711,
+          "reasoning": 86523064
+        },
+        "openness": {
+          "opennessIndex": 33.333333333333336,
+          "modelAvailability": 4,
+          "transparencyMethodology": 2,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 33.33,
+        "parameters": 2800,
+        "activeParameters": 104,
+        "licenseName": "Kimi K3.1-Pro Licence",
+        "licenseUrl": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro/blob/main/LICENSE",
+        "weightsSourceUrl": "https://huggingface.co/moonshotai/Kimi-K3.1-Pro",
+        "openSourceCategorization": "commercial-license",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Kimi"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Kimi"
+        },
+        "priceBlended": {
+          "blended0To3To1": 4,
+          "blended7To2To1": 1.54,
+          "blended0To1To1": 6,
+          "blended100To1To1": 0.3137254901960784,
+          "blended0To100To1": 2.0792079207920793
+        },
+        "cacheHitPrice": 0.2,
+        "cacheHitDiscountPercent": 0.9,
         "aaPrice": {
           "input": 2,
           "output": 10
@@ -512,6 +647,17 @@
         "releaseDate": "2026-11-16",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "qwen4-max",
+            "name": "Qwen4 Max",
+            "suffix": null,
+            "effort": "xhigh",
+            "intelligenceIndex": 42.89,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          }
+        ],
         "intelligenceIndex": 42.89,
         "capabilities": {
           "Finance & Accounting": 54.11,
@@ -537,9 +683,58 @@
         },
         "omniscience": 27.7,
         "contextWindow": 983616,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 71.5,
+        "timeToFirstToken": 5.41,
+        "timeToFirstAnswerToken": 89.49,
+        "timePerIntelligenceTask": 1467.64,
         "costPerTask": 3.2681,
+        "costPerIntelligenceTask": 3.2681,
+        "intelligenceIndexCost": {
+          "total": 2394.313957095027,
+          "input": 1822.1637700950273,
+          "nonCacheInput": 22.5542565,
+          "cacheRead": 685.7726712055248,
+          "cacheWrite": 1113.8368423895026,
+          "output": 572.150187,
+          "reasoning": 436.011093,
+          "answer": 136.139094
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 68914.39256805157,
+          "answer": 36025.384219101674,
+          "output": 104939.77678715324
+        },
+        "canonicalTokens": {
+          "input": 9901229682,
+          "output": 127144486,
+          "answer": 30253132,
+          "reasoning": 96891354
+        },
+        "openness": null,
+        "opennessIndex": null,
+        "parameters": null,
+        "activeParameters": null,
+        "licenseName": null,
+        "licenseUrl": null,
+        "weightsSourceUrl": null,
+        "openSourceCategorization": "proprietary",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Alibaba"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Alibaba"
+        },
+        "priceBlended": {
+          "blended0To3To1": 2.25,
+          "blended7To2To1": 0.8025,
+          "blended0To1To1": 3,
+          "blended100To1To1": 0.1323529411764706,
+          "blended0To100To1": 1.5297029702970297
+        },
+        "cacheHitPrice": 0.075,
+        "cacheHitDiscountPercent": 0.95,
         "aaPrice": {
           "input": 1.5,
           "output": 4.5
@@ -641,6 +836,26 @@
         "releaseDate": "2026-09-02",
         "deprecated": true,
         "deprecatedTo": "muse-wonder",
+        "variants": [
+          {
+            "slug": "muse-spark-1-3",
+            "name": "Muse Spark 1.3 (Max)",
+            "suffix": "Max",
+            "effort": "max",
+            "intelligenceIndex": 36.62,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "muse-spark-1-3-xhigh",
+            "name": "Muse Spark 1.3 (Xhigh)",
+            "suffix": "Xhigh",
+            "effort": "xhigh",
+            "intelligenceIndex": null,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 36.62,
         "capabilities": {
           "Finance & Accounting": 48.83,
@@ -673,9 +888,58 @@
         },
         "omniscience": 22.4,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 107.9,
+        "timeToFirstToken": 24.93,
+        "timeToFirstAnswerToken": 24.93,
+        "timePerIntelligenceTask": 844.48,
         "costPerTask": 2.3858,
+        "costPerIntelligenceTask": 2.3858,
+        "intelligenceIndexCost": {
+          "total": 1905.8419430797996,
+          "input": 1383.3300323297997,
+          "nonCacheInput": 16.8026575,
+          "cacheRead": 1142.5739528073,
+          "cacheWrite": 223.95342202249975,
+          "output": 522.51191075,
+          "reasoning": 395.28997549999997,
+          "answer": 127.22193525
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 54517.012909499106,
+          "answer": 36596.820214055275,
+          "output": 91113.83312355439
+        },
+        "canonicalTokens": {
+          "input": 7809764549,
+          "output": 122943979,
+          "answer": 29934573,
+          "reasoning": 93009406
+        },
+        "openness": null,
+        "opennessIndex": null,
+        "parameters": null,
+        "activeParameters": null,
+        "licenseName": null,
+        "licenseUrl": null,
+        "weightsSourceUrl": null,
+        "openSourceCategorization": "proprietary",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Meta"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Meta"
+        },
+        "priceBlended": {
+          "blended0To3To1": 2,
+          "blended7To2To1": 0.78,
+          "blended0To1To1": 2.75,
+          "blended100To1To1": 0.20098039215686275,
+          "blended0To100To1": 1.2797029702970297
+        },
+        "cacheHitPrice": 0.15,
+        "cacheHitDiscountPercent": 0.88,
         "aaPrice": {
           "input": 1.25,
           "output": 4.25
@@ -775,6 +1039,53 @@
         "releaseDate": "2026-10-07",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "claude-haiku-5-5",
+            "name": "Claude Haiku 5.5 (Max)",
+            "suffix": "Max",
+            "effort": "max",
+            "intelligenceIndex": 36.48,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          },
+          {
+            "slug": "claude-haiku-5-5-xhigh",
+            "name": "Claude Haiku 5.5 (Xhigh)",
+            "suffix": "Xhigh",
+            "effort": "xhigh",
+            "intelligenceIndex": 34.64,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "claude-haiku-5-5-high",
+            "name": "Claude Haiku 5.5 (High)",
+            "suffix": "High",
+            "effort": "high",
+            "intelligenceIndex": 29.87,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "claude-haiku-5-5-medium",
+            "name": "Claude Haiku 5.5 (Medium)",
+            "suffix": "Medium",
+            "effort": "medium",
+            "intelligenceIndex": 24.6,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "claude-haiku-5-5-low",
+            "name": "Claude Haiku 5.5 (Low)",
+            "suffix": "Low",
+            "effort": "low",
+            "intelligenceIndex": 18.62,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 36.48,
         "capabilities": {
           "Finance & Accounting": 43.56,
@@ -806,9 +1117,58 @@
         },
         "omniscience": 12.3,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 258.7,
+        "timeToFirstToken": 168.76,
+        "timeToFirstAnswerToken": 168.76,
+        "timePerIntelligenceTask": 873.53,
         "costPerTask": 0.411,
+        "costPerIntelligenceTask": 0.411,
+        "intelligenceIndexCost": {
+          "total": 339.47280224093265,
+          "input": 190.61184474093267,
+          "nonCacheInput": 1.871194,
+          "cacheRead": 142.09465529426672,
+          "cacheWrite": 46.64599544666596,
+          "output": 148.8609575,
+          "reasoning": 128.483789,
+          "answer": 20.3771685
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 172814.47722152487,
+          "answer": 53151.48249444444,
+          "output": 225965.9597159693
+        },
+        "canonicalTokens": {
+          "input": 14601345433,
+          "output": 297721915,
+          "answer": 40754337,
+          "reasoning": 256967578
+        },
+        "openness": null,
+        "opennessIndex": null,
+        "parameters": null,
+        "activeParameters": null,
+        "licenseName": null,
+        "licenseUrl": null,
+        "weightsSourceUrl": null,
+        "openSourceCategorization": "proprietary",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Anthropic"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Anthropic"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.2,
+          "blended7To2To1": 0.077,
+          "blended0To1To1": 0.3,
+          "blended100To1To1": 0.01568627450980392,
+          "blended0To100To1": 0.10396039603960396
+        },
+        "cacheHitPrice": 0.01,
+        "cacheHitDiscountPercent": 0.9,
         "aaPrice": {
           "input": 0.1,
           "output": 0.5
@@ -904,6 +1264,35 @@
         "releaseDate": "2026-09-21",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "grok-4-7",
+            "name": "Grok 4.7 (Xhigh)",
+            "suffix": "Xhigh",
+            "effort": "xhigh",
+            "intelligenceIndex": 35.49,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          },
+          {
+            "slug": "grok-4-7-high",
+            "name": "Grok 4.7 (High)",
+            "suffix": "High",
+            "effort": "high",
+            "intelligenceIndex": 35.21,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "grok-4-7-low",
+            "name": "Grok 4.7 (Low)",
+            "suffix": "Low",
+            "effort": "low",
+            "intelligenceIndex": 31.13,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 35.49,
         "capabilities": {
           "Finance & Accounting": 51.69,
@@ -936,9 +1325,58 @@
         },
         "omniscience": 31.23,
         "contextWindow": 500000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 75.8,
+        "timeToFirstToken": 55.53,
+        "timeToFirstAnswerToken": 55.53,
+        "timePerIntelligenceTask": 1378.67,
         "costPerTask": 7.7715,
+        "costPerIntelligenceTask": 7.7715,
+        "intelligenceIndexCost": {
+          "total": 5905.498377650051,
+          "input": 5017.497891650051,
+          "nonCacheInput": 30.632096,
+          "cacheRead": 3145.346036783316,
+          "cacheWrite": 1841.5197588667352,
+          "output": 888.0004859999999,
+          "reasoning": 727.4410499999999,
+          "answer": 160.559436
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 69440.50334974918,
+          "answer": 35090.43737094602,
+          "output": 104530.9407206952
+        },
+        "canonicalTokens": {
+          "input": 7226768001,
+          "output": 148000081,
+          "answer": 26759906,
+          "reasoning": 121240175
+        },
+        "openness": null,
+        "opennessIndex": null,
+        "parameters": null,
+        "activeParameters": null,
+        "licenseName": null,
+        "licenseUrl": null,
+        "weightsSourceUrl": null,
+        "openSourceCategorization": "proprietary",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "SpaceXAI"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "SpaceXAI"
+        },
+        "priceBlended": {
+          "blended0To3To1": 3,
+          "blended7To2To1": 1.35,
+          "blended0To1To1": 4,
+          "blended100To1To1": 0.5686274509803921,
+          "blended0To100To1": 2.0396039603960396
+        },
+        "cacheHitPrice": 0.5,
+        "cacheHitDiscountPercent": 0.75,
         "aaPrice": {
           "input": 2,
           "output": 6
@@ -1032,6 +1470,17 @@
         "releaseDate": "2026-11-03",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "tencent-hy4",
+            "name": "Tencent Hy4",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": 34.56,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          }
+        ],
         "intelligenceIndex": 34.56,
         "capabilities": {
           "Finance & Accounting": 38.04,
@@ -1053,9 +1502,64 @@
         },
         "omniscience": 5.4,
         "contextWindow": 1048576,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 94.1,
+        "timeToFirstToken": 2.75,
+        "timeToFirstAnswerToken": 99.3,
+        "timePerIntelligenceTask": 829.78,
         "costPerTask": 1.0311,
+        "costPerIntelligenceTask": 1.0311,
+        "intelligenceIndexCost": {
+          "total": 1021.4601930407449,
+          "input": 622.455177349745,
+          "nonCacheInput": 11.818721586,
+          "cacheRead": 236.01771570036203,
+          "cacheWrite": 374.618740063383,
+          "output": 399.0050156909999,
+          "reasoning": 346.77836088199996,
+          "answer": 52.226654808999996
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 54586.39934222193,
+          "answer": 23471.64859687687,
+          "output": 78058.04793909879
+        },
+        "canonicalTokens": {
+          "input": 6082823692,
+          "output": 159538191,
+          "answer": 20882309,
+          "reasoning": 138655882
+        },
+        "openness": {
+          "opennessIndex": 33.333333333333336,
+          "modelAvailability": 5,
+          "transparencyMethodology": 1,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 33.33,
+        "parameters": 774,
+        "activeParameters": 50.2,
+        "licenseName": "Tencent Hy License",
+        "licenseUrl": "https://huggingface.co/tencent/Hy4/blob/main/LICENSE",
+        "weightsSourceUrl": "https://huggingface.co/tencent/Hy4",
+        "openSourceCategorization": "commercial-license",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Tencent"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Tencent"
+        },
+        "priceBlended": {
+          "blended0To3To1": 1.25075,
+          "blended7To2To1": 0.44630000000000003,
+          "blended0To1To1": 1.6675,
+          "blended100To1To1": 0.07387254901960784,
+          "blended0To100To1": 0.8505049504950495
+        },
+        "cacheHitPrice": 0.042,
+        "cacheHitDiscountPercent": 0.9496402877697842,
         "aaPrice": {
           "input": 0.834,
           "output": 2.501
@@ -1145,6 +1649,17 @@
         "releaseDate": "2026-11-03",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "tencent-hy4",
+            "name": "Tencent Hy4",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": 34.56,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          }
+        ],
         "intelligenceIndex": 34.56,
         "capabilities": {
           "Finance & Accounting": 38.04,
@@ -1166,9 +1681,64 @@
         },
         "omniscience": 5.4,
         "contextWindow": 1048576,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 94.1,
+        "timeToFirstToken": 2.75,
+        "timeToFirstAnswerToken": 99.3,
+        "timePerIntelligenceTask": 829.78,
         "costPerTask": 1.0311,
+        "costPerIntelligenceTask": 1.0311,
+        "intelligenceIndexCost": {
+          "total": 1021.4601930407449,
+          "input": 622.455177349745,
+          "nonCacheInput": 11.818721586,
+          "cacheRead": 236.01771570036203,
+          "cacheWrite": 374.618740063383,
+          "output": 399.0050156909999,
+          "reasoning": 346.77836088199996,
+          "answer": 52.226654808999996
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 54586.39934222193,
+          "answer": 23471.64859687687,
+          "output": 78058.04793909879
+        },
+        "canonicalTokens": {
+          "input": 6082823692,
+          "output": 159538191,
+          "answer": 20882309,
+          "reasoning": 138655882
+        },
+        "openness": {
+          "opennessIndex": 33.333333333333336,
+          "modelAvailability": 5,
+          "transparencyMethodology": 1,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 33.33,
+        "parameters": 774,
+        "activeParameters": 50.2,
+        "licenseName": "Tencent Hy License",
+        "licenseUrl": "https://huggingface.co/tencent/Hy4/blob/main/LICENSE",
+        "weightsSourceUrl": "https://huggingface.co/tencent/Hy4",
+        "openSourceCategorization": "commercial-license",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Tencent"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Tencent"
+        },
+        "priceBlended": {
+          "blended0To3To1": 1.25075,
+          "blended7To2To1": 0.44630000000000003,
+          "blended0To1To1": 1.6675,
+          "blended100To1To1": 0.07387254901960784,
+          "blended0To100To1": 0.8505049504950495
+        },
+        "cacheHitPrice": 0.042,
+        "cacheHitDiscountPercent": 0.9496402877697842,
         "aaPrice": {
           "input": 0.834,
           "output": 2.501
@@ -1276,6 +1846,17 @@
         "releaseDate": "2026-09-02",
         "deprecated": true,
         "deprecatedTo": "qwen4-max",
+        "variants": [
+          {
+            "slug": "qwen3-8-max",
+            "name": "Qwen3.8 Max (0902)",
+            "suffix": null,
+            "effort": "xhigh",
+            "intelligenceIndex": 33.65,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 33.65,
         "capabilities": {
           "Finance & Accounting": 45.02,
@@ -1312,9 +1893,58 @@
         },
         "omniscience": 10.47,
         "contextWindow": 983616,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 48.3,
+        "timeToFirstToken": 10.32,
+        "timeToFirstAnswerToken": 104.06,
+        "timePerIntelligenceTask": 3535.44,
         "costPerTask": 10.0239,
+        "costPerIntelligenceTask": 10.0239,
+        "intelligenceIndexCost": {
+          "total": 6353.833130807854,
+          "input": 5451.093824807854,
+          "nonCacheInput": 28.424408,
+          "cacheRead": 3378.403015598878,
+          "cacheWrite": 2044.266401208976,
+          "output": 902.7393059999999,
+          "reasoning": 669.990408,
+          "answer": 232.748898
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 119697.63000886558,
+          "answer": 51096.33150528048,
+          "output": 170793.96151414607
+        },
+        "canonicalTokens": {
+          "input": 14549957467,
+          "output": 150456551,
+          "answer": 38791483,
+          "reasoning": 111665068
+        },
+        "openness": null,
+        "opennessIndex": null,
+        "parameters": null,
+        "activeParameters": null,
+        "licenseName": null,
+        "licenseUrl": null,
+        "weightsSourceUrl": null,
+        "openSourceCategorization": "proprietary",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Alibaba"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Alibaba"
+        },
+        "priceBlended": {
+          "blended0To3To1": 3,
+          "blended7To2To1": 1.175,
+          "blended0To1To1": 4,
+          "blended100To1To1": 0.3235294117647059,
+          "blended0To100To1": 2.0396039603960396
+        },
+        "cacheHitPrice": 0.25,
+        "cacheHitDiscountPercent": 0.875,
         "aaPrice": {
           "input": 2,
           "output": 6
@@ -1410,6 +2040,35 @@
         "releaseDate": "2026-10-17",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "deepseek-v4-1-flash-1017",
+            "name": "DeepSeek V4.1 Flash 1017 (Max)",
+            "suffix": "Max",
+            "effort": "max",
+            "intelligenceIndex": 32.59,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          },
+          {
+            "slug": "deepseek-v4-1-flash-1017-high",
+            "name": "DeepSeek V4.1 Flash 1017 (High)",
+            "suffix": "High",
+            "effort": "high",
+            "intelligenceIndex": 28.64,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "deepseek-v4-1-flash-1017-non-reasoning",
+            "name": "DeepSeek V4.1 Flash 1017 (Non-reasoning)",
+            "suffix": "Non-reasoning",
+            "effort": null,
+            "intelligenceIndex": 18.51,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 32.59,
         "capabilities": {
           "Finance & Accounting": 42.16,
@@ -1439,9 +2098,64 @@
         },
         "omniscience": 0.9,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 167.2,
+        "timeToFirstToken": 1.27,
+        "timeToFirstAnswerToken": 39.34,
+        "timePerIntelligenceTask": 830.94,
         "costPerTask": 0.6021,
+        "costPerIntelligenceTask": 0.6021,
+        "intelligenceIndexCost": {
+          "total": 520.6317440908241,
+          "input": 311.4045944908241,
+          "nonCacheInput": 2.5188315,
+          "cacheRead": 114.76751892875869,
+          "cacheWrite": 194.11824406206537,
+          "output": 209.22714960000002,
+          "reasoning": 161.36075160000001,
+          "answer": 47.866398000000004
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 90615.04503806597,
+          "answer": 48346.660848396656,
+          "output": 138961.70588646265
+        },
+        "canonicalTokens": {
+          "input": 19783376740,
+          "output": 174355958,
+          "answer": 39888665,
+          "reasoning": 134467293
+        },
+        "openness": {
+          "opennessIndex": 44.44444444444444,
+          "modelAvailability": 6,
+          "transparencyMethodology": 2,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 44.44,
+        "parameters": 552,
+        "activeParameters": 16,
+        "licenseName": "MIT",
+        "licenseUrl": "https://opensource.org/license/mit",
+        "weightsSourceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+        "openSourceCategorization": "permissive",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "DeepSeek"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "DeepSeek"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.5249999999999999,
+          "blended7To2To1": 0.1842,
+          "blended0To1To1": 0.75,
+          "blended100To1To1": 0.020588235294117643,
+          "blended0To100To1": 0.3089108910891089
+        },
+        "cacheHitPrice": 0.006,
+        "cacheHitDiscountPercent": 0.98,
         "aaPrice": {
           "input": 0.3,
           "output": 1.2
@@ -1525,6 +2239,35 @@
         "releaseDate": "2026-10-17",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "deepseek-v4-1-flash-1017",
+            "name": "DeepSeek V4.1 Flash 1017 (Max)",
+            "suffix": "Max",
+            "effort": "max",
+            "intelligenceIndex": 32.59,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          },
+          {
+            "slug": "deepseek-v4-1-flash-1017-high",
+            "name": "DeepSeek V4.1 Flash 1017 (High)",
+            "suffix": "High",
+            "effort": "high",
+            "intelligenceIndex": 28.64,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "deepseek-v4-1-flash-1017-non-reasoning",
+            "name": "DeepSeek V4.1 Flash 1017 (Non-reasoning)",
+            "suffix": "Non-reasoning",
+            "effort": null,
+            "intelligenceIndex": 18.51,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 32.59,
         "capabilities": {
           "Finance & Accounting": 42.16,
@@ -1554,9 +2297,64 @@
         },
         "omniscience": 0.9,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 167.2,
+        "timeToFirstToken": 1.27,
+        "timeToFirstAnswerToken": 39.34,
+        "timePerIntelligenceTask": 830.94,
         "costPerTask": 0.6021,
+        "costPerIntelligenceTask": 0.6021,
+        "intelligenceIndexCost": {
+          "total": 520.6317440908241,
+          "input": 311.4045944908241,
+          "nonCacheInput": 2.5188315,
+          "cacheRead": 114.76751892875869,
+          "cacheWrite": 194.11824406206537,
+          "output": 209.22714960000002,
+          "reasoning": 161.36075160000001,
+          "answer": 47.866398000000004
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 90615.04503806597,
+          "answer": 48346.660848396656,
+          "output": 138961.70588646265
+        },
+        "canonicalTokens": {
+          "input": 19783376740,
+          "output": 174355958,
+          "answer": 39888665,
+          "reasoning": 134467293
+        },
+        "openness": {
+          "opennessIndex": 44.44444444444444,
+          "modelAvailability": 6,
+          "transparencyMethodology": 2,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 44.44,
+        "parameters": 552,
+        "activeParameters": 16,
+        "licenseName": "MIT",
+        "licenseUrl": "https://opensource.org/license/mit",
+        "weightsSourceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+        "openSourceCategorization": "permissive",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "DeepSeek"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "DeepSeek"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.5249999999999999,
+          "blended7To2To1": 0.1842,
+          "blended0To1To1": 0.75,
+          "blended100To1To1": 0.020588235294117643,
+          "blended0To100To1": 0.3089108910891089
+        },
+        "cacheHitPrice": 0.006,
+        "cacheHitDiscountPercent": 0.98,
         "aaPrice": {
           "input": 0.3,
           "output": 1.2
@@ -1648,6 +2446,26 @@
         "releaseDate": "2026-08-18",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "glm-5-3",
+            "name": "GLM-5.3 (Max)",
+            "suffix": "Max",
+            "effort": "max",
+            "intelligenceIndex": 31.65,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          },
+          {
+            "slug": "glm-5-3-low",
+            "name": "GLM-5.3 (Low)",
+            "suffix": "Low",
+            "effort": "low",
+            "intelligenceIndex": 23.11,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 31.65,
         "capabilities": {
           "Finance & Accounting": 42.13,
@@ -1683,9 +2501,64 @@
         },
         "omniscience": 6.03,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 71.3,
+        "timeToFirstToken": 4.53,
+        "timeToFirstAnswerToken": 86.28,
+        "timePerIntelligenceTask": 1669.04,
         "costPerTask": 5.0093,
+        "costPerIntelligenceTask": 5.0093,
+        "intelligenceIndexCost": {
+          "total": 3495.618189005314,
+          "input": 2901.3229974053143,
+          "nonCacheInput": 5.7358168,
+          "cacheRead": 2625.9201981531737,
+          "cacheWrite": 269.6669824521404,
+          "output": 594.2951916,
+          "reasoning": 473.6454844,
+          "answer": 120.64970720000001
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 84775.66753992185,
+          "answer": 34210.83730707367,
+          "output": 118986.50484699552
+        },
+        "canonicalTokens": {
+          "input": 10296409355,
+          "output": 135067089,
+          "answer": 27420388,
+          "reasoning": 107646701
+        },
+        "openness": {
+          "opennessIndex": 33.333333333333336,
+          "modelAvailability": 5,
+          "transparencyMethodology": 1,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 33.33,
+        "parameters": 753,
+        "activeParameters": 40,
+        "licenseName": "GLM-5.3 License",
+        "licenseUrl": "https://huggingface.co/zai-org/GLM-5.3/blob/main/LICENSE",
+        "weightsSourceUrl": "https://huggingface.co/zai-org/GLM-5.3",
+        "openSourceCategorization": "commercial-license",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Z AI"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Z AI"
+        },
+        "priceBlended": {
+          "blended0To3To1": 2.15,
+          "blended7To2To1": 0.9019999999999999,
+          "blended0To1To1": 2.9000000000000004,
+          "blended100To1To1": 0.3117647058823529,
+          "blended0To100To1": 1.4297029702970299
+        },
+        "cacheHitPrice": 0.26,
+        "cacheHitDiscountPercent": 0.8142857142857143,
         "aaPrice": {
           "input": 1.4,
           "output": 4.4
@@ -1785,6 +2658,17 @@
         "releaseDate": "2026-09-21",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "mimo-v2-6-pro",
+            "name": "MiMo-V2.6-Pro",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": 29.89,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          }
+        ],
         "intelligenceIndex": 29.89,
         "capabilities": {
           "Finance & Accounting": 38.93,
@@ -1814,9 +2698,64 @@
         },
         "omniscience": -4.47,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 40.9,
+        "timeToFirstToken": 9.88,
+        "timeToFirstAnswerToken": 38.74,
+        "timePerIntelligenceTask": 2960.95,
         "costPerTask": 0.2572,
+        "costPerIntelligenceTask": 0.2572,
+        "intelligenceIndexCost": {
+          "total": 220.73459941339127,
+          "input": 107.13514372339127,
+          "nonCacheInput": 1.97981898,
+          "cacheRead": 26.234866044589225,
+          "cacheWrite": 78.92045869880204,
+          "output": 113.59945569,
+          "reasoning": 88.59396702,
+          "answer": 25.005488670000002
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 86273.34533205075,
+          "answer": 34799.784499147805,
+          "output": 121073.12983119856
+        },
+        "canonicalTokens": {
+          "input": 7473440440,
+          "output": 130574087,
+          "answer": 28741941,
+          "reasoning": 101832146
+        },
+        "openness": {
+          "opennessIndex": 52.77777777777778,
+          "modelAvailability": 6,
+          "transparencyMethodology": 3,
+          "transparencyPostTrainingData": 0.5,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 52.78,
+        "parameters": 1020,
+        "activeParameters": 42,
+        "licenseName": "MIT",
+        "licenseUrl": "https://huggingface.co/datasets/choosealicense/licenses/blob/main/markdown/mit.md",
+        "weightsSourceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL",
+        "openSourceCategorization": "permissive",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Xiaomi"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Xiaomi"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.54375,
+          "blended7To2To1": 0.17652,
+          "blended0To1To1": 0.6525,
+          "blended100To1To1": 0.016323529411764705,
+          "blended0To100To1": 0.4393069306930693
+        },
+        "cacheHitPrice": 0.0036,
+        "cacheHitDiscountPercent": 0.9917241379310345,
         "aaPrice": {
           "input": 0.435,
           "output": 0.87
@@ -1917,6 +2856,17 @@
         "releaseDate": "2026-10-19",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "minimax-m3-1-flash",
+            "name": "MiniMax-M3.1-Flash",
+            "suffix": null,
+            "effort": "max",
+            "intelligenceIndex": 29.06,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 29.06,
         "capabilities": {
           "Finance & Accounting": 39.14,
@@ -1946,12 +2896,267 @@
         },
         "omniscience": -6.4,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 131.3,
+        "timeToFirstToken": 1.53,
+        "timeToFirstAnswerToken": 43.46,
+        "timePerIntelligenceTask": 1052.63,
         "costPerTask": 0.491,
+        "costPerIntelligenceTask": 0.491,
+        "intelligenceIndexCost": {
+          "total": 358.06061967812354,
+          "input": 261.28206387812355,
+          "nonCacheInput": 2.63638875,
+          "cacheRead": 181.4491281524307,
+          "cacheWrite": 77.19654697569284,
+          "output": 96.77855579999999,
+          "reasoning": 79.26372239999999,
+          "answer": 17.5148334
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 102940.58190337746,
+          "answer": 35235.7763938493,
+          "output": 138176.35829722678
+        },
+        "canonicalTokens": {
+          "input": 12628828115,
+          "output": 161297593,
+          "answer": 29191389,
+          "reasoning": 132106204
+        },
+        "openness": {
+          "opennessIndex": 27.77777777777778,
+          "modelAvailability": 4,
+          "transparencyMethodology": 1,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 27.78,
+        "parameters": 428,
+        "activeParameters": 23,
+        "licenseName": "MINIMAX COMMUNITY LICENSE",
+        "licenseUrl": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash/blob/main/LICENSE",
+        "weightsSourceUrl": "https://huggingface.co/MiniMaxAI/MiniMax-M3.1-Flash",
+        "openSourceCategorization": "commercial-license",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "MiniMax"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "MiniMax"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.26249999999999996,
+          "blended7To2To1": 0.10049999999999999,
+          "blended0To1To1": 0.375,
+          "blended100To1To1": 0.022058823529411766,
+          "blended0To100To1": 0.15445544554455445
+        },
+        "cacheHitPrice": 0.015,
+        "cacheHitDiscountPercent": 0.9,
         "aaPrice": {
           "input": 0.15,
           "output": 0.6
+        },
+        "isOpenWeights": true
+      },
+      "aaStatus": "rated"
+    },
+    {
+      "id": "step-5-preview",
+      "name": "Step 5 Preview",
+      "canonicalId": "stepfun/step-5-preview",
+      "vendor": "StepFun",
+      "description": "StepFun's next-generation flagship base model for coding and professional knowledge work, with native text, image, and video input and a 1M-token context window",
+      "family": "step",
+      "openWeights": true,
+      "releaseDate": "2026-09-16",
+      "lastUpdated": "2026-09-20",
+      "knowledge": null,
+      "access": {
+        "go": true,
+        "free": false,
+        "limitedRegions": false
+      },
+      "pricing": {
+        "input": 1,
+        "output": 2.7,
+        "cacheRead": 0.1,
+        "blended": 1.425
+      },
+      "context": 1000000,
+      "maxOutput": 65536,
+      "modalities": {
+        "input": [
+          "text",
+          "image/jpeg",
+          "image/png",
+          "image/gif",
+          "image/webp",
+          "video/mp4",
+          "video/quicktime",
+          "video/x-matroska"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "capabilities": {
+        "tools": {
+          "supported": true
+        },
+        "reasoning": {
+          "supported": true,
+          "effort": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "structured_output": true,
+        "temperature": true,
+        "top_p": true,
+        "top_k": true,
+        "system_updates": false,
+        "effort_updates": false
+      },
+      "go": {
+        "monthly": {
+          "go": 15,
+          "goPlus": 60,
+          "goTeams": 20
+        },
+        "requests5h": {
+          "go": 426,
+          "goPlus": 1700,
+          "goUnlimited": false,
+          "goPlusUnlimited": false
+        },
+        "featured": false
+      },
+      "privacy": {
+        "training": false,
+        "zdr": true,
+        "retentionDays": 0,
+        "limitedRegions": false,
+        "source": "OpenCode Go model API",
+        "note": "OpenCode lists this model as zero-retention and not training on requests."
+      },
+      "aaSlug": "step-5-preview",
+      "aa": {
+        "slug": "step-5-preview",
+        "url": "https://artificialanalysis.ai/models/step-5-preview",
+        "variant": "Step 5 Preview",
+        "suffix": null,
+        "effort": null,
+        "releaseDate": "2026-09-18",
+        "deprecated": false,
+        "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "step-5",
+            "name": "Step 5 Preview",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": 28.53,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
+        "intelligenceIndex": 28.53,
+        "capabilities": {
+          "Finance & Accounting": 40.53,
+          "Strategy & Ops": 44.24,
+          "Legal": 38.62,
+          "Healthcare & Medical": 39.91,
+          "Engineering": 36.97,
+          "Economics": 38.56
+        },
+        "evals": {
+          "Humanity's Last Exam": 0.4648,
+          "HLE Diamond": 0.243,
+          "SciCode": 0.5891,
+          "Terminal-Bench 4.0": 0.3333,
+          "Terminal-Bench Science": 0.0238,
+          "FrontierCode": 0.3843,
+          "FrontierCode 2.0": 0.12,
+          "CritPt": 0.2086,
+          "CritPt Agentic Hard": 0.325,
+          "MMMU-Pro": 0.7636,
+          "AutomationBench": 0.5096,
+          "Enterprise Ops Gym": 0.4718,
+          "ITBench SRE": 0.5556,
+          "GDPval": 1590.99,
+          "GDP PDF": 0.148,
+          "Omniscience": 16.4333,
+          "Long Context Reasoning": 0.8833,
+          "Analyst Agent": 0.35,
+          "Apex Agents": 0.3798,
+          "MKA": 0.2758
+        },
+        "omniscience": 16.43,
+        "contextWindow": 1000000,
+        "outputSpeed": 76.8,
+        "timeToFirstToken": 22.87,
+        "timeToFirstAnswerToken": 56.3,
+        "timePerIntelligenceTask": 1478.18,
+        "costPerTask": 2.3453,
+        "costPerIntelligenceTask": 2.3453,
+        "intelligenceIndexCost": {
+          "total": 1643.7486034067194,
+          "input": 1296.2357452067195,
+          "nonCacheInput": 9.452014,
+          "cacheRead": 944.5883048659203,
+          "cacheWrite": 342.1954263407992,
+          "output": 347.5128582,
+          "reasoning": 273.6461016,
+          "answer": 73.8667566
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 79907.37651851749,
+          "answer": 33565.50120326059,
+          "output": 113472.87772177807
+        },
+        "canonicalTokens": {
+          "input": 9797530489,
+          "output": 128708466,
+          "answer": 27358058,
+          "reasoning": 101350408
+        },
+        "openness": {
+          "opennessIndex": 33.333333333333336,
+          "modelAvailability": 4,
+          "transparencyMethodology": 2,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 33.33,
+        "parameters": 600,
+        "activeParameters": 27,
+        "licenseName": "StepFun Model License 1.0",
+        "licenseUrl": "https://huggingface.co/stepfun-ai/Step-5-Preview/blob/main/LICENSE.txt",
+        "weightsSourceUrl": "https://huggingface.co/stepfun-ai/Step-5-Preview",
+        "openSourceCategorization": "commercial-license",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "StepFun"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "StepFun"
+        },
+        "priceBlended": {
+          "blended0To3To1": 1.425,
+          "blended7To2To1": 0.54,
+          "blended0To1To1": 1.85,
+          "blended100To1To1": 0.13431372549019607,
+          "blended0To100To1": 1.0168316831683168
+        },
+        "cacheHitPrice": 0.1,
+        "cacheHitDiscountPercent": 0.9,
+        "aaPrice": {
+          "input": 1,
+          "output": 2.7
         },
         "isOpenWeights": true
       },
@@ -2048,6 +3253,62 @@
         "releaseDate": "2026-09-22",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "gpt-6-luna",
+            "name": "GPT-6 Luna (Max)",
+            "suffix": "Max",
+            "effort": "max",
+            "intelligenceIndex": 27.86,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          },
+          {
+            "slug": "gpt-6-luna-xhigh",
+            "name": "GPT-6 Luna (Xhigh)",
+            "suffix": "Xhigh",
+            "effort": "xhigh",
+            "intelligenceIndex": 23.45,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "gpt-6-luna-high",
+            "name": "GPT-6 Luna (High)",
+            "suffix": "High",
+            "effort": "high",
+            "intelligenceIndex": 21.43,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "gpt-6-luna-medium",
+            "name": "GPT-6 Luna (Medium)",
+            "suffix": "Medium",
+            "effort": "medium",
+            "intelligenceIndex": 18.45,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "gpt-6-luna-low",
+            "name": "GPT-6 Luna (Low)",
+            "suffix": "Low",
+            "effort": "low",
+            "intelligenceIndex": 9.67,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "gpt-6-luna-non-reasoning",
+            "name": "GPT-6 Luna (Non-reasoning)",
+            "suffix": "Non-reasoning",
+            "effort": null,
+            "intelligenceIndex": 9.44,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 27.86,
         "capabilities": {
           "Finance & Accounting": 33.87,
@@ -2080,9 +3341,58 @@
         },
         "omniscience": -8.27,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 115.1,
+        "timeToFirstToken": 56.99,
+        "timeToFirstAnswerToken": 56.99,
+        "timePerIntelligenceTask": 654.32,
         "costPerTask": 0.152,
+        "costPerIntelligenceTask": 0.152,
+        "intelligenceIndexCost": {
+          "total": 136.06082185078296,
+          "input": 81.26666385078296,
+          "nonCacheInput": 1.7141741000000001,
+          "cacheRead": 58.236369989062354,
+          "cacheWrite": 21.31611976172061,
+          "output": 54.794158,
+          "reasoning": 46.650232,
+          "answer": 8.143926
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 57562.205532606444,
+          "answer": 17733.846833032265,
+          "output": 75296.05236563871
+        },
+        "canonicalTokens": {
+          "input": 6011307698,
+          "output": 109588316,
+          "answer": 16287852,
+          "reasoning": 93300464
+        },
+        "openness": null,
+        "opennessIndex": null,
+        "parameters": null,
+        "activeParameters": null,
+        "licenseName": null,
+        "licenseUrl": null,
+        "weightsSourceUrl": null,
+        "openSourceCategorization": "proprietary",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "OpenAI"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "OpenAI"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.2,
+          "blended7To2To1": 0.077,
+          "blended0To1To1": 0.3,
+          "blended100To1To1": 0.01568627450980392,
+          "blended0To100To1": 0.10396039603960396
+        },
+        "cacheHitPrice": 0.01,
+        "cacheHitDiscountPercent": 0.9,
         "aaPrice": {
           "input": 0.1,
           "output": 0.5
@@ -2173,12 +3483,23 @@
       "aa": {
         "slug": "glm-5-3-flash",
         "url": "https://artificialanalysis.ai/models/glm-5-3-flash",
-        "variant": "GLM-5.3-Flash",
-        "suffix": null,
+        "variant": "GLM-5.3-Flash (Max)",
+        "suffix": "Max",
         "effort": "max",
         "releaseDate": "2026-08-26",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "glm-5-3-flash",
+            "name": "GLM-5.3-Flash (Max)",
+            "suffix": "Max",
+            "effort": "max",
+            "intelligenceIndex": 27.8,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 27.8,
         "capabilities": {
           "Finance & Accounting": 38.78,
@@ -2213,9 +3534,64 @@
         },
         "omniscience": 0.67,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 61.2,
+        "timeToFirstToken": 3.15,
+        "timeToFirstAnswerToken": 69.77,
+        "timePerIntelligenceTask": 2192.06,
         "costPerTask": 0.5833,
+        "costPerIntelligenceTask": 0.5833,
+        "intelligenceIndexCost": {
+          "total": 377.9398815625881,
+          "input": 315.7968670625881,
+          "nonCacheInput": 2.5534296,
+          "cacheRead": 286.383439759353,
+          "cacheWrite": 26.859997703235088,
+          "output": 62.14301450000001,
+          "reasoning": 49.578273,
+          "answer": 12.5647415
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 102585.2726368363,
+          "answer": 31619.652746266514,
+          "output": 134204.92538310282
+        },
+        "canonicalTokens": {
+          "input": 9742204174,
+          "output": 124286029,
+          "answer": 25129483,
+          "reasoning": 99156546
+        },
+        "openness": {
+          "opennessIndex": 44.44444444444444,
+          "modelAvailability": 6,
+          "transparencyMethodology": 2,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 44.44,
+        "parameters": 320,
+        "activeParameters": 18,
+        "licenseName": "MIT",
+        "licenseUrl": "https://opensource.org/license/mit",
+        "weightsSourceUrl": "https://huggingface.co/zai-org/GLM-5.3-Flash",
+        "openSourceCategorization": "permissive",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Z AI"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Z AI"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.2375,
+          "blended7To2To1": 0.101,
+          "blended0To1To1": 0.325,
+          "blended100To1To1": 0.035784313725490194,
+          "blended0To100To1": 0.15346534653465346
+        },
+        "cacheHitPrice": 0.03,
+        "cacheHitDiscountPercent": 0.8,
         "aaPrice": {
           "input": 0.15,
           "output": 0.5
@@ -2315,6 +3691,17 @@
         "releaseDate": "2026-09-21",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "mimo-v2-6-flash",
+            "name": "MiMo-V2.6-Flash",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": 26.73,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 26.73,
         "capabilities": {
           "Finance & Accounting": 36.93,
@@ -2343,9 +3730,64 @@
         },
         "omniscience": -10.83,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 39.7,
+        "timeToFirstToken": 5.08,
+        "timeToFirstAnswerToken": 53.66,
+        "timePerIntelligenceTask": 3317.61,
         "costPerTask": 0.1285,
+        "costPerIntelligenceTask": 0.1285,
+        "intelligenceIndexCost": {
+          "total": 106.14389288107121,
+          "input": 60.5988235210712,
+          "nonCacheInput": 1.9833989000000003,
+          "cacheRead": 28.341756275896508,
+          "cacheWrite": 30.273668345174695,
+          "output": 45.54506936000001,
+          "reasoning": 38.330742240000006,
+          "answer": 7.21432712
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 99712.41744227175,
+          "answer": 32093.80807835528,
+          "output": 131806.22552062702
+        },
+        "canonicalTokens": {
+          "input": 10352463436,
+          "output": 162660962,
+          "answer": 25765454,
+          "reasoning": 136895508
+        },
+        "openness": {
+          "opennessIndex": 52.77777777777778,
+          "modelAvailability": 6,
+          "transparencyMethodology": 3,
+          "transparencyPostTrainingData": 0.5,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 52.78,
+        "parameters": 309,
+        "activeParameters": 15,
+        "licenseName": "MIT",
+        "licenseUrl": "https://huggingface.co/datasets/choosealicense/licenses/blob/main/markdown/mit.md",
+        "weightsSourceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL",
+        "openSourceCategorization": "permissive",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Xiaomi"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Xiaomi"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.17500000000000002,
+          "blended7To2To1": 0.05796000000000001,
+          "blended0To1To1": 0.21000000000000002,
+          "blended100To1To1": 0.006862745098039216,
+          "blended0To100To1": 0.1413861386138614
+        },
+        "cacheHitPrice": 0.0028,
+        "cacheHitDiscountPercent": 0.98,
         "aaPrice": {
           "input": 0.14,
           "output": 0.28
@@ -2432,6 +3874,17 @@
         "releaseDate": "2026-09-21",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "mimo-v2-6-flash",
+            "name": "MiMo-V2.6-Flash",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": 26.73,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 26.73,
         "capabilities": {
           "Finance & Accounting": 36.93,
@@ -2460,9 +3913,64 @@
         },
         "omniscience": -10.83,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 39.7,
+        "timeToFirstToken": 5.08,
+        "timeToFirstAnswerToken": 53.66,
+        "timePerIntelligenceTask": 3317.61,
         "costPerTask": 0.1285,
+        "costPerIntelligenceTask": 0.1285,
+        "intelligenceIndexCost": {
+          "total": 106.14389288107121,
+          "input": 60.5988235210712,
+          "nonCacheInput": 1.9833989000000003,
+          "cacheRead": 28.341756275896508,
+          "cacheWrite": 30.273668345174695,
+          "output": 45.54506936000001,
+          "reasoning": 38.330742240000006,
+          "answer": 7.21432712
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 99712.41744227175,
+          "answer": 32093.80807835528,
+          "output": 131806.22552062702
+        },
+        "canonicalTokens": {
+          "input": 10352463436,
+          "output": 162660962,
+          "answer": 25765454,
+          "reasoning": 136895508
+        },
+        "openness": {
+          "opennessIndex": 52.77777777777778,
+          "modelAvailability": 6,
+          "transparencyMethodology": 3,
+          "transparencyPostTrainingData": 0.5,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 52.78,
+        "parameters": 309,
+        "activeParameters": 15,
+        "licenseName": "MIT",
+        "licenseUrl": "https://huggingface.co/datasets/choosealicense/licenses/blob/main/markdown/mit.md",
+        "weightsSourceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL",
+        "openSourceCategorization": "permissive",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Xiaomi"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Xiaomi"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.17500000000000002,
+          "blended7To2To1": 0.05796000000000001,
+          "blended0To1To1": 0.21000000000000002,
+          "blended100To1To1": 0.006862745098039216,
+          "blended0To100To1": 0.1413861386138614
+        },
+        "cacheHitPrice": 0.0028,
+        "cacheHitDiscountPercent": 0.98,
         "aaPrice": {
           "input": 0.14,
           "output": 0.28
@@ -2562,6 +4070,62 @@
         "releaseDate": "2026-07-09",
         "deprecated": true,
         "deprecatedTo": "gpt-6-luna",
+        "variants": [
+          {
+            "slug": "gpt-5-6-luna",
+            "name": "GPT-5.6 Luna (Max)",
+            "suffix": "Max",
+            "effort": "max",
+            "intelligenceIndex": 23.79,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "gpt-5-6-luna-xhigh",
+            "name": "GPT-5.6 Luna (Xhigh)",
+            "suffix": "Xhigh",
+            "effort": "xhigh",
+            "intelligenceIndex": null,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "gpt-5-6-luna-high",
+            "name": "GPT-5.6 Luna (High)",
+            "suffix": "High",
+            "effort": "high",
+            "intelligenceIndex": null,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "gpt-5-6-luna-medium",
+            "name": "GPT-5.6 Luna (Medium)",
+            "suffix": "Medium",
+            "effort": "medium",
+            "intelligenceIndex": null,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "gpt-5-6-luna-low",
+            "name": "GPT-5.6 Luna (Low)",
+            "suffix": "Low",
+            "effort": "low",
+            "intelligenceIndex": null,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "gpt-5-6-luna-non-reasoning",
+            "name": "GPT-5.6 Luna (Non-reasoning)",
+            "suffix": "Non-reasoning",
+            "effort": null,
+            "intelligenceIndex": null,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 23.79,
         "capabilities": {
           "Finance & Accounting": 31.83,
@@ -2595,9 +4159,58 @@
         },
         "omniscience": -17.07,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 97.7,
+        "timeToFirstToken": 44.44,
+        "timeToFirstAnswerToken": 44.44,
+        "timePerIntelligenceTask": 603.74,
         "costPerTask": 0.3313,
+        "costPerIntelligenceTask": 0.3313,
+        "intelligenceIndexCost": {
+          "total": 334.347841910495,
+          "input": 203.676438710495,
+          "nonCacheInput": 3.428702,
+          "cacheRead": 152.62324880778306,
+          "cacheWrite": 47.62448790271198,
+          "output": 130.6714032,
+          "reasoning": 107.2060884,
+          "answer": 23.465314799999998
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 37810.88974011659,
+          "answer": 21192.496825702226,
+          "output": 59003.386565818815
+        },
+        "canonicalTokens": {
+          "input": 7838803902,
+          "output": 108892836,
+          "answer": 19554429,
+          "reasoning": 89338407
+        },
+        "openness": null,
+        "opennessIndex": null,
+        "parameters": null,
+        "activeParameters": null,
+        "licenseName": null,
+        "licenseUrl": null,
+        "weightsSourceUrl": null,
+        "openSourceCategorization": "proprietary",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "OpenAI"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "OpenAI"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.45,
+          "blended7To2To1": 0.174,
+          "blended0To1To1": 0.7,
+          "blended100To1To1": 0.03333333333333334,
+          "blended0To100To1": 0.2099009900990099
+        },
+        "cacheHitPrice": 0.02,
+        "cacheHitDiscountPercent": 0.9,
         "aaPrice": {
           "input": 0.2,
           "output": 1.2
@@ -2688,6 +4301,35 @@
         "releaseDate": "2026-08-13",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "deepseek-v4-pro",
+            "name": "DeepSeek V4 Pro 0813 (Max)",
+            "suffix": "Max",
+            "effort": "max",
+            "intelligenceIndex": 23.06,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "deepseek-v4-pro-high",
+            "name": "DeepSeek V4 Pro 0813 (High)",
+            "suffix": "High",
+            "effort": "high",
+            "intelligenceIndex": 20.8,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "deepseek-v4-pro-non-reasoning",
+            "name": "DeepSeek V4 Pro 0813 (Non-reasoning)",
+            "suffix": "Non-reasoning",
+            "effort": null,
+            "intelligenceIndex": 12.57,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 23.06,
         "capabilities": {
           "Finance & Accounting": 30.39,
@@ -2718,9 +4360,64 @@
         },
         "omniscience": -6.37,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 86.3,
+        "timeToFirstToken": 2.57,
+        "timeToFirstAnswerToken": 73.21,
+        "timePerIntelligenceTask": 1144.49,
         "costPerTask": 1.7691,
+        "costPerIntelligenceTask": 1.7691,
+        "intelligenceIndexCost": {
+          "total": 1401.8837888269109,
+          "input": 928.7386407469107,
+          "nonCacheInput": 5.6805262800000005,
+          "cacheRead": 560.5532397935548,
+          "cacheWrite": 362.5048746733559,
+          "output": 473.14514808,
+          "reasoning": 347.80028184,
+          "answer": 125.34486623999999
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 60708.601006489625,
+          "answer": 38024.08981645744,
+          "output": 98732.69082294707
+        },
+        "canonicalTokens": {
+          "input": 13018774693,
+          "output": 119481098,
+          "answer": 31652744,
+          "reasoning": 87828354
+        },
+        "openness": {
+          "opennessIndex": 44.44444444444444,
+          "modelAvailability": 6,
+          "transparencyMethodology": 2,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 44.44,
+        "parameters": 1600,
+        "activeParameters": 49,
+        "licenseName": "MIT",
+        "licenseUrl": "https://opensource.org/license/mit",
+        "weightsSourceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813",
+        "openSourceCategorization": "permissive",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "DeepSeek"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "DeepSeek"
+        },
+        "priceBlended": {
+          "blended0To3To1": 1.98,
+          "blended7To2To1": 0.6908,
+          "blended0To1To1": 2.64,
+          "blended100To1To1": 0.09490196078431372,
+          "blended0To100To1": 1.3461386138613862
+        },
+        "cacheHitPrice": 0.044,
+        "cacheHitDiscountPercent": 0.9666666666666667,
         "aaPrice": {
           "input": 1.32,
           "output": 3.96
@@ -2815,6 +4512,17 @@
         "releaseDate": "2026-06-01",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "minimax-m3",
+            "name": "MiniMax-M3",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": 18.88,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 18.88,
         "capabilities": {
           "Finance & Accounting": 25.09,
@@ -2850,9 +4558,64 @@
         },
         "omniscience": -5.5,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 108.3,
+        "timeToFirstToken": 1.85,
+        "timeToFirstAnswerToken": 58.79,
+        "timePerIntelligenceTask": 844.42,
         "costPerTask": 1.2851,
+        "costPerIntelligenceTask": 1.2851,
+        "intelligenceIndexCost": {
+          "total": 878.026165071006,
+          "input": 752.8906042710059,
+          "nonCacheInput": 4.8615642,
+          "cacheRead": 595.7296647959988,
+          "cacheWrite": 152.2993752750072,
+          "output": 125.1355608,
+          "reasoning": 85.56160919999999,
+          "answer": 39.5739516
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 46071.024222617634,
+          "answer": 45380.561125448454,
+          "output": 91451.58534806609
+        },
+        "canonicalTokens": {
+          "input": 10351164628,
+          "output": 104279634,
+          "answer": 32978293,
+          "reasoning": 71301341
+        },
+        "openness": {
+          "opennessIndex": 33.333333333333336,
+          "modelAvailability": 4,
+          "transparencyMethodology": 2,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 33.33,
+        "parameters": 428,
+        "activeParameters": 23,
+        "licenseName": "MINIMAX COMMUNITY LICENSE",
+        "licenseUrl": "https://huggingface.co/MiniMaxAI/MiniMax-M3/blob/main/LICENSE",
+        "weightsSourceUrl": "https://huggingface.co/MiniMaxAI/MiniMax-M3",
+        "openSourceCategorization": "commercial-license",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "MiniMax"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "MiniMax"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.5249999999999999,
+          "blended7To2To1": 0.22199999999999998,
+          "blended0To1To1": 0.75,
+          "blended100To1To1": 0.07352941176470588,
+          "blended0To100To1": 0.3089108910891089
+        },
+        "cacheHitPrice": 0.06,
+        "cacheHitDiscountPercent": 0.8,
         "aaPrice": {
           "input": 0.3,
           "output": 1.2
@@ -2946,6 +4709,17 @@
         "releaseDate": "2026-10-16",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "reflection-beam",
+            "name": "Beam 1.0",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": 17.73,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          }
+        ],
         "intelligenceIndex": 17.73,
         "capabilities": {
           "Finance & Accounting": 30.24,
@@ -2973,12 +4747,279 @@
         },
         "omniscience": 2.33,
         "contextWindow": 1048576,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 310.8,
+        "timeToFirstToken": 0.72,
+        "timeToFirstAnswerToken": 6.32,
+        "timePerIntelligenceTask": 110.17,
         "costPerTask": 0.2844,
+        "costPerIntelligenceTask": 0.2844,
+        "intelligenceIndexCost": {
+          "total": 249.82968364404098,
+          "input": 185.34486364404097,
+          "nonCacheInput": 1.8100224000000003,
+          "cacheRead": 143.925342839551,
+          "cacheWrite": 39.60949840448994,
+          "output": 64.48482,
+          "reasoning": 48.9062412,
+          "answer": 15.578578799999999
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 21933.484130378525,
+          "answer": 12308.696301939308,
+          "output": 34242.18043231784
+        },
+        "canonicalTokens": {
+          "input": 3701682373,
+          "output": 53737350,
+          "answer": 12982149,
+          "reasoning": 40755201
+        },
+        "openness": {
+          "opennessIndex": 38.888888888888886,
+          "modelAvailability": 6,
+          "transparencyMethodology": 1,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 38.89,
+        "parameters": 501,
+        "activeParameters": 23,
+        "licenseName": "Apache 2.0",
+        "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0",
+        "weightsSourceUrl": "https://huggingface.co/reflection/Beam-1.0-501B-A23B",
+        "openSourceCategorization": "permissive",
+        "performanceDataSource": {
+          "type": "median"
+        },
+        "priceDataSource": {
+          "type": "median"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.6000000000000001,
+          "blended7To2To1": 0.22800000000000004,
+          "blended0To1To1": 0.8,
+          "blended100To1To1": 0.05490196078431373,
+          "blended0To100To1": 0.40792079207920795
+        },
+        "cacheHitPrice": 0.04,
+        "cacheHitDiscountPercent": 0.9,
         "aaPrice": {
           "input": 0.4,
           "output": 1.2
+        },
+        "isOpenWeights": true
+      },
+      "aaStatus": "rated"
+    },
+    {
+      "id": "kimi-k3",
+      "name": "Kimi K3",
+      "canonicalId": "moonshotai/kimi-k3",
+      "vendor": "Moonshot AI",
+      "description": "Multimodal Kimi model with 1M context and toggleable max-effort thinking for long-horizon agent work",
+      "family": "kimi",
+      "openWeights": true,
+      "releaseDate": "2026-07-16",
+      "lastUpdated": "2026-07-16",
+      "knowledge": null,
+      "access": {
+        "go": true,
+        "free": false,
+        "limitedRegions": false
+      },
+      "pricing": {
+        "input": 3,
+        "output": 15,
+        "cacheRead": 0.3,
+        "blended": 6
+      },
+      "context": 1048576,
+      "maxOutput": 1048576,
+      "modalities": {
+        "input": [
+          "text",
+          "image/jpeg",
+          "image/png",
+          "image/gif",
+          "image/webp",
+          "image/bmp",
+          "image/heic",
+          "image/heif",
+          "video/mp4",
+          "video/mpeg",
+          "video/mov",
+          "video/avi",
+          "video/x-flv",
+          "video/mpg",
+          "video/webm",
+          "video/wmv",
+          "video/3gpp"
+        ],
+        "output": [
+          "text"
+        ]
+      },
+      "capabilities": {
+        "tools": {
+          "supported": true
+        },
+        "reasoning": {
+          "supported": true,
+          "effort": [
+            "max"
+          ]
+        },
+        "structured_output": true,
+        "temperature": false,
+        "top_p": false,
+        "top_k": false,
+        "system_updates": true,
+        "effort_updates": false
+      },
+      "go": {
+        "monthly": {
+          "go": 15,
+          "goPlus": 60,
+          "goTeams": 20
+        },
+        "requests5h": {
+          "go": 98,
+          "goPlus": 392,
+          "goUnlimited": false,
+          "goPlusUnlimited": false
+        },
+        "featured": false
+      },
+      "privacy": {
+        "training": false,
+        "zdr": true,
+        "retentionDays": 0,
+        "limitedRegions": false,
+        "source": "OpenCode Go model API",
+        "note": "OpenCode lists this model as zero-retention and not training on requests."
+      },
+      "aaSlug": "kimi-k3",
+      "aa": {
+        "slug": "kimi-k3",
+        "url": "https://artificialanalysis.ai/models/kimi-k3",
+        "variant": "Kimi K3 (Low)",
+        "suffix": "Low",
+        "effort": "low",
+        "releaseDate": "2026-07-16",
+        "deprecated": true,
+        "deprecatedTo": "kimi-k3-1-pro",
+        "variants": [
+          {
+            "slug": "kimi-k3-low",
+            "name": "Kimi K3 (Low)",
+            "suffix": "Low",
+            "effort": "low",
+            "intelligenceIndex": 17.42,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          },
+          {
+            "slug": "kimi-k3",
+            "name": "Kimi K3 (Max)",
+            "suffix": "Max",
+            "effort": "max",
+            "intelligenceIndex": null,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          }
+        ],
+        "intelligenceIndex": 17.42,
+        "capabilities": {
+          "Finance & Accounting": 28.26,
+          "Strategy & Ops": 36.97,
+          "Legal": 27.66,
+          "Healthcare & Medical": 29.24,
+          "Engineering": 22.78,
+          "Economics": 27.67
+        },
+        "evals": {
+          "GPQA Diamond": 0.8424,
+          "Humanity's Last Exam": 0.2498,
+          "HLE Diamond": 0.14,
+          "SciCode": 0.5266,
+          "Terminal-Bench 2.1": 0.824,
+          "Terminal-Bench 4.0": 0.1263,
+          "Terminal-Bench Science": 0.0095,
+          "FrontierCode": 0.2848,
+          "FrontierCode 2.0": 0.109,
+          "CritPt": 0.0314,
+          "CritPt Agentic Hard": 0.055,
+          "Tau Banking": 0.4165,
+          "MMMU-Pro": 0.785,
+          "AutomationBench": 0.4926,
+          "GDPval": 1135.99,
+          "GDP PDF": 0.186,
+          "Omniscience": -1.7,
+          "Long Context Reasoning": 0.7933
+        },
+        "omniscience": -1.7,
+        "contextWindow": 1048576,
+        "outputSpeed": 36.8,
+        "timeToFirstToken": 5.83,
+        "timeToFirstAnswerToken": 8.48,
+        "timePerIntelligenceTask": 1077.35,
+        "costPerTask": 2.3688,
+        "costPerIntelligenceTask": 2.3688,
+        "intelligenceIndexCost": {
+          "total": 1763.5214171649118,
+          "input": 1282.0338521649119,
+          "nonCacheInput": 50.546831999999995,
+          "cacheRead": 663.155333537232,
+          "cacheWrite": 568.3316866276799,
+          "output": 481.487565,
+          "reasoning": 272.32164,
+          "answer": 209.16592500000002
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 27126.463968271986,
+          "answer": 12539.807235351862,
+          "output": 39666.27120362385
+        },
+        "canonicalTokens": {
+          "input": 2416810618,
+          "output": 32099171,
+          "answer": 13944395,
+          "reasoning": 18154776
+        },
+        "openness": {
+          "opennessIndex": 38.888888888888886,
+          "modelAvailability": 4,
+          "transparencyMethodology": 3,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 38.89,
+        "parameters": 2800,
+        "activeParameters": 104,
+        "licenseName": "Kimi K3 License",
+        "licenseUrl": "https://huggingface.co/moonshotai/Kimi-K3/blob/main/LICENSE",
+        "weightsSourceUrl": "https://huggingface.co/moonshotai/Kimi-K3",
+        "openSourceCategorization": "commercial-license",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Kimi"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Kimi"
+        },
+        "priceBlended": {
+          "blended0To3To1": 6,
+          "blended7To2To1": 2.31,
+          "blended0To1To1": 9,
+          "blended100To1To1": 0.47058823529411764,
+          "blended0To100To1": 3.118811881188119
+        },
+        "cacheHitPrice": 0.3,
+        "cacheHitDiscountPercent": 0.9,
+        "aaPrice": {
+          "input": 3,
+          "output": 15
         },
         "isOpenWeights": true
       },
@@ -3058,6 +5099,17 @@
         "releaseDate": "2026-10-15",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "nemotron-3-5-super-vl",
+            "name": "Nemotron 3.5 Super VL",
+            "suffix": null,
+            "effort": "high",
+            "intelligenceIndex": 13.62,
+            "deprecated": false,
+            "chartDefaultSelected": true
+          }
+        ],
         "intelligenceIndex": 13.62,
         "capabilities": {
           "Finance & Accounting": 26.7,
@@ -3085,9 +5137,62 @@
         },
         "omniscience": -2.87,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 353.5,
+        "timeToFirstToken": 0.97,
+        "timeToFirstAnswerToken": 9.33,
+        "timePerIntelligenceTask": 230.35,
         "costPerTask": 0.4818,
+        "costPerIntelligenceTask": 0.4818,
+        "intelligenceIndexCost": {
+          "total": 416.1025385862802,
+          "input": 356.4034445862802,
+          "nonCacheInput": 1.38407595,
+          "cacheRead": 170.64843743185995,
+          "cacheWrite": 184.37093120442026,
+          "output": 59.699094,
+          "reasoning": 48.2565095,
+          "answer": 11.4425845
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 56149.96674290771,
+          "answer": 25284.667671003197,
+          "output": 81434.63441391091
+        },
+        "canonicalTokens": {
+          "input": 4651335463,
+          "output": 119398188,
+          "answer": 22885169,
+          "reasoning": 96513019
+        },
+        "openness": {
+          "opennessIndex": 83.33333333333333,
+          "modelAvailability": 6,
+          "transparencyMethodology": 6,
+          "transparencyPostTrainingData": 1.5,
+          "transparencyPreTrainingData": 1.5
+        },
+        "opennessIndex": 83.33,
+        "parameters": 120,
+        "activeParameters": 12,
+        "licenseName": "OpenMDW-1.1",
+        "licenseUrl": "https://openmdw.ai/license/1-1/",
+        "weightsSourceUrl": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16",
+        "openSourceCategorization": "permissive",
+        "performanceDataSource": {
+          "type": "median"
+        },
+        "priceDataSource": {
+          "type": "median"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.2375,
+          "blended7To2To1": 0.11499999999999999,
+          "blended0To1To1": 0.325,
+          "blended100To1To1": 0.0553921568627451,
+          "blended0To100To1": 0.15346534653465346
+        },
+        "cacheHitPrice": 0.05,
+        "cacheHitDiscountPercent": 0.8,
         "aaPrice": {
           "input": 0.15,
           "output": 0.5
@@ -3161,6 +5266,17 @@
         "releaseDate": "2026-08-11",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "nemotron-3-5-lightning",
+            "name": "Nemotron 3.5 Lightning",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": 5.53,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": 5.53,
         "capabilities": {
           "Finance & Accounting": 14.89,
@@ -3191,9 +5307,62 @@
         },
         "omniscience": -15.7,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 296.2,
+        "timeToFirstToken": 0.77,
+        "timeToFirstAnswerToken": 13.32,
+        "timePerIntelligenceTask": 219.56,
         "costPerTask": 0.3145,
+        "costPerIntelligenceTask": 0.3145,
+        "intelligenceIndexCost": {
+          "total": 245.81939866,
+          "input": 230.26139406,
+          "nonCacheInput": 0.2683812,
+          "cacheRead": 0,
+          "cacheWrite": 229.99301286,
+          "output": 15.558004600000002,
+          "reasoning": 10.575023000000002,
+          "answer": 4.9829816000000005
+        },
+        "intelligenceIndexOutputTokensPerTask": {
+          "reasoning": 30602.0629751803,
+          "answer": 34424.1057545786,
+          "output": 65026.1687297589
+        },
+        "canonicalTokens": {
+          "input": 3837689901,
+          "output": 77790023,
+          "answer": 24914908,
+          "reasoning": 52875115
+        },
+        "openness": {
+          "opennessIndex": 83.33333333333333,
+          "modelAvailability": 6,
+          "transparencyMethodology": 6,
+          "transparencyPostTrainingData": 1.5,
+          "transparencyPreTrainingData": 1.5
+        },
+        "opennessIndex": 83.33,
+        "parameters": 31.6,
+        "activeParameters": 3.6,
+        "licenseName": "OpenMDW-1.1",
+        "licenseUrl": "https://openmdw.ai/license/1-1/",
+        "weightsSourceUrl": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+        "openSourceCategorization": "permissive",
+        "performanceDataSource": {
+          "type": "median"
+        },
+        "priceDataSource": {
+          "type": "median"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.095,
+          "blended7To2To1": 0.06000000000000001,
+          "blended0To1To1": 0.13,
+          "blended100To1To1": 0.04176470588235294,
+          "blended0To100To1": 0.061386138613861385
+        },
+        "cacheHitPrice": 0.04,
+        "cacheHitDiscountPercent": 0.4285714285714286,
         "aaPrice": {
           "input": 0.06,
           "output": 0.2
@@ -3482,6 +5651,17 @@
         "releaseDate": "2026-07-06",
         "deprecated": true,
         "deprecatedTo": "tencent-hy4",
+        "variants": [
+          {
+            "slug": "hy3",
+            "name": "Hy3",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": null,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": null,
         "capabilities": {},
         "evals": {
@@ -3500,9 +5680,44 @@
         },
         "omniscience": null,
         "contextWindow": 256000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 68.8,
+        "timeToFirstToken": 5.24,
+        "timeToFirstAnswerToken": 42.79,
+        "timePerIntelligenceTask": null,
         "costPerTask": null,
+        "costPerIntelligenceTask": null,
+        "intelligenceIndexCost": null,
+        "intelligenceIndexOutputTokensPerTask": null,
+        "canonicalTokens": null,
+        "openness": {
+          "opennessIndex": 44.44444444444444,
+          "modelAvailability": 5,
+          "transparencyMethodology": 3,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 44.44,
+        "parameters": 299,
+        "activeParameters": 21,
+        "licenseName": "Apache 2.0",
+        "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0",
+        "weightsSourceUrl": "https://huggingface.co/tencent/Hy3",
+        "openSourceCategorization": "commercial-license",
+        "performanceDataSource": {
+          "type": "median"
+        },
+        "priceDataSource": {
+          "type": "median"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.25,
+          "blended7To2To1": 0.1105,
+          "blended0To1To1": 0.36,
+          "blended100To1To1": 0.04137254901960785,
+          "blended0To100To1": 0.14435643564356437
+        },
+        "cacheHitPrice": 0.035,
+        "cacheHitDiscountPercent": 0.75,
         "aaPrice": {
           "input": 0.14,
           "output": 0.58
@@ -3807,6 +6022,17 @@
         "releaseDate": "2026-06-12",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "kimi-k2-7-code",
+            "name": "Kimi K2.7 Code",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": null,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": null,
         "capabilities": {},
         "evals": {
@@ -3828,148 +6054,49 @@
         },
         "omniscience": null,
         "contextWindow": 256000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 50.1,
+        "timeToFirstToken": 6.36,
+        "timeToFirstAnswerToken": 37.74,
+        "timePerIntelligenceTask": null,
         "costPerTask": null,
+        "costPerIntelligenceTask": null,
+        "intelligenceIndexCost": null,
+        "intelligenceIndexOutputTokensPerTask": null,
+        "canonicalTokens": null,
+        "openness": {
+          "opennessIndex": 27.77777777777778,
+          "modelAvailability": 4,
+          "transparencyMethodology": 1,
+          "transparencyPostTrainingData": 0,
+          "transparencyPreTrainingData": 0
+        },
+        "opennessIndex": 27.78,
+        "parameters": 1000,
+        "activeParameters": 32,
+        "licenseName": "Modified MIT License",
+        "licenseUrl": "https://huggingface.co/moonshotai/Kimi-K2.7-Code/blob/main/LICENSE",
+        "weightsSourceUrl": "https://huggingface.co/moonshotai/Kimi-K2.7-Code",
+        "openSourceCategorization": "commercial-license",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Kimi"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Kimi"
+        },
+        "priceBlended": {
+          "blended0To3To1": 1.7125,
+          "blended7To2To1": 0.7230000000000001,
+          "blended0To1To1": 2.475,
+          "blended100To1To1": 0.23480392156862745,
+          "blended0To100To1": 0.9801980198019802
+        },
+        "cacheHitPrice": 0.19,
+        "cacheHitDiscountPercent": 0.8,
         "aaPrice": {
           "input": 0.95,
           "output": 4
-        },
-        "isOpenWeights": true
-      },
-      "aaStatus": "unrated"
-    },
-    {
-      "id": "kimi-k3",
-      "name": "Kimi K3",
-      "canonicalId": "moonshotai/kimi-k3",
-      "vendor": "Moonshot AI",
-      "description": "Multimodal Kimi model with 1M context and toggleable max-effort thinking for long-horizon agent work",
-      "family": "kimi",
-      "openWeights": true,
-      "releaseDate": "2026-07-16",
-      "lastUpdated": "2026-07-16",
-      "knowledge": null,
-      "access": {
-        "go": true,
-        "free": false,
-        "limitedRegions": false
-      },
-      "pricing": {
-        "input": 3,
-        "output": 15,
-        "cacheRead": 0.3,
-        "blended": 6
-      },
-      "context": 1048576,
-      "maxOutput": 1048576,
-      "modalities": {
-        "input": [
-          "text",
-          "image/jpeg",
-          "image/png",
-          "image/gif",
-          "image/webp",
-          "image/bmp",
-          "image/heic",
-          "image/heif",
-          "video/mp4",
-          "video/mpeg",
-          "video/mov",
-          "video/avi",
-          "video/x-flv",
-          "video/mpg",
-          "video/webm",
-          "video/wmv",
-          "video/3gpp"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "capabilities": {
-        "tools": {
-          "supported": true
-        },
-        "reasoning": {
-          "supported": true,
-          "effort": [
-            "max"
-          ]
-        },
-        "structured_output": true,
-        "temperature": false,
-        "top_p": false,
-        "top_k": false,
-        "system_updates": true,
-        "effort_updates": false
-      },
-      "go": {
-        "monthly": {
-          "go": 15,
-          "goPlus": 60,
-          "goTeams": 20
-        },
-        "requests5h": {
-          "go": 98,
-          "goPlus": 392,
-          "goUnlimited": false,
-          "goPlusUnlimited": false
-        },
-        "featured": false
-      },
-      "privacy": {
-        "training": false,
-        "zdr": true,
-        "retentionDays": 0,
-        "limitedRegions": false,
-        "source": "OpenCode Go model API",
-        "note": "OpenCode lists this model as zero-retention and not training on requests."
-      },
-      "aaSlug": "kimi-k3",
-      "aa": {
-        "slug": "kimi-k3",
-        "url": "https://artificialanalysis.ai/models/kimi-k3",
-        "variant": "Kimi K3 (Max)",
-        "suffix": "Max",
-        "effort": "max",
-        "releaseDate": "2026-07-16",
-        "deprecated": true,
-        "deprecatedTo": "kimi-k3-1-pro",
-        "intelligenceIndex": null,
-        "capabilities": {},
-        "evals": {
-          "GPQA Diamond": 0.9354,
-          "Humanity's Last Exam": 0.469,
-          "HLE Diamond": 0.269,
-          "SciCode": 0.5949,
-          "Terminal-Bench 2.1": 0.8502,
-          "Terminal-Bench 4.0": 0.1263,
-          "Terminal-Bench Science": 0.081,
-          "FrontierCode": 0.4361,
-          "CritPt": 0.2343,
-          "CritPt Agentic Hard": 0.405,
-          "Tau Banking": 0.4598,
-          "MMMU-Pro": 0.8052,
-          "HealthBench": 0.5472,
-          "HealthBench Professional": 0.5324,
-          "AutomationBench": 0.5827,
-          "Enterprise Ops Gym": 0.4533,
-          "ITBench SRE": 0.4769,
-          "GDPval": 1542.46,
-          "GDP PDF": 0.22,
-          "Long Context Reasoning": 0.8867,
-          "Analyst Agent": 0.3875,
-          "Apex Agents": 0.413
-        },
-        "omniscience": null,
-        "contextWindow": 1048576,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
-        "costPerTask": null,
-        "aaPrice": {
-          "input": 3,
-          "output": 15
         },
         "isOpenWeights": true
       },
@@ -4141,6 +6268,17 @@
         "releaseDate": "2026-08-05",
         "deprecated": true,
         "deprecatedTo": "muse-spark-1-3",
+        "variants": [
+          {
+            "slug": "muse-spark-1-2",
+            "name": "Muse Spark 1.2 (Xhigh)",
+            "suffix": "Xhigh",
+            "effort": "xhigh",
+            "intelligenceIndex": null,
+            "deprecated": true,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": null,
         "capabilities": {},
         "evals": {
@@ -4159,9 +6297,40 @@
         },
         "omniscience": null,
         "contextWindow": 1048576,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 203.4,
+        "timeToFirstToken": 9.38,
+        "timeToFirstAnswerToken": 9.38,
+        "timePerIntelligenceTask": null,
         "costPerTask": null,
+        "costPerIntelligenceTask": null,
+        "intelligenceIndexCost": null,
+        "intelligenceIndexOutputTokensPerTask": null,
+        "canonicalTokens": null,
+        "openness": null,
+        "opennessIndex": null,
+        "parameters": null,
+        "activeParameters": null,
+        "licenseName": null,
+        "licenseUrl": null,
+        "weightsSourceUrl": null,
+        "openSourceCategorization": "proprietary",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Meta"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Meta"
+        },
+        "priceBlended": {
+          "blended0To3To1": 2,
+          "blended7To2To1": 0.78,
+          "blended0To1To1": 2.75,
+          "blended100To1To1": 0.20098039215686275,
+          "blended0To100To1": 1.2797029702970297
+        },
+        "cacheHitPrice": 0.15,
+        "cacheHitDiscountPercent": 0.88,
         "aaPrice": {
           "input": 1.25,
           "output": 4.25
@@ -4263,6 +6432,17 @@
         "releaseDate": "2026-06-01",
         "deprecated": false,
         "deprecatedTo": null,
+        "variants": [
+          {
+            "slug": "qwen3-7-plus",
+            "name": "Qwen3.7 Plus",
+            "suffix": null,
+            "effort": null,
+            "intelligenceIndex": null,
+            "deprecated": false,
+            "chartDefaultSelected": false
+          }
+        ],
         "intelligenceIndex": null,
         "capabilities": {},
         "evals": {
@@ -4286,9 +6466,40 @@
         },
         "omniscience": null,
         "contextWindow": 1000000,
-        "outputSpeed": null,
-        "timeToFirstToken": null,
+        "outputSpeed": 55.1,
+        "timeToFirstToken": 2.8,
+        "timeToFirstAnswerToken": 42.43,
+        "timePerIntelligenceTask": null,
         "costPerTask": null,
+        "costPerIntelligenceTask": null,
+        "intelligenceIndexCost": null,
+        "intelligenceIndexOutputTokensPerTask": null,
+        "canonicalTokens": null,
+        "openness": null,
+        "opennessIndex": null,
+        "parameters": null,
+        "activeParameters": null,
+        "licenseName": null,
+        "licenseUrl": null,
+        "weightsSourceUrl": null,
+        "openSourceCategorization": "proprietary",
+        "performanceDataSource": {
+          "type": "firstParty",
+          "providerName": "Alibaba"
+        },
+        "priceDataSource": {
+          "type": "firstParty",
+          "providerName": "Alibaba"
+        },
+        "priceBlended": {
+          "blended0To3To1": 0.7000000000000001,
+          "blended7To2To1": 0.296,
+          "blended0To1To1": 1,
+          "blended100To1To1": 0.09803921568627451,
+          "blended0To100To1": 0.4118811881188119
+        },
+        "cacheHitPrice": 0.08,
+        "cacheHitDiscountPercent": 0.8,
         "aaPrice": {
           "input": 0.4,
           "output": 1.6
@@ -4387,90 +6598,6 @@
       "aaSlug": null,
       "aa": null,
       "aaStatus": "missing"
-    },
-    {
-      "id": "step-5-preview",
-      "name": "Step 5 Preview",
-      "canonicalId": "stepfun/step-5-preview",
-      "vendor": "StepFun",
-      "description": "StepFun's next-generation flagship base model for coding and professional knowledge work, with native text, image, and video input and a 1M-token context window",
-      "family": "step",
-      "openWeights": true,
-      "releaseDate": "2026-09-16",
-      "lastUpdated": "2026-09-20",
-      "knowledge": null,
-      "access": {
-        "go": true,
-        "free": false,
-        "limitedRegions": false
-      },
-      "pricing": {
-        "input": 1,
-        "output": 2.7,
-        "cacheRead": 0.1,
-        "blended": 1.425
-      },
-      "context": 1000000,
-      "maxOutput": 65536,
-      "modalities": {
-        "input": [
-          "text",
-          "image/jpeg",
-          "image/png",
-          "image/gif",
-          "image/webp",
-          "video/mp4",
-          "video/quicktime",
-          "video/x-matroska"
-        ],
-        "output": [
-          "text"
-        ]
-      },
-      "capabilities": {
-        "tools": {
-          "supported": true
-        },
-        "reasoning": {
-          "supported": true,
-          "effort": [
-            "low",
-            "medium",
-            "high"
-          ]
-        },
-        "structured_output": true,
-        "temperature": true,
-        "top_p": true,
-        "top_k": true,
-        "system_updates": false,
-        "effort_updates": false
-      },
-      "go": {
-        "monthly": {
-          "go": 15,
-          "goPlus": 60,
-          "goTeams": 20
-        },
-        "requests5h": {
-          "go": 426,
-          "goPlus": 1700,
-          "goUnlimited": false,
-          "goPlusUnlimited": false
-        },
-        "featured": false
-      },
-      "privacy": {
-        "training": false,
-        "zdr": true,
-        "retentionDays": 0,
-        "limitedRegions": false,
-        "source": "OpenCode Go model API",
-        "note": "OpenCode lists this model as zero-retention and not training on requests."
-      },
-      "aaSlug": "step-5-preview",
-      "aa": null,
-      "aaStatus": "unrated"
     },
     {
       "id": "tidepool-alpha-free",

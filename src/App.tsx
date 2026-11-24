@@ -3,6 +3,7 @@ import { RefreshCw } from 'lucide-react'
 import { Layout, type Route } from './components/Layout'
 import { ModelDetail } from './components/ModelDetail'
 import { StaleBanner } from './components/StaleBanner'
+import { OverviewView } from './views/OverviewView'
 import { CatalogView } from './views/CatalogView'
 import { isStale, loadChanges, loadResearch, loadSnapshot, modelById } from './lib/data'
 import { useTheme } from './lib/theme'
@@ -18,31 +19,37 @@ const MethodologyView = lazy(() =>
   import('./views/MethodologyView').then((module) => ({ default: module.MethodologyView })),
 )
 
-const ROUTES: Route[] = ['catalog', 'value', 'changes', 'about']
+const ROUTES: Route[] = ['overview', 'models', 'analysis', 'changes', 'about']
 
 interface ParsedHash {
   route: Route
   modelId: string | null
 }
 
+const LEGACY_ROUTES: Record<string, Route> = {
+  catalog: 'models',
+  value: 'analysis',
+}
+
 function parseHash(hash: string): ParsedHash {
   const raw = hash.replace(/^#/, '')
   const [first, second] = raw.split('/')
   if (first === 'model' && second) {
-    return { route: 'catalog', modelId: decodeURIComponent(second) }
+    return { route: 'models', modelId: decodeURIComponent(second) }
   }
   if (first.startsWith('model=')) {
-    return { route: 'catalog', modelId: decodeURIComponent(first.slice('model='.length)) }
+    return { route: 'models', modelId: decodeURIComponent(first.slice('model='.length)) }
   }
-  if (ROUTES.includes(first as Route)) {
+  const normalized = LEGACY_ROUTES[first] ?? first
+  if (ROUTES.includes(normalized as Route)) {
     return {
-      route: first as Route,
+      route: normalized as Route,
       modelId: second?.startsWith('model=')
         ? decodeURIComponent(second.slice('model='.length))
         : null,
     }
   }
-  return { route: 'catalog', modelId: null }
+  return { route: 'overview', modelId: null }
 }
 
 function currentHash(): string {
@@ -55,7 +62,7 @@ export default function App() {
   const [research, setResearch] = useState<ResearchFeed | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [hash, setHash] = useState(currentHash)
-  const previousRoute = useRef<Route>('catalog')
+  const previousRoute = useRef<Route>('overview')
   const { choice, choose } = useTheme()
 
   useEffect(() => {
@@ -91,12 +98,12 @@ export default function App() {
   }, [route, parsed.modelId])
 
   useEffect(() => {
-    if (parsed.modelId && route !== 'catalog') previousRoute.current = route
+    if (parsed.modelId && route !== 'models') previousRoute.current = route
   }, [parsed.modelId, route])
 
   const openModel = useCallback((id: string) => {
-    if (route !== 'catalog') previousRoute.current = route
-    window.location.hash = `#catalog/model=${encodeURIComponent(id)}`
+    if (route !== 'models') previousRoute.current = route
+    window.location.hash = `#models/model=${encodeURIComponent(id)}`
   }, [route])
 
   const closeModel = useCallback(() => {
@@ -132,8 +139,9 @@ export default function App() {
       <>
         {isStale(snapshot.generatedAt) && <StaleBanner generatedAt={snapshot.generatedAt} />}
         <Suspense fallback={<div className="section"><p className="meta">Loading view…</p></div>}>
-          {route === 'catalog' && <CatalogView snapshot={snapshot} research={research} onOpen={openModel} />}
-          {route === 'value' && <ValueView snapshot={snapshot} onOpen={openModel} />}
+          {route === 'overview' && <OverviewView snapshot={snapshot} research={research} onOpen={openModel} />}
+          {route === 'models' && <CatalogView snapshot={snapshot} research={research} onOpen={openModel} />}
+          {route === 'analysis' && <ValueView snapshot={snapshot} research={research} onOpen={openModel} />}
           {route === 'changes' && <ChangesView feed={changes} onOpen={openModel} />}
           {route === 'about' && <MethodologyView snapshot={snapshot} />}
         </Suspense>

@@ -83,6 +83,16 @@ export interface Privacy {
   note: string;
 }
 
+export interface AAVariant {
+  slug: string | null;
+  name: string | null;
+  suffix: string | null;
+  effort: string | null;
+  intelligenceIndex: number | null;
+  deprecated: boolean;
+  chartDefaultSelected: boolean;
+}
+
 export interface AAProfile {
   slug: string;
   url: string;
@@ -102,6 +112,33 @@ export interface AAProfile {
   costPerTask: number | null;
   aaPrice: { input: number | null; output: number | null } | null;
   isOpenWeights: boolean;
+  // Extended metrics (added for the Analysis workspace)
+  variants: AAVariant[];
+  openness: { opennessIndex: number; modelAvailability: number; transparencyMethodology: number; transparencyPostTrainingData: number; transparencyPreTrainingData: number } | null;
+  opennessIndex: number | null;
+  costPerIntelligenceTask: number | null;
+  intelligenceIndexCost: unknown;
+  intelligenceIndexOutputTokensPerTask: { reasoning: number; answer: number; output: number } | null;
+  canonicalTokens: { input: number; output: number; answer: number; reasoning: number } | null;
+  timeToFirstAnswerToken: number | null;
+  timePerIntelligenceTask: number | null;
+  parameters: number | null;
+  activeParameters: number | null;
+  licenseName: string | null;
+  licenseUrl: string | null;
+  weightsSourceUrl: string | null;
+  openSourceCategorization: string | null;
+  performanceDataSource: { type: string; providerName: string } | null;
+  priceDataSource: { type: string; providerName: string } | null;
+  priceBlended: {
+    blended0To3To1: number | null;
+    blended7To2To1: number | null;
+    blended0To1To1: number | null;
+    blended100To1To1: number | null;
+    blended0To100To1: number | null;
+  } | null;
+  cacheHitPrice: number | null;
+  cacheHitDiscountPercent: number | null;
 }
 
 export interface Model {

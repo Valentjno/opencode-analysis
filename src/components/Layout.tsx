@@ -3,7 +3,7 @@ import { GitBranch } from 'lucide-react'
 import type { ThemeChoice } from '../lib/theme'
 import { ThemeToggle } from './ThemeToggle'
 
-export type Route = 'catalog' | 'value' | 'changes' | 'about'
+export type Route = 'overview' | 'models' | 'analysis' | 'changes' | 'about'
 
 interface LayoutProps {
   route: Route
@@ -13,10 +13,11 @@ interface LayoutProps {
 }
 
 const NAV: { route: Route; label: string; index: string }[] = [
-  { route: 'catalog', label: 'Catalog', index: '01' },
-  { route: 'value', label: 'Value', index: '02' },
-  { route: 'changes', label: 'Changes', index: '03' },
-  { route: 'about', label: 'About', index: '04' },
+  { route: 'overview', label: 'Overview', index: '01' },
+  { route: 'models', label: 'Models', index: '02' },
+  { route: 'analysis', label: 'Analysis', index: '03' },
+  { route: 'changes', label: 'Changes', index: '04' },
+  { route: 'about', label: 'About', index: '05' },
 ]
 
 function Footer() {
@@ -25,7 +26,7 @@ function Footer() {
       <div className="shell">
         <div className="footer-grid">
           <div>
-            <p className="footer-title">OpenCode Model Radar</p>
+            <p className="footer-title">OpenCode Analysis</p>
             <p className="footer-copy">
               An independent view for OpenCode developers: understand which Go and free models make
               the best use of your monthly allowance, based on your privacy needs. Not affiliated
@@ -71,7 +72,7 @@ export function Layout({ route, themeChoice, onChooseTheme, children }: LayoutPr
         <div className="shell topbar-inner">
           <a className="brand" href="#catalog" aria-label="OpenCode Model Radar home">
             <span className="brand-mark mono" aria-hidden="true">&lt;/&gt;</span>
-            <span className="brand-name">opencode<span>/model-radar</span></span>
+            <span className="brand-name">opencode<span> analysis</span></span>
           </a>
           <nav className="nav" aria-label="Sections">
             {NAV.map((item) => (
