@@ -228,7 +228,7 @@ export function PlanValue({ models }: { models: Model[] }) {
               <YAxis
                 type="number"
                 dataKey="y"
-                domain={[0, 100]}
+                domain={[0, Math.ceil(Math.max(10, ...points.map((p) => p.y)) + 5)]}
                 tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }}
                 tickLine={false}
                 axisLine={{ stroke: 'var(--border)' }}

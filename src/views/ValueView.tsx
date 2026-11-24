@@ -16,6 +16,7 @@ import { formatScore, formatCompact } from '../lib/format'
 import { FilterBar } from '../components/FilterBar'
 import { DataTable } from '../components/DataTable'
 import { InfoPopover } from '../components/InfoPopover'
+import { VendorFilter } from '../components/VendorFilter'
 import { vendorColor, vendorLegend } from '../lib/vendors'
 import {
   DEFAULT_FILTERS,
@@ -31,11 +32,12 @@ interface Props {
   onOpen: (id: string) => void
 }
 
-type CostAxis = 'blended' | 'go' | 'requests' | 'aaTask'
+type CostAxis = 'blended' | 'go' | 'goPlus' | 'requests' | 'aaTask'
 
 const COST_AXES: { key: CostAxis; label: string; higherIsBetter: boolean; format: (v: number) => string }[] = [
   { key: 'blended', label: 'Blended $ / 1M tokens', higherIsBetter: false, format: (v) => `$${v}` },
-  { key: 'go', label: 'Go monthly $', higherIsBetter: true, format: (v) => `$${v}` },
+  { key: 'go', label: 'Go $10/mo allowance', higherIsBetter: true, format: (v) => `$${v}` },
+  { key: 'goPlus', label: 'Go Plus $40/mo allowance', higherIsBetter: true, format: (v) => `$${v}` },
   { key: 'requests', label: 'Requests / 5h', higherIsBetter: true, format: (v) => String(v) },
   { key: 'aaTask', label: 'AA $ per II task', higherIsBetter: false, format: (v) => `$${v.toFixed(3)}` },
 ]
@@ -46,6 +48,8 @@ function xOf(model: Model, axis: CostAxis): number | null {
       return typeof model.pricing.blended === 'number' ? model.pricing.blended : null
     case 'go':
       return typeof model.go?.monthly?.go === 'number' ? model.go.monthly.go : null
+    case 'goPlus':
+      return typeof model.go?.monthly?.goPlus === 'number' ? model.go.monthly.goPlus : null
     case 'requests':
       return model.go?.requests5h.goUnlimited ? null : (typeof model.go?.requests5h.go === 'number' ? model.go.requests5h.go : null)
     case 'aaTask':
@@ -92,12 +96,15 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
   const [costAxis, setCostAxis] = useState<CostAxis>('blended')
   const [filters, setFilters] = useState<CatalogFilters>(DEFAULT_FILTERS)
   const [included, setIncluded] = useState<Set<string>>(() => new Set(snapshot.models.map((m) => m.id)))
-  const vendors = useMemo(() => vendorOptions(snapshot.models), [snapshot.models])
+  const [vendors, setVendors] = useState<Set<string>>(
+    () => new Set(snapshot.models.map((m) => m.vendor)),
+  )
+  const vendorOptionsList = useMemo(() => vendorOptions(snapshot.models), [snapshot.models])
 
   const filtered = useMemo(() => {
     const base = filterModels(snapshot.models, filters)
-    return base.filter((m) => included.has(m.id))
-  }, [snapshot.models, filters, included])
+    return base.filter((m) => included.has(m.id) && vendors.has(m.vendor))
+  }, [snapshot.models, filters, included, vendors])
 
   const changeFilters = (patch: Partial<CatalogFilters>) => {
     setFilters((current) => {
@@ -130,7 +137,14 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
         return { id: m.id, name: m.name, vendor: m.vendor, x, y, frontier: front.has(m.id) }
       })
       .filter(Boolean) as { id: string; name: string; vendor: string; x: number; y: number; frontier: boolean }[]
+
   }, [filtered, costAxis, front])
+
+  const yDomain = useMemo(() => {
+    const values = scatterData.map((point) => point.y)
+    const max = values.length ? Math.max(...values) : 10
+    return [0, Math.ceil(max + 5)]
+  }, [scatterData])
 
   const sortedByRatio = useMemo(() => {
     return filtered
@@ -168,11 +182,15 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
         <div className="stack" style={{ marginTop: 16 }}>
         <FilterBar
           filters={filters}
-          vendors={vendors}
+          vendors={vendorOptionsList}
           shown={filtered.length}
           total={snapshot.models.length}
           onChange={changeFilters}
         />
+
+        <div className="panel" style={{ padding: 12 }}>
+          <VendorFilter models={snapshot.models} selected={vendors} onChange={setVendors} />
+        </div>
 
         <div className="panel" style={{ padding: 12 }}>
           <div className="row" style={{ flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
@@ -261,7 +279,7 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
                 <YAxis
                   type="number"
                   dataKey="y"
-                  domain={[0, 100]}
+                  domain={yDomain as [number, number]}
                   tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }}
                   tickLine={false}
                   axisLine={{ stroke: 'var(--border)' }}
@@ -312,22 +330,37 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
         <div id="capability" className="panel" style={{ padding: 16 }}>
           <h3 className="section-title" style={{ fontSize: 16, marginBottom: 8 }}>
             <span className="section-index">[02]</span> Capability Indexes
+            <InfoPopover title="How to read capability indexes">
+              <p>Rows are models, columns are Artificial Analysis capability scores. Darker means higher. Blank means AA did not publish that capability.</p>
+              <p>These are separate from the Intelligence Index: a model can score well on finance or legal tasks without being the smartest overall.</p>
+            </InfoPopover>
           </h3>
           <CapabilityHeatmap models={filtered} />
+          <p className="chart-note">AA capability scores, 0–100 scale. Blank cells mean not published.</p>
         </div>
 
         <div id="benchmarks" className="panel" style={{ padding: 16 }}>
           <h3 className="section-title" style={{ fontSize: 16, marginBottom: 8 }}>
             <span className="section-index">[03]</span> Benchmarks
+            <InfoPopover title="How to read benchmarks">
+              <p>Rows are models, columns are published benchmark scores, shown as percent. Darker means higher. Blank means AA did not publish that score.</p>
+              <p>These are the raw eval scores behind the Intelligence Index. A high II usually comes from strong scores here, but the weighting is AA's.</p>
+            </InfoPopover>
           </h3>
           <BenchmarkHeatmap models={filtered} />
+          <p className="chart-note">Published benchmark scores as percent. Blank cells mean not published.</p>
         </div>
 
         <div id="openness" className="panel" style={{ padding: 16 }}>
           <h3 className="section-title" style={{ fontSize: 16, marginBottom: 8 }}>
             <span className="section-index">[04]</span> Openness Index
+            <InfoPopover title="How to read openness">
+              <p>The Artificial Analysis Openness Index, 0–100. Higher means more transparent and more available: open weights, published methodology, published training data.</p>
+              <p>Only open-weights models score well here. A proprietary model with a high Intelligence Index can still score zero on openness.</p>
+            </InfoPopover>
           </h3>
           <OpennessChart models={filtered} />
+          <p className="chart-note">AA Openness Index, 0–100. Missing bars mean AA did not publish openness for that model.</p>
         </div>
 
         <div id="cost" className="panel" style={{ padding: 16 }}>
@@ -357,29 +390,48 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
         <div id="performance" className="panel" style={{ padding: 16 }}>
           <h3 className="section-title" style={{ fontSize: 16, marginBottom: 8 }}>
             <span className="section-index">[06]</span> Performance
+            <InfoPopover title="How to read performance">
+              <p>Output speed in tokens per second against the Intelligence Index. Up and to the right is better: smarter and faster.</p>
+              <p>Speeds come from AA's measured providers and vary by host. A slow but smart model may be the wrong choice for interactive use.</p>
+            </InfoPopover>
           </h3>
           <PerformanceChart models={filtered} />
+          <p className="chart-note">Output tokens per second vs Intelligence Index. Missing points mean no published speed.</p>
         </div>
 
         <div id="tokens" className="panel" style={{ padding: 16 }}>
           <h3 className="section-title" style={{ fontSize: 16, marginBottom: 8 }}>
             <span className="section-index">[07]</span> Token Use
+            <InfoPopover title="How to read token use">
+              <p>Reasoning and answer tokens per Intelligence Index task. The bar is the total output tokens the model produced to solve the suite.</p>
+              <p>More tokens usually means more reasoning, which costs more and takes longer. A model that matches the leader on intelligence with fewer tokens is cheaper to run.</p>
+            </InfoPopover>
           </h3>
           <TokenChart models={filtered} />
+          <p className="chart-note">Output tokens per Intelligence Index task, split into reasoning and answer.</p>
         </div>
 
         <div id="context" className="panel" style={{ padding: 16 }}>
           <h3 className="section-title" style={{ fontSize: 16, marginBottom: 8 }}>
             <span className="section-index">[08]</span> Context Window
+            <InfoPopover title="How to read context">
+              <p>Intelligence Index against the context window in tokens. Right means more context. Intelligence and context are independent: a smart model can have a small window.</p>
+            </InfoPopover>
           </h3>
           <ContextChart models={filtered} />
+          <p className="chart-note">Context window in tokens vs Intelligence Index. Missing points mean no published window.</p>
         </div>
 
         <div id="size" className="panel" style={{ padding: 16 }}>
           <h3 className="section-title" style={{ fontSize: 16, marginBottom: 8 }}>
             <span className="section-index">[09]</span> Model Size (open weights only)
+            <InfoPopover title="How to read model size">
+              <p>Intelligence Index against active parameters in billions, for open-weights models only. Up and to the left is more efficient: more intelligence from fewer active parameters.</p>
+              <p>Active parameters matter more than total parameters for inference cost. A model with 2.8T total but 104B active is cheap to run.</p>
+            </InfoPopover>
           </h3>
           <SizeChart models={filtered} />
+          <p className="chart-note">Active parameters in billions vs Intelligence Index, open-weights models only.</p>
         </div>
 
         <div className="panel" style={{ padding: 12 }}>
@@ -594,13 +646,14 @@ function PerformanceChart({ models }: { models: Model[] }) {
     })
     .filter(Boolean) as { id: string; name: string; x: number; y: number }[]
   if (data.length === 0) return <p className="prose muted">No performance data for the selected models.</p>
+  const yMax = Math.ceil(Math.max(...data.map((d) => d.y)) + 5)
   return (
     <div style={{ width: '100%', height: 360 }}>
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart margin={{ top: 12, right: 30, bottom: 20, left: 4 }}>
           <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
           <XAxis type="number" dataKey="x" tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} tickLine={false} axisLine={{ stroke: 'var(--border)' }} label={{ value: 'Output speed (tok/s)', position: 'insideBottom', offset: -12, fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} />
-          <YAxis type="number" dataKey="y" domain={[0, 100]} tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} tickLine={false} axisLine={{ stroke: 'var(--border)' }} width={34} />
+          <YAxis type="number" dataKey="y" domain={[0, yMax]} tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} tickLine={false} axisLine={{ stroke: 'var(--border)' }} width={34} />
           <Tooltip content={({ active, payload }) => active && payload?.length ? <div className="panel" style={{ padding: '6px 8px', fontSize: 11 }}><strong>{(payload[0].payload as { name: string }).name}</strong></div> : null} />
           <Scatter data={data} fill="var(--accent)" isAnimationActive={false} />
         </ScatterChart>
@@ -642,13 +695,14 @@ function ContextChart({ models }: { models: Model[] }) {
     })
     .filter(Boolean) as { id: string; name: string; x: number; y: number }[]
   if (data.length === 0) return <p className="prose muted">No context data for the selected models.</p>
+  const yMax = Math.ceil(Math.max(...data.map((d) => d.y)) + 5)
   return (
     <div style={{ width: '100%', height: 360 }}>
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart margin={{ top: 12, right: 30, bottom: 20, left: 4 }}>
           <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
           <XAxis type="number" dataKey="x" tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} tickLine={false} axisLine={{ stroke: 'var(--border)' }} tickFormatter={(v: number) => formatCompact(v)} label={{ value: 'Context window (tokens)', position: 'insideBottom', offset: -12, fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} />
-          <YAxis type="number" dataKey="y" domain={[0, 100]} tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} tickLine={false} axisLine={{ stroke: 'var(--border)' }} width={34} />
+          <YAxis type="number" dataKey="y" domain={[0, yMax]} tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} tickLine={false} axisLine={{ stroke: 'var(--border)' }} width={34} />
           <Tooltip content={({ active, payload }) => active && payload?.length ? <div className="panel" style={{ padding: '6px 8px', fontSize: 11 }}><strong>{(payload[0].payload as { name: string }).name}</strong></div> : null} />
           <Scatter data={data} fill="var(--accent)" isAnimationActive={false} />
         </ScatterChart>
@@ -668,13 +722,14 @@ function SizeChart({ models }: { models: Model[] }) {
     })
     .filter(Boolean) as { id: string; name: string; x: number; y: number; params: number | null }[]
   if (data.length === 0) return <p className="prose muted">No open-weights model size data for the selected models.</p>
+  const yMax = Math.ceil(Math.max(...data.map((d) => d.y)) + 5)
   return (
     <div style={{ width: '100%', height: 360 }}>
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart margin={{ top: 12, right: 30, bottom: 20, left: 4 }}>
           <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
           <XAxis type="number" dataKey="x" tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} tickLine={false} axisLine={{ stroke: 'var(--border)' }} label={{ value: 'Active parameters (B)', position: 'insideBottom', offset: -12, fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} />
-          <YAxis type="number" dataKey="y" domain={[0, 100]} tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} tickLine={false} axisLine={{ stroke: 'var(--border)' }} width={34} />
+          <YAxis type="number" dataKey="y" domain={[0, yMax]} tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} tickLine={false} axisLine={{ stroke: 'var(--border)' }} width={34} />
           <Tooltip content={({ active, payload }) => active && payload?.length ? <div className="panel" style={{ padding: '6px 8px', fontSize: 11 }}><strong>{(payload[0].payload as { name: string }).name}</strong><div className="num muted">{formatScore((payload[0].payload as { params: number | null }).params, 0)}B total</div></div> : null} />
           <Scatter data={data} fill="var(--accent)" isAnimationActive={false} />
         </ScatterChart>

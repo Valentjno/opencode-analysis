@@ -1,8 +1,10 @@
+import { useMemo, useState } from 'react'
 import type { Snapshot, ResearchFeed } from '../lib/types'
 import { formatDateTime } from '../lib/format'
 import { StatsBar } from '../components/StatsBar'
 import { RecommendationGrid } from '../components/RecommendationGrid'
 import { PlanValue } from '../components/PlanValue'
+import { VendorFilter } from '../components/VendorFilter'
 import { InfoPopover } from '../components/InfoPopover'
 import { ArrowRight } from 'lucide-react'
 
@@ -13,26 +15,33 @@ interface Props {
 }
 
 export function OverviewView({ snapshot, research: _research, onOpen }: Props) {
+  const [vendors, setVendors] = useState<Set<string>>(
+    () => new Set(snapshot.models.map((m) => m.vendor)),
+  )
+  const filtered = useMemo(
+    () => snapshot.models.filter((m) => vendors.has(m.vendor)),
+    [snapshot.models, vendors],
+  )
+
   return (
     <>
       <section className="hero" aria-labelledby="hero-heading">
         <div className="hero-eyebrow meta meta-strong">
-          Independent · {formatDateTime(snapshot.generatedAt)} · updates every 12h
+          Independent · {formatDateTime(snapshot.generatedAt)} · updated every 12 hours
         </div>
         <h1 id="hero-heading">
-          Every Go and free model. <em>Measured.</em>
+          Every Go and free model, <em>compared.</em>
         </h1>
         <div className="hero-copy">
           <p>
-            OpenCode's Go and free models joined with Artificial Analysis intelligence scores,
-            published allowances, and honest privacy terms. Built for developers deciding what to
-            run this month — not a leaderboard for its own sake.
+            Artificial Analysis scores, published Go allowances, API prices, context windows, and
+            privacy terms in one catalog. Find the model that fits your budget and your data.
           </p>
           <div className="hero-actions">
             <a className="btn btn-primary" href="#models">
               Browse models <ArrowRight size={13} aria-hidden="true" />
             </a>
-            <a className="btn" href="#analysis">Intelligence vs cost</a>
+            <a className="btn" href="#analysis">Compare intelligence vs cost</a>
             <a className="btn" href="#about">How it works</a>
           </div>
         </div>
@@ -61,7 +70,10 @@ export function OverviewView({ snapshot, research: _research, onOpen }: Props) {
             </InfoPopover>
           </p>
         </div>
-        <PlanValue models={snapshot.models} />
+        <div className="stack">
+          <VendorFilter models={snapshot.models} selected={vendors} onChange={setVendors} />
+          <PlanValue models={filtered} />
+        </div>
       </section>
 
       <section className="section" aria-labelledby="picks-heading">
@@ -70,8 +82,8 @@ export function OverviewView({ snapshot, research: _research, onOpen }: Props) {
             <span className="section-index">[01]</span> Today's picks
           </h2>
           <p className="section-note">
-            Deterministic, recomputed on every refresh. Select a card to inspect the model and the
-            exact values behind the pick.
+            Five deterministic picks from the current snapshot. Open a card to see the numbers and
+            the rule behind it.
           </p>
         </div>
         <RecommendationGrid
