@@ -124,7 +124,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase --autostash
-          git add public/data/research.json
+          if [ -f public/data/research.json ]; then git add public/data/research.json; fi
           if git diff --cached --quiet; then
             echo "No research changes."
           else
