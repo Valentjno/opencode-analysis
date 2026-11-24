@@ -29,7 +29,8 @@ function ensureModel(feed, id, name = id) {
 
 function putEntry(feed, entry, { locked = false, now = new Date().toISOString() } = {}) {
   if (!entry || !entry.modelId || !entry.benchmarkId) return
-  const model = ensureModel(feed, entry.modelId)
+  const model = ensureModel(feed, entry.modelId, entry.sourceTitle || entry.modelId)
+  if (entry.sourceTitle && model.name === model.id) model.name = entry.sourceTitle
   const index = model.benchmarks.findIndex((item) => item.benchmarkId === entry.benchmarkId)
   const next = {
     ...stripModelId(entry),

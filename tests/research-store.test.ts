@@ -62,6 +62,11 @@ describe('gap selection and research store', () => {
     expect(next.models[0].benchmarks[0].locked).toBe(true)
   })
 
+  it('stores the human model name with a new entry', () => {
+    const feed = mergeResearch({ previous: empty, overrides: empty, candidates: [entry], now: NOW })
+    expect(feed.models[0].name).toBe('Kimi K3')
+  })
+
   it('marks entries stale after 30 days and superseded when AA has an index', () => {
     const feed = mergeResearch({ previous: empty, overrides: empty, candidates: [entry], now: NOW })
     const old = markStale(feed, Date.parse(NOW) + 31 * DAY)

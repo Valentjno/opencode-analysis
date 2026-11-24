@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { redact } from '../scripts/research/redact.mjs'
-import { chat } from '../scripts/research/router-client.mjs'
+import { chat, listRouterModels } from '../scripts/research/router-client.mjs'
 import { extract } from '../scripts/research/extract.mjs'
 import { benchmarkById } from '../scripts/research/registry.mjs'
 import { makeModel } from './fixtures/dataset'
@@ -47,6 +47,36 @@ describe('router client and extraction', () => {
     expect(result.provider).toBe('groq-cloud')
   })
 
+  it('lists exact provider/model ids from the router', async () => {
+    const models = await listRouterModels({
+      fetchImpl: async (url) => {
+        expect(url).toContain('/v1/models?all=1')
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ data: [{ id: 'groq-cloud/qwen/qwen3.8-27b', owned_by: 'groq-cloud' }] }),
+        }
+      },
+    })
+    expect(models).toHaveLength(1)
+    expect(models[0].id).toBe('groq-cloud/qwen/qwen3.8-27b')
+  })
+
+  it('sends a larger output budget when asked', async () => {
+    let captured
+    await chat({
+      profile: 'kilo-gateway/kilo-auto/free',
+      maxTokens: 6000,
+      messages: [],
+      fetchImpl: async (_url, options) => {
+        captured = JSON.parse(options.body)
+        return reply()
+      },
+    })
+    expect(captured.max_tokens).toBe(6000)
+    expect(captured.model).toBe('kilo-gateway/kilo-auto/free')
+  })
+
   it('returns structured extraction from a JSON response', async () => {
     const result = await extract({ model, benchmark, page, profile: 'auto:smart', fetchImpl: async () => reply() })
     expect(result).toMatchObject({ value: 93.5, unit: '%', provider: 'groq-cloud' })
@@ -77,6 +107,42 @@ describe('router client and extraction', () => {
     const loose = 'value: 93.5, unit: %, quote: "Kimi K3 results: GPQA Diamond 93.5%.", sourceUrl: https://github.com/MoonshotAI/Kimi-K3'
     const result = await extract({ model, benchmark, page, profile: 'auto:smart', fetchImpl: async () => reply({ text: loose }) })
     expect(result).toMatchObject({ value: 93.5, quote: 'Kimi K3 results: GPQA Diamond 93.5%.' })
+  })
+
+  it('builds a deterministic quote from a table row', async () => {
+    const tablePage = {
+      ...page,
+      text: 'Benchmark | Kimi K3 | Claude\nGPQA Diamond | 93.5 | 92.6',
+    }
+    const result = await extract({
+      model, benchmark, page: tablePage, profile: 'groq-cloud/qwen/qwen3.8-27b',
+      fetchImpl: async () => reply({
+        provider: 'groq-cloud',
+        text: JSON.stringify({ value: 93.5, unit: '%', quote: 'made up', sourceUrl: '' }),
+      }),
+    })
+    expect(result).toMatchObject({ value: 93.5, quote: 'GPQA Diamond | 93.5 | 92.6' })
+  })
+
+  it('rejects a table column that belongs to a different model variant', async () => {
+    const freeModel = makeModel('hy4-flash-free', {
+      name: 'Hy4 flash Free',
+      canonicalId: 'tencent/hy4-flash',
+    })
+    const basePage = {
+      ...page,
+      text: '| Benchmark | Hy4 flash Base | Hy4 Base |\n| MMMU-Pro (Standard, 10 opts) | 52.0 | 59.6 |',
+    }
+    const result = await extract({
+      model: freeModel,
+      benchmark: benchmarkById('mmmu-pro'),
+      page: basePage,
+      profile: 'groq-cloud/qwen/qwen3.8-27b',
+      fetchImpl: async () => reply({
+        text: JSON.stringify({ value: 52.0, unit: '%', quote: 'made up', sourceUrl: '' }),
+      }),
+    })
+    expect(result).toBeNull()
   })
 
   it('recovers a value from prose by quoting the page itself', async () => {

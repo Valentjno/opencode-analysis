@@ -542,3 +542,43 @@ The `nano-harness` family was reviewed as a possible base. It is not adopted:
 The research job stays a small Node pipeline using the existing `cheerio`
 dependency and native `fetch`, with the Free-LLM Router as the only model
 gateway.
+
+## 18. Revision 2026-11-24 — exact routing and page context
+
+The first live runs accepted zero values. The root causes were measured, not
+guessed, and the following changes replace the earlier `auto:*` design:
+
+- **Raw model cards first.** Benchmark tables live far below the first 12K
+  characters of a rendered Hugging Face page. The job now tries
+  `huggingface.co/{id}/raw/main/README.md`,
+  `raw.githubusercontent.com/{id}/main/README.md` and
+  `github.com/{id}/raw/main/README.md` before the rendered page. Raw cards are
+  smaller (Kimi K3: 44.9K characters, GPQA at 8.9K) and are plain text.
+- **Tables survive conversion.** HTML tables become pipe-separated rows, and
+  HTML tables embedded in a Markdown card served as `text/plain` are converted
+  too. Without this, a vendor table was invisible to extraction.
+- **Focused excerpt.** The prompt receives a window around the benchmark
+  mention, extended backwards to include the table header, not the first 12K
+  characters of the page.
+- **Exact model targets, not profiles.** The orchestrator reads
+  `/v1/models?all=1` and asks exact `provider/model` IDs in round-robin provider
+  order. `fallback_to_auto` must be `false`; otherwise an exact request can be
+  served by a different provider, which would make two confirmations look
+  independent when they are not.
+- **Reasoning-token budget.** `auto:*` profiles selected reasoning models that
+  spent the whole budget in `reasoning_content` and returned empty `content`.
+  Exact Groq `qwen/qwen3.8-27b` returns a clean extraction in under a second;
+  Kilo `kilo-auto/free` and `reflection/beam-free` succeed with 6000 output
+  tokens.
+- **Deterministic quote and table column.** The quote is rebuilt from the
+  cleaned page text, not copied from the model. For a table row the value must
+  be in the column whose header names this model. A `Hy4 flash Base` column is
+  rejected for `Hy4 flash Free`, and `SuperGPQA` no longer satisfies a `GPQA`
+  mention.
+- **Provider requirement unchanged.** Two different
+  `x-free-llm-provider` values, agreement within tolerance, and the quote must
+  exist in the page before a value is published.
+
+Locally verified against the real Kimi K3.1 Pro card: GPQA Diamond 94.2 and
+MMMU-Pro 84.1, each confirmed by `groq-cloud` and `kilo-gateway`. Google AI
+Studio remains disabled; Groq and Kilo are the two required providers.

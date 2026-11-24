@@ -37,7 +37,11 @@ export function officialUrlAllowed(url, canonicalId) {
     (parsed.hostname === 'github.com' || parsed.hostname === 'huggingface.co' || parsed.hostname === 'www.github.com') &&
     segments.length > 0 &&
     source.orgs.some((org) => segments[0].toLowerCase() === org.toLowerCase())
-  return hostAllowed || orgAllowed
+  const rawGithubAllowed =
+    parsed.hostname === 'raw.githubusercontent.com' &&
+    segments.length > 1 &&
+    source.orgs.some((org) => segments[0].toLowerCase() === org.toLowerCase())
+  return hostAllowed || orgAllowed || rawGithubAllowed
 }
 
 function resolveDdgHref(href) {
@@ -56,13 +60,14 @@ function fallbackUrls(model) {
   if (!source) return []
   const urls = []
 
-  // Prefer the model's own page: model cards carry the benchmark tables.
+  // Prefer raw model cards: they are small, plain text, and carry the benchmark tables.
   if (typeof model.canonicalId === 'string' && model.canonicalId.includes('/')) {
     const id = model.canonicalId.replace(/^\/+|\/+$/g, '')
+    urls.push(`https://huggingface.co/${id}/raw/main/README.md`)
+    urls.push(`https://raw.githubusercontent.com/${id}/main/README.md`)
+    urls.push(`https://github.com/${id}/raw/main/README.md`)
     urls.push(`https://huggingface.co/${id}`)
-    urls.push(`https://huggingface.co/${id}/blob/main/README.md`)
     urls.push(`https://github.com/${id}`)
-    urls.push(`https://github.com/${id}/blob/main/README.md`)
   }
   for (const org of source.orgs) {
     urls.push(`https://github.com/${org}`)
@@ -77,12 +82,13 @@ function fallbackUrls(model) {
 }
 
 export async function search({ model, benchmark, fetchImpl = fetch }) {
+  const direct = fallbackUrls(model).filter((result) => officialUrlAllowed(result.url, model.canonicalId))
   const query = `"${model.name}" "${benchmark.label}" benchmark score`
   let html = ''
   try {
     const response = await fetchImpl(`https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`, {
       headers: { 'user-agent': 'OpenCodeAnalysisResearch/1.0', accept: 'text/html' },
-      signal: AbortSignal.timeout(20_000),
+      signal: AbortSignal.timeout(8_000),
     })
     if (response.ok && response.status !== 202 && response.status !== 429) {
       html = await response.text()
@@ -91,9 +97,7 @@ export async function search({ model, benchmark, fetchImpl = fetch }) {
     html = ''
   }
 
-  if (!html || /captcha|anomaly-modal/i.test(html)) {
-    return fallbackUrls(model).filter((result) => officialUrlAllowed(result.url, model.canonicalId)).slice(0, 10)
-  }
+  if (!html || /captcha|anomaly-modal/i.test(html)) return direct.slice(0, 10)
 
   const $ = load(html)
   const results = []
@@ -102,8 +106,24 @@ export async function search({ model, benchmark, fetchImpl = fetch }) {
     if (!url || !officialUrlAllowed(url, model.canonicalId)) return
     results.push({ url, title: $(element).text().trim() })
   })
-  if (results.length === 0) {
-    return fallbackUrls(model).filter((result) => officialUrlAllowed(result.url, model.canonicalId)).slice(0, 10)
+
+  // Keep the three raw-card guesses first, then let search results correct a
+  // wrong canonical repo name, then fall back to the remaining direct pages.
+  const seen = new Set()
+  const merged = []
+  for (const result of direct.slice(0, 3)) {
+    seen.add(result.url)
+    merged.push(result)
   }
-  return results.slice(0, 10)
+  for (const result of results) {
+    if (seen.has(result.url)) continue
+    seen.add(result.url)
+    merged.push(result)
+  }
+  for (const result of direct.slice(3)) {
+    if (seen.has(result.url)) continue
+    seen.add(result.url)
+    merged.push(result)
+  }
+  return merged.slice(0, 10)
 }

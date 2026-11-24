@@ -1,3 +1,5 @@
+import { tableColumnMatches } from './context.mjs'
+
 const normalize = (text) => String(text ?? '').replace(/\s+/g, ' ').trim().toLowerCase()
 
 function numberForms(value) {
@@ -11,7 +13,7 @@ function numberForms(value) {
   return forms
 }
 
-function quoteContainsFacts(candidate, model, benchmark) {
+function quoteContainsFacts(candidate, model, benchmark, pageText) {
   const text = normalize(candidate.quote)
   const names = [model.name, model.id, model.canonicalId?.split('/').pop()]
     .filter(Boolean)
@@ -21,7 +23,7 @@ function quoteContainsFacts(candidate, model, benchmark) {
   const hasBenchmark = labels.some((label) => text.includes(label))
   const forms = [...numberForms(candidate.value)].map(normalize)
   const hasValue = forms.some((form) => text.includes(form))
-  return hasModel && hasBenchmark && hasValue
+  return hasBenchmark && hasValue && (hasModel || tableColumnMatches(pageText, model, benchmark, candidate.value))
 }
 
 function agrees(candidate, other, benchmark) {
@@ -34,7 +36,7 @@ export function verifyCandidate({ candidate, other, model, benchmark, pageText, 
   if (!candidate || !other || !candidate.provider || candidate.provider === other.provider) {
     return { status: 'single-source' }
   }
-  if (!quoteContainsFacts(candidate, model, benchmark)) return { status: 'quote-mismatch' }
+  if (!quoteContainsFacts(candidate, model, benchmark, pageText)) return { status: 'quote-mismatch' }
   if (!normalize(pageText).includes(normalize(candidate.quote))) return { status: 'quote-mismatch' }
   if (!agrees(candidate, other, benchmark)) return { status: 'conflict' }
 

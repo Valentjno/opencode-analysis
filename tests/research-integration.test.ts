@@ -13,6 +13,10 @@ const snapshot = {
   models: [makeModel('kimi-k3', { name: 'Kimi K3', canonicalId: 'moonshotai/kimi-k3', ii: null })],
 }
 const quote = 'Kimi K3 results: GPQA Diamond 93.5%.'
+const availableModels = [
+  { id: 'groq-cloud/qwen/qwen3.8-27b', owned_by: 'groq-cloud' },
+  { id: 'kilo-gateway/kilo-auto/free', owned_by: 'kilo-gateway' },
+]
 const pageText = `${quote} Other: 1%`
 
 function htmlResponse(url, text) {
@@ -54,13 +58,16 @@ describe('research orchestrator', () => {
       overrides: { entries: [] },
       maxModels: 1,
       maxPerModel: 1,
+      availableModels,
       now: NOW,
       fetchImpl: async (url) => {
         const target = String(url)
         if (target.includes('duckduckgo')) {
           return htmlResponse(target, '<a class="result__a" href="https://github.com/MoonshotAI/Kimi-K3">Kimi K3</a>')
         }
-        if (target.includes('github.com')) return htmlResponse(target, `<html><body>${pageText}</body></html>`)
+        if (target === 'https://huggingface.co/moonshotai/kimi-k3/raw/main/README.md') {
+          return htmlResponse(target, `<html><body>${pageText}</body></html>`)
+        }
         return htmlResponse(target, '')
       },
       chatImpl: async () => {
@@ -70,7 +77,9 @@ describe('research orchestrator', () => {
     })
 
     expect(feed.models[0].benchmarks[0].status).toBe('verified')
-    expect(feed.models[0].benchmarks[0].sourceUrl).toBe('https://github.com/MoonshotAI/Kimi-K3')
+    expect(feed.models[0].benchmarks[0].sourceUrl).toBe(
+      'https://huggingface.co/moonshotai/kimi-k3/raw/main/README.md',
+    )
     expect(feed.run.rejected).toBeGreaterThanOrEqual(0)
     expect(JSON.stringify(feed)).not.toMatch(/gsk_|AIza|fllm-/)
   })
@@ -78,7 +87,7 @@ describe('research orchestrator', () => {
   it('uses the fetched URL, not the URL returned by the model', async () => {
     const feed = await runResearch({
       snapshot, research: emptyFeed, overrides: { entries: [] },
-      maxModels: 1, maxPerModel: 1, now: NOW,
+      maxModels: 1, maxPerModel: 1, availableModels, now: NOW,
       fetchImpl: async (url) => {
         const target = String(url)
         if (target.includes('duckduckgo')) return htmlResponse(target, '<a class="result__a" href="https://github.com/MoonshotAI/Kimi-K3">Kimi K3</a>')
@@ -96,7 +105,10 @@ describe('research orchestrator', () => {
         })
       })(),
     })
-    expect(feed.models[0].benchmarks[0].sourceUrl).toBe('https://github.com/MoonshotAI/Kimi-K3')
+    expect(feed.models[0].benchmarks[0].sourceUrl).toBe(
+      'https://huggingface.co/moonshotai/kimi-k3/raw/main/README.md',
+    )
+    expect(feed.models[0].benchmarks[0].sourceUrl).not.toContain('evil.example.com')
   })
 
   it('re-verifies entries older than 30 days', async () => {
@@ -113,7 +125,7 @@ describe('research orchestrator', () => {
     }
     const feed = await runResearch({
       snapshot, research, overrides: { entries: [] },
-      maxModels: 1, maxPerModel: 1, now: NOW,
+      maxModels: 1, maxPerModel: 1, availableModels, now: NOW,
       fetchImpl: async (url) => {
         const target = String(url)
         if (target.includes('duckduckgo')) return htmlResponse(target, '<a class="result__a" href="https://github.com/MoonshotAI/Kimi-K3">Kimi K3</a>')
@@ -137,7 +149,7 @@ describe('research orchestrator', () => {
     const research = { ...emptyFeed, models: [{ id: 'kimi-k3', name: 'Kimi K3', benchmarks: [entry] }] }
     const rated = { models: [makeModel('kimi-k3', { name: 'Kimi K3', canonicalId: 'moonshotai/kimi-k3', ii: 50 })] }
     const feed = await runResearch({
-      snapshot: rated, research, overrides: { entries: [] }, maxModels: 1, maxPerModel: 1, now: NOW,
+      snapshot: rated, research, overrides: { entries: [] }, maxModels: 1, maxPerModel: 1, availableModels, now: NOW,
       fetchImpl: async () => htmlResponse('https://example.test', ''),
       chatImpl: async () => chatResponse('groq-cloud'),
     })
@@ -147,7 +159,7 @@ describe('research orchestrator', () => {
   it('rejects an out-of-range extraction instead of publishing it raw', async () => {
     const feed = await runResearch({
       snapshot, research: emptyFeed, overrides: { entries: [] },
-      maxModels: 1, maxPerModel: 1, now: NOW,
+      maxModels: 1, maxPerModel: 1, availableModels, now: NOW,
       fetchImpl: async (url) => {
         const target = String(url)
         if (target.includes('duckduckgo')) return htmlResponse(target, '<a class="result__a" href="https://github.com/MoonshotAI/Kimi-K3">Kimi K3</a>')

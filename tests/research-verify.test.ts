@@ -26,6 +26,33 @@ describe('candidate verification', () => {
     expect(verifyCandidate({ candidate: bad, other, model, benchmark, pageText }).status).toBe('quote-mismatch')
   })
 
+  it('accepts a table row when the value sits in the model column', () => {
+    const tableText = 'Benchmark | Kimi K3 | Claude\nGPQA Diamond | 93.5 | 92.6'
+    const tableCandidate = {
+      ...candidate,
+      quote: 'GPQA Diamond | 93.5 | 92.6',
+    }
+    expect(verifyCandidate({
+      candidate: tableCandidate,
+      other: { ...other, quote: tableCandidate.quote },
+      model, benchmark, pageText: tableText,
+    }).status).toBe('verified')
+  })
+
+  it('rejects the same row when the value belongs to another model column', () => {
+    const tableText = 'Benchmark | Kimi K3 | Claude\nGPQA Diamond | 93.5 | 92.6'
+    const wrongColumn = {
+      ...candidate,
+      value: 92.6,
+      quote: 'GPQA Diamond | 93.5 | 92.6',
+    }
+    expect(verifyCandidate({
+      candidate: wrongColumn,
+      other: { ...other, value: 92.6, quote: wrongColumn.quote },
+      model, benchmark, pageText: tableText,
+    }).status).toBe('quote-mismatch')
+  })
+
   it('requires two different providers and tolerates rounding', () => {
     expect(verifyCandidate({
       candidate, other: { ...candidate, provider: 'google-ai-studio' }, model, benchmark, pageText,

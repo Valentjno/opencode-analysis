@@ -1,17 +1,43 @@
 import { redact } from './redact.mjs'
 
-const ROUTER_URL = 'http://127.0.0.1:4000/v1/chat/completions'
-const TIMEOUT_MS = 60_000
+const ROUTER_BASE = (process.env.FREE_LLM_ROUTER_URL ?? 'http://127.0.0.1:4000').replace(/\/+$/, '')
+const ROUTER_URL = `${ROUTER_BASE}/v1/chat/completions`
+const MODELS_URL = `${ROUTER_BASE}/v1/models?all=1`
+const TIMEOUT_MS = 75_000
+
+function defaultKey() {
+  return process.env.FREE_LLM_API_KEY ?? 'fllm-local'
+}
 
 export function providerFromResponse(response) {
   return response?.headers?.get?.('x-free-llm-provider') ?? null
 }
 
+export function modelFromResponse(response) {
+  return response?.headers?.get?.('x-free-llm-model') ?? null
+}
+
+export async function listRouterModels({
+  fetchImpl = fetch,
+  apiKey = defaultKey(),
+  timeoutMs = 20_000,
+} = {}) {
+  const response = await fetchImpl(MODELS_URL, {
+    headers: { authorization: `Bearer ${apiKey}` },
+    signal: AbortSignal.timeout(timeoutMs),
+  })
+  if (!response.ok) throw new Error(`Router model list returned HTTP ${response.status}`)
+  const data = await response.json()
+  return Array.isArray(data?.data) ? data.data : []
+}
+
 export async function chat({
   profile,
+  model,
   messages,
   fetchImpl = fetch,
-  apiKey = process.env.FREE_LLM_API_KEY ?? 'fllm-local',
+  apiKey = defaultKey(),
+  maxTokens = 3_000,
 }) {
   let lastError = null
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -24,10 +50,10 @@ export async function chat({
           'content-type': 'application/json',
         },
         body: JSON.stringify({
-          model: profile,
+          model: model ?? profile,
           messages,
           temperature: 0,
-          max_tokens: 600,
+          max_tokens: maxTokens,
         }),
         signal: AbortSignal.timeout(TIMEOUT_MS),
       })
@@ -56,12 +82,18 @@ export async function chat({
       lastError = new Error('Router returned invalid JSON')
       break
     }
-    const text = data?.choices?.[0]?.message?.content
+    const message = data?.choices?.[0]?.message
+    const text = message?.content
     if (typeof text !== 'string') {
       lastError = new Error('Router response had no message content')
       break
     }
-    return { text, provider: providerFromResponse(response) ?? 'unknown' }
+    return {
+      text,
+      reasoning: typeof message?.reasoning_content === 'string' ? message.reasoning_content : '',
+      provider: providerFromResponse(response) ?? 'unknown',
+      model: modelFromResponse(response),
+    }
   }
   throw lastError ?? new Error('Router request failed')
 }

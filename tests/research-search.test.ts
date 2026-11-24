@@ -34,7 +34,38 @@ describe('safe search and fetch', () => {
       benchmark,
       fetchImpl: async () => response({ text: html }),
     })
-    expect(results[0].url).toContain('github.com/MoonshotAI')
+    expect(results.some((result) => result.url.includes('github.com/MoonshotAI'))).toBe(true)
+  })
+
+  it('converts an HTML table into readable pipe-separated rows', async () => {
+    const html = '<html><body><table><tr><th>Benchmark</th><th>Kimi K3</th></tr><tr><td>GPQA Diamond</td><td>93.5</td></tr></table></body></html>'
+    const page = await fetchPage('https://example.test/table', {
+      fetchImpl: async () => response({ text: html }),
+    })
+    expect(page?.text).toContain('Benchmark | Kimi K3')
+    expect(page?.text).toContain('GPQA Diamond | 93.5')
+  })
+
+  it('preserves newlines in plain-text model cards', async () => {
+    const page = await fetchPage('https://example.test/README.md', {
+      fetchImpl: async () => response({ contentType: 'text/plain', text: 'Benchmark | Kimi K3\nGPQA Diamond | 93.5' }),
+    })
+    expect(page?.text).toBe('Benchmark | Kimi K3\nGPQA Diamond | 93.5')
+  })
+
+  it('converts HTML tables embedded in a plain-text model card', async () => {
+    const raw = [
+      '## Results',
+      '<table>',
+      '<tr><th>Benchmark</th><th>Kimi K3</th></tr>',
+      '<tr><td>GPQA Diamond</td><td>93.5</td></tr>',
+      '</table>',
+    ].join('\n')
+    const page = await fetchPage('https://example.test/README.md', {
+      fetchImpl: async () => response({ contentType: 'text/plain', text: raw }),
+    })
+    expect(page?.text).toContain('Benchmark | Kimi K3')
+    expect(page?.text).toContain('GPQA Diamond | 93.5')
   })
 
   it('blocks SSRF redirects', async () => {
@@ -59,6 +90,7 @@ describe('safe search and fetch', () => {
       fetchImpl: async () => response({ text: '<html><body>No results here</body></html>' }),
     })
     expect(results.length).toBeGreaterThan(0)
+    expect(results[0].url).toBe('https://huggingface.co/moonshotai/kimi-k3/raw/main/README.md')
     expect(results.some((r) => r.url === 'https://huggingface.co/moonshotai/kimi-k3')).toBe(true)
   })
 
@@ -67,6 +99,8 @@ describe('safe search and fetch', () => {
     expect(officialUrlAllowed('https://evil-moonshot.cn/model', id)).toBe(false)
     expect(officialUrlAllowed('https://github.com/attacker/moonshotai/notes', id)).toBe(false)
     expect(officialUrlAllowed('https://github.com/MoonshotAI/Kimi-K3', id)).toBe(true)
+    expect(officialUrlAllowed('https://raw.githubusercontent.com/MoonshotAI/Kimi-K3/main/README.md', id)).toBe(true)
+    expect(officialUrlAllowed('https://raw.githubusercontent.com/attacker/Kimi-K3/main/README.md', id)).toBe(false)
   })
 
   it('follows redirects manually and rejects a private location before fetching it', async () => {

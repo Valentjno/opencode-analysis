@@ -1,31 +1,8 @@
 import { chat } from './router-client.mjs'
+import { findQuote, focusExcerpt, tableColumnMatches } from './context.mjs'
+import { normalizeValue } from './registry.mjs'
 
-const norm = (text) => String(text ?? '').replace(/\s+/g, ' ').trim().toLowerCase()
-
-function quoteFromPage(text, model, benchmark, value) {
-  const names = [model.name, model.id, model.canonicalId?.split('/').pop()]
-    .filter(Boolean)
-    .map(norm)
-  const labels = [benchmark.label, ...benchmark.aliases].map(norm)
-  const forms = new Set([String(value), String(Number((value / 100).toFixed(4)))])
-  const sentences = String(text ?? '').split(/(?<=[.!?])\s+/)
-  for (let size = 1; size <= 3; size += 1) {
-    for (let index = 0; index <= sentences.length - size; index += 1) {
-      const window = sentences.slice(index, index + size).join(' ').trim()
-      const normalized = norm(window)
-      if (
-        names.some((name) => normalized.includes(name)) &&
-        labels.some((label) => normalized.includes(label)) &&
-        [...forms].some((form) => normalized.includes(form))
-      ) {
-        return window
-      }
-    }
-  }
-  return null
-}
-
-const SYSTEM = `You are a strict data extractor. You will receive a page text delimited by <page_text> tags.
+const SYSTEM = `You are a strict data extractor. You will receive a page excerpt delimited by <page_text> tags.
 
 RULES:
 1. Use ONLY facts that appear verbatim in <page_text>. Never use your training knowledge, never guess, never estimate, never say "about" or "approximately".
@@ -35,27 +12,68 @@ RULES:
    {"value": number, "unit": string, "quote": string, "sourceUrl": string}
    - "value": the exact number from the page, without the % sign.
    - "unit": "%" for percentage scores, "raw" otherwise.
-   - "quote": copied VERBATIM from <page_text>, at least 20 characters. It MUST contain the model name, the benchmark name, and the number. Do not paraphrase.
+   - "quote": copied VERBATIM from <page_text>, at least 20 characters. It MUST contain the benchmark name and the number. Do not paraphrase.
    - "sourceUrl": the page URL you were given.
-5. If the page does not contain an exact number for this model and this benchmark, output exactly:
+5. Tables are pipe-separated: cell 1 is the benchmark, cell 2 belongs to the first model column, cell 3 to the second, and so on. The model name is in the header row. Read the value from the column whose header names the requested model.
+6. If the page does not contain an exact number for this model and this benchmark, output exactly:
    {"value": null, "quote": "", "sourceUrl": ""}
-6. If the page contains scores for other models, ignore them. Only the requested model counts.
+7. If the page contains scores for other models, ignore them. Only the requested model counts.
+8. Do not explain your reasoning. Answer immediately with the JSON object.
 
 EXAMPLE of a valid answer:
-{"value": 93.5, "unit": "%", "quote": "Kimi K3 — GPQA Diamond: 93.5%", "sourceUrl": "https://github.com/MoonshotAI/Kimi-K3"}`
+{"value": 93.5, "unit": "%", "quote": "GPQA Diamond | 93.5 | 92.6", "sourceUrl": "https://huggingface.co/moonshotai/kimi-k3/raw/main/README.md"}`
 
-export async function extract({ model, benchmark, page, profile, fetchImpl = fetch }) {
+function parsePayload(text) {
+  let payload = String(text ?? '').trim()
+  if (payload.startsWith('```')) payload = payload.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim()
+
+  const start = payload.indexOf('{')
+  const end = payload.lastIndexOf('}')
+  if (start !== -1 && end > start) {
+    try {
+      const parsed = JSON.parse(payload.slice(start, end + 1))
+      if (parsed && typeof parsed === 'object') return parsed
+    } catch {
+      // Fall through to the loose parser.
+    }
+  }
+
+  const valueMatch = payload.match(/(?:"value"|value|score)\s*(?:is|was|of|=|:)?\s*(-?[0-9]+(?:[.,][0-9]+)?)/i)
+  if (!valueMatch) return null
+  return {
+    value: Number(valueMatch[1].replace(',', '.')),
+    unit: payload.match(/(?:"unit"|unit)\s*[:=]\s*"?([^"\s,}]+)/i)?.[1] ?? '%',
+    quote: payload.match(/(?:"quote"|quote)\s*[:=]\s*"((?:[^"\\]|\\.)*)"/i)?.[1] ?? '',
+    sourceUrl: payload.match(/https:\/\/[^\s"',}]+/i)?.[0] ?? '',
+  }
+}
+
+export async function extract({
+  model,
+  benchmark,
+  page,
+  profile,
+  routerModel,
+  fetchImpl = fetch,
+  maxTokens = 3_000,
+}) {
+  const excerpt = focusExcerpt(page?.text, model, benchmark)
+  if (!excerpt) return null
+
   const prompt = [
     `Model: ${model.name}`,
     `Benchmark: ${benchmark.label}`,
     `Page URL: ${page.sourceUrl ?? ''}`,
     '<page_text>',
-    page.text.slice(0, 12_000),
+    excerpt,
     '</page_text>',
   ].join('\n')
 
+  const requestedModel = routerModel ?? profile
   const { text, provider } = await chat({
     profile,
+    model: requestedModel,
+    maxTokens,
     messages: [
       { role: 'system', content: SYSTEM },
       { role: 'user', content: prompt },
@@ -63,62 +81,23 @@ export async function extract({ model, benchmark, page, profile, fetchImpl = fet
     fetchImpl,
   })
 
-  let payload = text.trim()
-  if (payload.startsWith('```')) payload = payload.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim()
-  const start = payload.indexOf('{')
-  const end = payload.lastIndexOf('}')
-  let parsed = null
-  if (start !== -1 && end > start) {
-    try {
-      parsed = JSON.parse(payload.slice(start, end + 1))
-    } catch {
-      parsed = null
-    }
-  }
-  if (!parsed) {
-    const valueMatch = payload.match(/(?:"value"|value|score)\s*[:=]?\s*([0-9]+(?:\.[0-9]+)?)/i)
-    const quoteMatch = payload.match(/(?:"quote"|quote)\s*[:=]\s*"([^"]+)"/i)
-    const urlMatch = payload.match(/https:\/\/[^\s"',}]+/i)
-    if (valueMatch && quoteMatch && urlMatch) {
-      parsed = {
-        value: Number(valueMatch[1]),
-        unit: (payload.match(/(?:"unit"|unit)\s*[:=]\s*"?([^"\s,}]+)/i)?.[1]) ?? '%',
-        quote: quoteMatch[1],
-        sourceUrl: urlMatch[0],
-      }
-    } else {
-      const numberMatch = payload.match(/[0-9]+(?:\.[0-9]+)?/)
-      if (numberMatch) {
-        const value = Number(numberMatch[0])
-        const quote = quoteFromPage(page.text, model, benchmark, value)
-        if (quote) {
-          parsed = {
-            value,
-            unit: quote.includes('%') ? '%' : 'raw',
-            quote,
-            sourceUrl: page.sourceUrl,
-          }
-        }
-      }
-    }
-  }
-  if (!parsed) return null
-  if (
-    typeof parsed.value !== 'number' ||
-    !Number.isFinite(parsed.value) ||
-    typeof parsed.unit !== 'string' ||
-    typeof parsed.quote !== 'string' ||
-    typeof parsed.sourceUrl !== 'string'
-  ) {
-    return null
-  }
+  const parsed = parsePayload(text)
+  if (!parsed || typeof parsed.value !== 'number' || !Number.isFinite(parsed.value)) return null
+
+  const unitHint = typeof parsed.unit === 'string' && parsed.unit ? parsed.unit : benchmark.unit
+  const value = normalizeValue(benchmark.id, parsed.value, unitHint)
+  if (value === null) return null
+
+  const quote = findQuote(page.text, model, benchmark, value)
+  if (!quote) return null
+  if (quote.includes('|') && !tableColumnMatches(page.text, model, benchmark, value)) return null
 
   return {
-    value: parsed.value,
-    unit: parsed.unit,
-    quote: parsed.quote,
-    sourceUrl: parsed.sourceUrl,
+    value,
+    unit: benchmark.unit,
+    quote,
+    sourceUrl: page.sourceUrl ?? '',
     provider,
-    profile,
+    profile: requestedModel,
   }
 }

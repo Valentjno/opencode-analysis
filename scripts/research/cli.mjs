@@ -3,15 +3,24 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { selectGaps } from './gaps.mjs'
 import { applyOverrides, markStale, mergeResearch } from './store.mjs'
-import { officialUrlAllowed } from './search.mjs'
-import { search } from './search.mjs'
+import { officialUrlAllowed, search } from './search.mjs'
 import { fetchPage } from './fetch-page.mjs'
 import { extract } from './extract.mjs'
+import { mentionsBenchmark } from './context.mjs'
 import { verifyCandidate } from './verify.mjs'
-import { normalizeValue } from './registry.mjs'
+import { listRouterModels } from './router-client.mjs'
+import { rankTargets } from './targets.mjs'
 import { redact } from './redact.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..')
+
+function toleranceFor(benchmark) {
+  return benchmark.unit === '%' ? 0.05 : 0.0001
+}
+
+function maxTokensFor(target) {
+  return target.provider === 'groq-cloud' ? 3_000 : 6_000
+}
 
 export async function runResearch({
   snapshot,
@@ -19,8 +28,10 @@ export async function runResearch({
   overrides,
   fetchImpl = fetch,
   chatImpl = fetch,
+  availableModels,
   maxModels = 5,
   maxPerModel = 3,
+  maxCallsPerGap = 6,
   now = new Date().toISOString(),
 } = {}) {
   const prepared = applyOverrides(markStale(research, now), overrides, snapshot)
@@ -32,11 +43,26 @@ export async function runResearch({
     reasons[reason] = (reasons[reason] ?? 0) + 1
   }
 
+  let targets = availableModels ? rankTargets(availableModels) : null
+  if (!targets) {
+    try {
+      targets = rankTargets(await listRouterModels({ fetchImpl: chatImpl }))
+    } catch {
+      targets = []
+    }
+  }
+
+  if (!targets.length) {
+    for (let index = 0; index < gaps.length; index += 1) reject('no-router-models')
+  }
+
   for (const gap of gaps) {
+    if (!targets.length) break
     try {
       const results = await search({ model: gap.model, benchmark: gap.benchmark, fetchImpl })
-      let handled = false
-      for (const result of results.slice(0, 3)) {
+      let acceptedForGap = false
+
+      for (const result of results.slice(0, 6)) {
         const page = await fetchPage(result.url, {
           fetchImpl,
           allowedUrl: (next) => officialUrlAllowed(next, gap.model.canonicalId),
@@ -45,42 +71,76 @@ export async function runResearch({
           reject('fetch-failed')
           continue
         }
-        const withUrl = { ...page, sourceUrl: result.url }
-
-        const profiles = ['auto:smart', 'auto:spread', 'auto:reasoning', 'auto:coding', 'auto:long', 'auto:fast']
-        const candidates = []
-        for (const profile of profiles) {
-          if (candidates.length >= 2) break
-          const value = await extract({
-            model: gap.model, benchmark: gap.benchmark, page: withUrl, profile, fetchImpl: chatImpl,
-          })
-          if (!value) {
-            reject('malformed-extraction')
-            continue
-          }
-          if (candidates.some((item) => item.provider === value.provider)) continue
-          candidates.push({ ...value, sourceUrl: result.url })
+        if (!mentionsBenchmark(page.text, gap.benchmark)) {
+          reject('page-missing-benchmark')
+          continue
         }
 
-        if (candidates.length < 2) {
+        const withUrl = { ...page, sourceUrl: result.url }
+        const candidates = []
+        let calls = 0
+        let conflicting = false
+
+        const attempt = async (target) => {
+          if (calls >= maxCallsPerGap) return null
+          calls += 1
+          try {
+            const candidate = await extract({
+              model: gap.model,
+              benchmark: gap.benchmark,
+              page: withUrl,
+              profile: target.id,
+              routerModel: target.id,
+              fetchImpl: chatImpl,
+              maxTokens: maxTokensFor(target),
+            })
+            if (!candidate) {
+              reject('malformed-extraction')
+              return null
+            }
+            return { ...candidate, sourceUrl: result.url }
+          } catch (error) {
+            reject('error')
+            console.warn(redact(`Research failed for ${gap.model.id}/${gap.benchmark.id} on ${target.id}: ${error.message}`))
+            return null
+          }
+        }
+
+        for (const target of targets) {
+          if (candidates.length >= 1 || calls >= maxCallsPerGap) break
+          const candidate = await attempt(target)
+          if (candidate) candidates.push(candidate)
+        }
+
+        if (!candidates.length) continue
+        const first = candidates[0]
+        if (!first.provider || first.provider === 'unknown') {
           reject('single-source')
           continue
         }
 
-        const normalized = []
-        for (const item of candidates) {
-          const value = normalizeValue(gap.benchmark.id, item.value, item.unit)
-          if (value === null) {
-            reject('out-of-range')
-            normalized.length = 0
+        const tolerance = toleranceFor(gap.benchmark)
+        for (const target of targets) {
+          if (calls >= maxCallsPerGap || candidates.length >= 2) break
+          if (target.provider === first.provider) continue
+          const candidate = await attempt(target)
+          if (!candidate) continue
+          if (!candidate.provider || candidate.provider === first.provider) continue
+          if (Math.abs(candidate.value - first.value) <= tolerance) {
+            candidates.push(candidate)
             break
           }
-          normalized.push({ ...item, value })
+          conflicting = true
         }
-        if (normalized.length < 2) continue
+
+        if (candidates.length < 2) {
+          reject(conflicting ? 'conflict' : 'single-source')
+          continue
+        }
+
         const verdict = verifyCandidate({
-          candidate: normalized[0],
-          other: normalized[1],
+          candidate: candidates[0],
+          other: candidates[1],
           model: gap.model,
           benchmark: gap.benchmark,
           pageText: page.text,
@@ -92,10 +152,11 @@ export async function runResearch({
           continue
         }
         accepted.push(verdict.entry)
-        handled = true
+        acceptedForGap = true
         break
       }
-      if (!handled && accepted.length === 0 && Object.keys(reasons).length === 0) reject('no-source')
+
+      if (!acceptedForGap && accepted.length === 0 && Object.keys(reasons).length === 0) reject('no-source')
     } catch (error) {
       reject('error')
       console.warn(redact(`Research failed for ${gap.model.id}/${gap.benchmark.id}: ${error.message}`))
@@ -155,6 +216,10 @@ export async function main() {
     `Research: ${feed.run.accepted} accepted, ${feed.run.rejected} rejected, ${feed.run.modelsResearched} pairs. Reasons: ${JSON.stringify(feed.run.reasons)}`,
   )
   if (args['dry-run']) return
+  if (feed.run.accepted === 0) {
+    console.log('No verified values; keeping the existing research feed unchanged.')
+    return
+  }
 
   const output = path.join(ROOT, 'public', 'data', 'research.json')
   await mkdir(path.dirname(output), { recursive: true })

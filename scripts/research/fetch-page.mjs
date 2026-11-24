@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto'
+import { load } from 'cheerio'
 import { isPrivateUrl } from './search.mjs'
 
 const MAX_BYTES = 2 * 1024 * 1024
@@ -8,7 +9,41 @@ const REDIRECT_CODES = new Set([301, 302, 303, 307, 308])
 
 function contentTypeAllowed(response) {
   const type = (response.headers?.get?.('content-type') ?? '').toLowerCase()
-  return type.includes('text/html') || type.includes('text/plain')
+  return type.includes('text/html') || type.includes('text/plain') || type.includes('text/markdown')
+}
+
+function normalizeLines(text) {
+  return String(text ?? '')
+    .split(/\r?\n/)
+    .map((line) => line.replace(/[ \t\f\v]+/g, ' ').trim())
+    .filter(Boolean)
+    .join('\n')
+}
+
+export function htmlToText(html) {
+  const $ = load(html)
+  $('script,style,noscript,svg,template,iframe').remove()
+
+  $('tr').each((_, row) => {
+    const cells = $(row)
+      .find('td,th')
+      .map((_, cell) => $(cell).text().replace(/\s+/g, ' ').trim())
+      .get()
+    if (cells.length) {
+      const line = cells.join(' | ').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      $(row).replaceWith(`\n${line}\n`)
+    }
+  })
+
+  $('p,div,br,li,h1,h2,h3,h4,h5,h6,thead,tbody,table,section,article,header,footer').each((_, element) => {
+    $(element).append('\n')
+  })
+
+  return normalizeLines($.root().text())
+}
+
+function looksLikeHtmlTable(text) {
+  return /<(?:table|tr|td|th)[\s>]/i.test(String(text ?? ''))
 }
 
 export async function fetchPage(url, {
@@ -52,17 +87,21 @@ export async function fetchPage(url, {
     const declared = Number(response.headers?.get?.('content-length') ?? 0)
     if (declared > maxBytes) return null
 
-    let text
+    let raw
     try {
-      text = await response.text()
+      raw = await response.text()
     } catch {
       return null
     }
+    if (Buffer.byteLength(raw, 'utf8') > maxBytes) return null
+
+    const type = (response.headers?.get?.('content-type') ?? '').toLowerCase()
+    const text = type.includes('text/html') || looksLikeHtmlTable(raw) ? htmlToText(raw) : normalizeLines(raw)
+    if (!text) return null
     if (Buffer.byteLength(text, 'utf8') > maxBytes) return null
 
-    const normalized = text.replace(/\s+/g, ' ').trim()
-    const hash = `sha256:${createHash('sha256').update(normalized).digest('hex')}`
-    return { text: normalized, hash }
+    const hash = `sha256:${createHash('sha256').update(text).digest('hex')}`
+    return { text, hash }
   }
   return null
 }
