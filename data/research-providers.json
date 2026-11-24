@@ -1,0 +1,22 @@
+{
+  "providers": [
+    { "id": "groq-cloud", "label": "Groq", "env": ["GROQ_API_KEY"], "enabled": true },
+    { "id": "kilo-gateway", "label": "Kilo", "env": ["KILO_API_KEY"], "enabled": true },
+    { "id": "openrouter", "label": "OpenRouter", "env": ["OPENROUTER_API_KEY"], "enabled": true },
+    { "id": "requesty", "label": "Requesty", "env": ["REQUESTY_API_KEY"], "enabled": true },
+    {
+      "id": "cloudflare-workers-ai",
+      "label": "Cloudflare Workers AI",
+      "env": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"],
+      "enabled": true
+    },
+    { "id": "freeinference", "label": "FreeInference", "env": ["FREEINFERENCE_API_KEY"], "enabled": true },
+    {
+      "id": "google-ai-studio",
+      "label": "Google AI Studio",
+      "env": ["GEMINI_API_KEY"],
+      "enabled": false,
+      "note": "Disabled: the key is rejected from CI and local networks with Invalid Auth key."
+    }
+  ]
+}

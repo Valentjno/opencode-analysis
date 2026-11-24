@@ -1,28 +1,37 @@
 # Setting up the CI research job
 
-The job fills missing external benchmark values for Go/free models that have no
-Artificial Analysis Intelligence Index. It publishes a value only when two
-independent free providers extract the same number from an official vendor page
-and the exact quote, unit and table column all check out.
+The job fills missing external benchmark values for Go/free models. It publishes
+a value only when two independent providers extract the same number from an
+official vendor page and the exact quote, unit and table column all check out.
 
 Keys never appear in the repository, a log, or an artifact. They live in GitHub
 Actions secrets in the protected `research` environment and are passed to the
 router only as environment variables.
 
-## 1. Free provider keys
+## 1. Add any provider keys you have
 
-| Provider | Create a key at | Role |
-|----------|-----------------|------|
-| Groq | https://console.groq.com/keys | First extraction provider |
-| Kilo | https://kilocode.ai | Second, independent extraction provider |
-| OpenRouter | https://openrouter.ai/keys | Optional failover |
-| Requesty | https://requesty.ai | Optional failover |
-| Cloudflare Workers AI | https://dash.cloudflare.com | Optional failover; needs an Account ID too |
+You do not need a fixed set. The job auto-detects which supported providers are
+configured and enables only those:
 
-All have free, no-card tiers. Google AI Studio is deliberately disabled: it
-rejects the key from both the runner and the local network with
-`Invalid Auth key`. The orchestrator never hardcodes provider model IDs; it
-discovers exact `provider/model` IDs from the router's `/v1/models?all=1`.
+| Provider | Secret name | Notes |
+|----------|-------------|-------|
+| Groq | `GROQ_API_KEY` | Good default first provider |
+| Kilo | `KILO_API_KEY` | Independent second provider |
+| OpenRouter | `OPENROUTER_API_KEY` | Optional |
+| Requesty | `REQUESTY_API_KEY` | Optional |
+| Cloudflare Workers AI | `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` | Optional; both are required |
+| FreeInference | `FREEINFERENCE_API_KEY` | Optional |
+| Google AI Studio | `GEMINI_API_KEY` | Disabled in the registry; the key is rejected with `Invalid Auth key` |
+
+The registry lives in `data/research-providers.json`. Adding a new provider is
+one entry there plus the secret; no other code changes are needed.
+
+The router itself also needs two keys that are not provider keys:
+
+- `FREE_LLM_API_KEY` — the bearer key clients use to call the router
+- `FREE_LLM_MASTER_KEY` — encrypts the ephemeral router config
+
+Generate both once with `openssl rand -hex 32`.
 
 ## 2. Put the keys in a local file, not in chat or git
 
@@ -32,7 +41,7 @@ nano /tmp/opencode/free-llm-keys.env
 chmod 600 /tmp/opencode/free-llm-keys.env
 ```
 
-Contents:
+Contents (add only the providers you have):
 
 ```dotenv
 GROQ_API_KEY=
@@ -41,30 +50,40 @@ OPENROUTER_API_KEY=
 REQUESTY_API_KEY=
 CLOUDFLARE_API_TOKEN=
 CLOUDFLARE_ACCOUNT_ID=
+FREEINFERENCE_API_KEY=
+FREE_LLM_API_KEY=
+FREE_LLM_MASTER_KEY=
 ```
 
-Create the GitHub environment and required secrets from that file:
+Create the GitHub environment and push the secrets:
 
 ```bash
 gh api -X PUT repos/Valentjno/opencode-analysis/environments/research
-for name in GROQ_API_KEY KILO_API_KEY FREE_LLM_API_KEY FREE_LLM_MASTER_KEY; do
+for name in GROQ_API_KEY KILO_API_KEY OPENROUTER_API_KEY REQUESTY_API_KEY \
+            CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID FREEINFERENCE_API_KEY \
+            FREE_LLM_API_KEY FREE_LLM_MASTER_KEY; do
   value=$(grep "^${name}=" /tmp/opencode/free-llm-keys.env | cut -d= -f2-)
-  printf '%s' "$value" | gh secret set "$name" --env research
+  [ -n "$value" ] && printf '%s' "$value" | gh secret set "$name" --env research
 done
 ```
 
-Add any optional providers the same way. The commands read each value from the
-file without printing it. `FREE_LLM_API_KEY` is the router's own bearer key and
-`FREE_LLM_MASTER_KEY` encrypts the ephemeral router config; generate both once
-with `openssl rand -hex 32` if they are not in the file yet.
+The commands read each value from the file without printing it. After setting
+the secrets, delete the local file if you want. GitHub keeps the only copy.
 
-After setting the secrets, delete the local file if you want. GitHub keeps the
-only copy.
+## 3. What happens with one or many providers
 
-## 3. Router configuration
+- **Two or more** configured providers: values can be verified and published.
+- **One** provider: the job still runs, but every value is marked
+  `single-source` and nothing is published.
+- **Zero** providers: the job stops with a clear message.
 
-The workflow writes this config into `$FREE_LLM_HOME/config.json` before
-starting the router:
+The workflow prints only the provider names/count, never the keys. It no longer
+requires Groq and Kilo specifically.
+
+## 4. Router configuration
+
+The workflow generates `$FREE_LLM_HOME/config.json` from the registry and the
+environment:
 
 ```json
 {
@@ -72,7 +91,11 @@ starting the router:
   "log_requests": false,
   "fallback_to_auto": false,
   "catalog": { "url": "https://free-llm.com/catalog.json", "refresh_hours": 8760 },
-  "providers": { "google-ai-studio": { "enabled": false, "guest": false } }
+  "providers": {
+    "groq-cloud": { "enabled": true, "guest": false },
+    "kilo-gateway": { "enabled": true, "guest": false },
+    "openrouter": { "enabled": false, "guest": false }
+  }
 }
 ```
 
@@ -81,7 +104,7 @@ exact `provider/model` request but silently serve it from another provider. That
 would defeat the two-provider rule and could make the same provider look like
 two independent confirmations.
 
-## 4. Run it
+## 5. Run it
 
 Manual first:
 

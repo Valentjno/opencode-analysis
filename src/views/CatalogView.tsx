@@ -62,13 +62,12 @@ export function CatalogView({ snapshot, research, onOpen }: Props) {
           Independent · {formatDateTime(snapshot.generatedAt)} · updates every 12h
         </div>
         <h1 id="hero-heading">
-          Every Go and free model. <em>Measured.</em>
+          Every Go and free model, <em>compared.</em>
         </h1>
         <div className="hero-copy">
           <p>
-            OpenCode's Go and free models joined with Artificial Analysis intelligence scores,
-            published allowances, and honest privacy terms. Built for developers deciding what to
-            run this month — not a leaderboard for its own sake.
+            Artificial Analysis scores, published Go allowances, API prices, context windows, and
+            privacy terms in one catalog. Find the model that fits your budget and your data.
           </p>
           <div className="hero-actions">
             <button
@@ -89,8 +88,8 @@ export function CatalogView({ snapshot, research, onOpen }: Props) {
             <span className="section-index">[00]</span> Today's picks
           </h2>
           <p className="section-note">
-            Deterministic, recomputed on every refresh. Select a card to inspect the model and the
-            exact values behind the pick.
+            Five deterministic picks from the current snapshot. Open a card to see the numbers and
+            the rule behind it.
           </p>
         </div>
         <RecommendationGrid
@@ -106,8 +105,9 @@ export function CatalogView({ snapshot, research, onOpen }: Props) {
             <span className="section-index">[01]</span> Model catalog
           </h2>
           <p className="section-note">
-            Unrated models stay visible and sort last. Prices are published API prices per 1M
-            tokens; Go allowances are plan limits, not a live balance.
+            The full Go and free catalog. Filter by access, vendor, rating, privacy, price, and
+            context. Prices are published API prices; Go allowances are plan limits, not a live
+            balance.
           </p>
         </div>
 

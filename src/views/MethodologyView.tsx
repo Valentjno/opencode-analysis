@@ -15,9 +15,8 @@ export function MethodologyView({ snapshot }: Props) {
           <span className="section-index">[04]</span> How this works
         </h2>
         <p className="section-note">
-          This is an independent view for OpenCode developers. It is not affiliated with OpenCode or
-          Artificial Analysis. Its purpose is to help you choose models based on your monthly Go
-          allowance and your privacy needs.
+          Where the data comes from, how the picks are calculated, and what this site does not know.
+          This is an independent project and is not affiliated with OpenCode or Artificial Analysis.
         </p>
       </div>
 
@@ -26,8 +25,8 @@ export function MethodologyView({ snapshot }: Props) {
         <p>
           A GitHub Action runs every 12 hours and writes two JSON files: <code>latest.json</code>{' '}
           (the catalog) and <code>changes.json</code> (the change feed). Cloudflare Pages rebuilds
-          the site on each commit. No server, no account, no secrets, no cookies, and no analytics.
-          The only browser storage is one key remembering your theme.
+          the site on each commit. The site is static: no server, no account, no cookies, no analytics.
+          The only browser storage is your theme.
         </p>
         <ul>
           <li>
@@ -74,8 +73,8 @@ export function MethodologyView({ snapshot }: Props) {
         <p>
           Only models that are in Go, free, or both: {stats.total} in total ({stats.go} in Go,{' '}
           {stats.free} free, {stats.both} in both). Paid Console-only models are excluded, even when
-          Artificial Analysis rates them. Live dollar balances are out of scope; allowances are the
-          published plan limits, not an account readout.
+          Artificial Analysis rates them. This site does not read your account, so it cannot show
+          your remaining balance. Allowances are published plan limits.
         </p>
 
         <h2>Recommendation rules</h2>
@@ -107,10 +106,10 @@ export function MethodologyView({ snapshot }: Props) {
           </li>
         </ol>
         <p>
-          A caveat is attached whenever a pick trains on requests or has undocumented terms. This is
-          why Gemini 4 Argon (no training, but no zero-retention guarantee) and Muse Spark (training
-          on requests) are never presented as equivalent: {stats.private} models are fully private and{' '}
-          {stats.trains} are documented as training on requests.
+          A caveat is attached whenever a pick trains on requests or has undocumented terms. Picks
+          with weaker privacy terms are never presented as equivalent to fully private ones:
+          {stats.private} models are fully private and {stats.trains} are documented as training on
+          requests.
         </p>
 
         <h2>Pareto frontier</h2>

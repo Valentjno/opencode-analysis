@@ -11,6 +11,7 @@ import { verifyCandidate } from './verify.mjs'
 import { listRouterModels } from './router-client.mjs'
 import { rankTargets } from './targets.mjs'
 import { redact } from './redact.mjs'
+import { loadProviderRegistry, providerSummary } from './providers.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..')
 
@@ -32,6 +33,7 @@ export async function runResearch({
   maxModels = 5,
   maxPerModel = 3,
   maxCallsPerGap = 6,
+  providers = null,
   now = new Date().toISOString(),
 } = {}) {
   const prepared = applyOverrides(markStale(research, now), overrides, snapshot)
@@ -172,6 +174,7 @@ export async function runResearch({
     accepted: accepted.length,
     rejected,
     reasons,
+    ...(providers ? { providers } : {}),
   }
   return feed
 }
@@ -193,6 +196,20 @@ function parseArgs(argv) {
 
 export async function main() {
   const args = parseArgs(process.argv.slice(2))
+  const registry = await loadProviderRegistry()
+  const summary = providerSummary(registry)
+  console.log(
+    `Providers (${summary.count}): ${summary.configured.map((provider) => provider.label).join(', ') || 'none'}`,
+  )
+  if (summary.count === 0) {
+    console.error('No provider keys configured; add at least one supported provider secret.')
+    process.exitCode = 1
+    return
+  }
+  if (!summary.enoughForVerification) {
+    console.log('Only one provider is configured; values will be single-source and will not be published.')
+  }
+
   const [snapshot, research, overrides] = await Promise.all([
     readFile(path.join(ROOT, 'public', 'data', 'latest.json'), 'utf8').then(JSON.parse),
     readFile(path.join(ROOT, 'public', 'data', 'research.json'), 'utf8').then(JSON.parse).catch(() => null),
@@ -208,6 +225,7 @@ export async function main() {
       models: [],
     },
     overrides,
+    providers: summary.configured,
     maxModels: Number(args['max-models'] ?? args.maxModels ?? 5),
     maxPerModel: 3,
   })

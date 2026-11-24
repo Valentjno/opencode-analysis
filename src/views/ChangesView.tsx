@@ -34,8 +34,8 @@ export function ChangesView({ feed, onOpen }: Props) {
           <span className="section-index">[03]</span> What changed
         </h2>
         <p className="section-note">
-          One event per difference between two snapshots, newest first. The feed is capped at 500
-          events and produced by the same 12-hour job that refreshes the catalog.
+          What changed between snapshots: new models, price moves, allowance changes, and score
+          updates. Newest first.
         </p>
       </div>
 

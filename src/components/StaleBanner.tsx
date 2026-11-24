@@ -12,7 +12,7 @@ export function StaleBanner({ generatedAt }: Props) {
       <AlertTriangle size={15} aria-hidden="true" />
       <span>
         This snapshot is {ageLabel(generatedAt)} (generated {formatDateTime(generatedAt)}). The
-        refresh job may be late. Values below remain the last published data.
+        refresh job may be late; the values below are the last published data.
       </span>
     </div>
   )

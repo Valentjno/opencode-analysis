@@ -28,9 +28,8 @@ function Footer() {
           <div>
             <p className="footer-title">OpenCode Analysis</p>
             <p className="footer-copy">
-              An independent view for OpenCode developers: understand which Go and free models make
-              the best use of your monthly allowance, based on your privacy needs. Not affiliated
-              with OpenCode or Artificial Analysis.
+              An independent comparison of OpenCode Go and free models. Not affiliated with OpenCode
+              or Artificial Analysis.
             </p>
           </div>
           <div className="footer-links">
@@ -57,7 +56,7 @@ function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span>Independent · free · no cookies · refreshed every 12h</span>
+          <span>Independent · free · no cookies · updated every 12 hours</span>
           <span>Model data © OpenCode · Benchmarks © Artificial Analysis</span>
         </div>
       </div>

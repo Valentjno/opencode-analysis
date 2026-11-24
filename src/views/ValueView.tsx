@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import {
   CartesianGrid,
+  Cell,
   ResponsiveContainer,
   Scatter,
   ScatterChart,
@@ -14,6 +15,8 @@ import type { Snapshot, ResearchFeed, Model } from '../lib/types'
 import { formatScore, formatCompact } from '../lib/format'
 import { FilterBar } from '../components/FilterBar'
 import { DataTable } from '../components/DataTable'
+import { InfoPopover } from '../components/InfoPopover'
+import { vendorColor, vendorLegend } from '../lib/vendors'
 import {
   DEFAULT_FILTERS,
   defaultDirection,
@@ -124,9 +127,9 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
         const y = scoreOf(m)
         const x = xOf(m, costAxis)
         if (y === null || x === null) return null
-        return { id: m.id, name: m.name, x, y, frontier: front.has(m.id) }
+        return { id: m.id, name: m.name, vendor: m.vendor, x, y, frontier: front.has(m.id) }
       })
-      .filter(Boolean) as { id: string; name: string; x: number; y: number; frontier: boolean }[]
+      .filter(Boolean) as { id: string; name: string; vendor: string; x: number; y: number; frontier: boolean }[]
   }, [filtered, costAxis, front])
 
   const sortedByRatio = useMemo(() => {
@@ -156,8 +159,9 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
             <span className="section-index">[02]</span> Analysis
           </h2>
           <p className="section-note">
-            Non-dominated models on intelligence versus cost. Higher intelligence and lower cost (or
-            higher allowance) is better. Unrated models cannot be placed on the intelligence axis.
+            Compare models across intelligence, capability, benchmarks, openness, cost, performance,
+            token use, context, and size. Filter the catalog, choose the models you want, and see
+            which ones are worth it.
           </p>
         </div>
 
@@ -222,6 +226,24 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
         <div id="intelligence" className="panel" style={{ padding: 16 }}>
           <h3 className="section-title" style={{ fontSize: 16, marginBottom: 8 }}>
             <span className="section-index">[01]</span> Intelligence vs. cost
+            <InfoPopover title="How to read intelligence vs cost">
+              <p>
+                Each point is a model. The vertical axis is the Artificial Analysis Intelligence
+                Index; the horizontal axis is the cost option selected above.
+              </p>
+              <ul>
+                <li><strong>Blended $ / 1M:</strong> published API price, 75% input + 25% output.</li>
+                <li><strong>Go monthly $:</strong> the model's monthly usage allowance inside the $10 Go plan.</li>
+                <li><strong>Requests / 5h:</strong> the rate limit. Higher is better.</li>
+                <li><strong>AA $ per II task:</strong> the average cost of one Intelligence Index task.</li>
+                <li><strong>Color:</strong> vendor. <strong>Ring:</strong> frontier.</li>
+              </ul>
+              <p>
+                A frontier model is not beaten by another model on both intelligence and this cost
+                axis. A blank point means the model has no Intelligence Index or no value for this
+                axis.
+              </p>
+            </InfoPopover>
           </h3>
           <div style={{ width: '100%', height: 420 }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -261,8 +283,16 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
                   }}
                   cursor={{ stroke: 'var(--border-strong)' }}
                 />
-                <Scatter data={scatterData.filter((p) => !p.frontier)} fill="var(--text-muted)" fillOpacity={0.6} isAnimationActive={false} />
-                <Scatter data={scatterData.filter((p) => p.frontier)} fill="var(--accent)" isAnimationActive={false} />
+                <Scatter data={scatterData.filter((p) => !p.frontier)} isAnimationActive={false}>
+                  {scatterData.filter((p) => !p.frontier).map((point) => (
+                    <Cell key={point.id} fill={vendorColor(point.vendor)} fillOpacity={0.7} />
+                  ))}
+                </Scatter>
+                <Scatter data={scatterData.filter((p) => p.frontier)} isAnimationActive={false}>
+                  {scatterData.filter((p) => p.frontier).map((point) => (
+                    <Cell key={point.id} fill={vendorColor(point.vendor)} stroke="var(--text)" strokeWidth={2} />
+                  ))}
+                </Scatter>
               </ScatterChart>
             </ResponsiveContainer>
           </div>
@@ -270,6 +300,13 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
             {axis.higherIsBetter ? 'Higher cost axis is better (more allowance/requests).' : 'Lower cost axis is better.'}{' '}
             {scatterData.length === 0 && 'No models have both an Intelligence Index and a value for this axis.'}
           </p>
+          <div className="row" style={{ flexWrap: 'wrap', gap: 6, marginTop: 6 }}>
+            {vendorLegend(filtered).map((item) => (
+              <span className="legend-item" key={item.vendor}>
+                <span className="legend-swatch" style={{ background: item.color }} /> {item.vendor}
+              </span>
+            ))}
+          </div>
         </div>
 
         <div id="capability" className="panel" style={{ padding: 16 }}>
@@ -296,7 +333,24 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
         <div id="cost" className="panel" style={{ padding: 16 }}>
           <h3 className="section-title" style={{ fontSize: 16, marginBottom: 8 }}>
             <span className="section-index">[05]</span> Cost
+            <InfoPopover title="What cost means here">
+              <p>This page uses five different cost ideas. They are not interchangeable.</p>
+              <ul>
+                <li><strong>Plan price:</strong> what you pay OpenCode — $10 Go or $40 Go Plus per month.</li>
+                <li><strong>Included allowance:</strong> the monthly usage budget for a model inside the plan.</li>
+                <li><strong>Request cap:</strong> requests per 5 hours; a rate limit, not a budget.</li>
+                <li><strong>API list price:</strong> input/output/blended $ per 1M tokens outside the plan.</li>
+                <li><strong>AA evaluation cost:</strong> the total cost of running the full Artificial Analysis Intelligence Index suite, and the average cost per task.</li>
+              </ul>
+              <p>
+                The stacked bar below is the AA evaluation cost, split into uncached input, cache
+                read, cache write, reasoning and answer tokens. It is not your Go subscription and
+                not the API price.
+              </p>
+            </InfoPopover>
           </h3>
+          <CostConcepts />
+          <div style={{ height: 10 }} />
           <CostBreakdown models={filtered} />
         </div>
 
@@ -329,14 +383,32 @@ export function ValueView({ snapshot, research: _research, onOpen: _onOpen }: Pr
         </div>
 
         <div className="panel" style={{ padding: 12 }}>
-          <h3 className="section-title" style={{ fontSize: 14, marginBottom: 6 }}>Intelligence per dollar ranking</h3>
+          <h3 className="section-title" style={{ fontSize: 14, marginBottom: 6 }}>
+            Intelligence per cost ranking
+            <InfoPopover title="How to read the ranking">
+              <p>
+                This is the Intelligence Index divided by the selected cost. For blended API price
+                it is II per $1 per 1M tokens. For Go monthly it is II per $100 of allowance. For
+                requests it is II per request.
+              </p>
+              <p>
+                Higher is better, but the ratio ignores scale: a cheap model can win the ratio while
+                being unable to handle long or hard tasks. Use it as a tie-breaker, not a verdict.
+              </p>
+            </InfoPopover>
+          </h3>
           <DataTable
-            columns={['Model', 'II', axis.label, 'II / unit']}
+            columns={[
+              'Model',
+              'II',
+              axis.label,
+              costAxis === 'go' ? 'II per $100' : costAxis === 'requests' ? 'II per request' : 'II per $1',
+            ]}
             rows={sortedByRatio.slice(0, 25).map((r) => [
               r.model.name,
               formatScore(r.model.aa?.intelligenceIndex),
               axis.format(xOf(r.model, costAxis)!),
-              r.ratio.toFixed(2),
+              (r.ratio * (costAxis === 'go' ? 100 : 1)).toFixed(2),
             ])}
             caption="Models sorted by intelligence per cost unit for the selected axis."
           />
@@ -430,26 +502,84 @@ function OpennessChart({ models }: { models: Model[] }) {
   )
 }
 
-function CostBreakdown({ models }: { models: Model[] }) {
-  const rows = models.filter((m) => typeof m.pricing.blended === 'number' || typeof m.aa?.costPerTask === 'number')
-  if (rows.length === 0) return <p className="prose muted">No cost data for the selected models.</p>
-  const data = rows.map((m) => ({
-    name: m.name,
-    blended: m.pricing.blended ?? 0,
-    costPerTask: m.aa?.costPerTask ?? 0,
-    costPerII: m.aa?.costPerIntelligenceTask ?? 0,
-  }))
+function CostConcepts() {
+  const rows = [
+    ['Plan price', '$10 Go / $40 Go Plus per month', 'What you pay OpenCode.'],
+    ['Included allowance', 'Monthly usage budget per model', 'Not extra money; a budget inside the plan.'],
+    ['Request cap', 'Requests per 5 hours', 'A rate limit, not a budget.'],
+    ['API list price', 'Input/output/blended $ per 1M tokens', 'What the API costs outside the plan.'],
+    ['AA evaluation cost', 'Total $ for the full AA Intelligence Index suite', 'The cost of running the benchmark, not your bill.'],
+  ]
   return (
-    <div style={{ width: '100%', height: Math.max(220, rows.length * 24 + 60) }}>
+    <div style={{ overflowX: 'auto' }}>
+      <table className="data-table" style={{ fontSize: 11 }}>
+        <thead>
+          <tr><th>Cost</th><th>Unit</th><th>What it means</th></tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row[0]}><td>{row[0]}</td><td>{row[1]}</td><td>{row[2]}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function CostBreakdown({ models }: { models: Model[] }) {
+  const rows = models.filter(
+    (m) => m.aa?.intelligenceIndexCost && typeof m.aa.costPerIntelligenceTask === 'number',
+  )
+  if (rows.length === 0) {
+    return <p className="prose muted">No total-cost data for the selected models.</p>
+  }
+  const data = rows.map((m) => {
+    const parts = (m.aa?.intelligenceIndexCost ?? {}) as {
+      nonCacheInput?: number
+      cacheRead?: number
+      cacheWrite?: number
+      reasoning?: number
+      answer?: number
+    }
+    return {
+      name: m.name,
+      nonCacheInput: parts.nonCacheInput ?? 0,
+      cacheRead: parts.cacheRead ?? 0,
+      cacheWrite: parts.cacheWrite ?? 0,
+      reasoning: parts.reasoning ?? 0,
+      answer: parts.answer ?? 0,
+    }
+  })
+  return (
+    <div style={{ width: '100%', height: Math.max(240, rows.length * 26 + 80) }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} layout="vertical" margin={{ left: 120, right: 20, top: 8, bottom: 8 }}>
           <XAxis type="number" tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} />
           <YAxis type="category" dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 10, fontFamily: 'var(--font-mono)' }} width={110} />
-          <Tooltip content={({ active, payload }) => active && payload?.length ? <div className="panel" style={{ padding: '6px 8px', fontSize: 11 }}><strong>{payload[0].payload.name}</strong></div> : null} />
-          <Bar dataKey="blended" fill="var(--text-muted)" name="Blended $/1M" />
-          <Bar dataKey="costPerTask" fill="var(--accent)" name="Cost per II task" />
+          <Tooltip
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null
+              const total = payload.reduce((sum, item) => sum + (typeof item.value === 'number' ? item.value : 0), 0)
+              return (
+                <div className="panel" style={{ padding: '8px 10px', fontSize: 11 }}>
+                  <strong>{payload[0].payload.name}</strong>
+                  <div className="num muted">${total.toFixed(2)} total evaluation cost</div>
+                </div>
+              )
+            }}
+          />
+          <Bar dataKey="nonCacheInput" stackId="cost" fill="#64748B" name="Uncached input" />
+          <Bar dataKey="cacheRead" stackId="cost" fill="#06B6D4" name="Cache read" />
+          <Bar dataKey="cacheWrite" stackId="cost" fill="#8B5CF6" name="Cache write" />
+          <Bar dataKey="reasoning" stackId="cost" fill="#F59E0B" name="Reasoning" />
+          <Bar dataKey="answer" stackId="cost" fill="#22C55E" name="Answer" />
         </BarChart>
       </ResponsiveContainer>
+      <p className="chart-note">
+        Total cost of running the full Artificial Analysis Intelligence Index suite, split by token
+        type. This is not the Go subscription and not the API price. A missing bar means AA did not
+        publish the cost breakdown for that model.
+      </p>
     </div>
   )
 }

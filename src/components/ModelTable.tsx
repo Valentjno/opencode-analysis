@@ -47,7 +47,7 @@ export function ModelTable({ models, research, filters, onSort, onOpen }: Props)
   if (models.length === 0) {
     return (
       <div className="empty-state">
-        <p>No models match these filters. Try clearing the search or choosing a different access tier.</p>
+        <p>No models match these filters. Clear the search or widen the access filter.</p>
       </div>
     )
   }

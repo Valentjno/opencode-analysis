@@ -10,12 +10,12 @@
 export const RULES = {
   planner: 'Highest Artificial Analysis Intelligence Index overall.',
   builder:
-    'Cheaper than the planner and within 10 Intelligence Index points of it; highest intelligence per dollar.',
+    'Cheaper than the planner and within 10 Intelligence Index points of it; best intelligence per dollar.',
   medium:
     'Highest Intelligence Index among models at or below the median blended price of rated models.',
   cheapest: 'Lowest blended price among models with an Intelligence Index of at least 25.',
   private:
-    'Not training on requests, zero data retention, and an Intelligence Index of at least 30.',
+    'No training on requests, zero data retention, and an Intelligence Index of at least 30.',
 };
 
 export const MIN_BUILDER_GAP = 10;

@@ -40,9 +40,8 @@ export function ExternalBenchmarks({ feed, model }: Props) {
         </div>
       ))}
       <p className="prose muted" style={{ fontSize: 12, marginTop: 6 }}>
-        These values are not Artificial Analysis scores. They require an exact quote on an official
-        source and agreement between two different providers selected by the router. They are never
-        used for the Intelligence Index, the five recommendations, or the Pareto frontier.
+        Verified from official vendor pages by two independent providers. These are not Artificial
+        Analysis scores and never affect the Intelligence Index, picks, or frontier.
       </p>
     </section>
   )

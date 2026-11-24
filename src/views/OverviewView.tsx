@@ -2,7 +2,8 @@ import type { Snapshot, ResearchFeed } from '../lib/types'
 import { formatDateTime } from '../lib/format'
 import { StatsBar } from '../components/StatsBar'
 import { RecommendationGrid } from '../components/RecommendationGrid'
-import { ValueChart } from '../components/ValueChart'
+import { PlanValue } from '../components/PlanValue'
+import { InfoPopover } from '../components/InfoPopover'
 import { ArrowRight } from 'lucide-react'
 
 interface Props {
@@ -40,15 +41,27 @@ export function OverviewView({ snapshot, research: _research, onOpen }: Props) {
       <section className="section" aria-labelledby="overview-value-heading">
         <div className="section-head">
           <h2 className="section-title" id="overview-value-heading">
-            <span className="section-index">[00]</span> Intelligence per dollar
+            <span className="section-index">[00]</span> What your Go plan buys
           </h2>
           <p className="section-note">
-            Blended API price per 1M tokens on the x-axis, Artificial Analysis Intelligence Index on
-            the y-axis. Points on the frontier are non-dominated: no rated model is both smarter and
-            cheaper. Free models sit at $0.
+            Go is $10/month and Go Plus is $40/month. Each model has its own monthly usage
+            allowance inside the plan and its own 5-hour request cap. This view shows both, so you
+            can see how much of a model you can actually use.
+            <InfoPopover title="How to read the plan view">
+              <p>
+                The plan price is what you pay OpenCode. The allowance is the monthly usage budget
+                published for a specific model inside that plan. Requests per 5 hours is a separate
+                rate limit.
+              </p>
+              <p>
+                A model with a large allowance but a low request cap is good for long, expensive
+                work; a model with a small allowance but a high request cap is better for many short
+                requests. The table labels each model as budget-heavy, rate-heavy or balanced.
+              </p>
+            </InfoPopover>
           </p>
         </div>
-        <ValueChart mode="price" models={snapshot.models} />
+        <PlanValue models={snapshot.models} />
       </section>
 
       <section className="section" aria-labelledby="picks-heading">

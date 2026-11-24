@@ -43,7 +43,7 @@ jobs:
       - name: Install pinned Free-LLM Router
         run: npm install github:nejib1/Free-LLM#85864c4d0f29b74db442b296087862b96f4d84a1
 
-      - name: Check secret presence
+      - name: Check provider key presence
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -51,14 +51,13 @@ jobs:
           REQUESTY_API_KEY: ${{ secrets.REQUESTY_API_KEY }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          FREEINFERENCE_API_KEY: ${{ secrets.FREEINFERENCE_API_KEY }}
           FREE_LLM_API_KEY: ${{ secrets.FREE_LLM_API_KEY }}
           FREE_LLM_MASTER_KEY: ${{ secrets.FREE_LLM_MASTER_KEY }}
         run: |
-          [ -n "$GROQ_API_KEY" ] || { echo "GROQ_API_KEY is not set"; exit 1; }
-          [ -n "$KILO_API_KEY" ] || { echo "KILO_API_KEY is not set"; exit 1; }
           [ -n "$FREE_LLM_API_KEY" ] || { echo "FREE_LLM_API_KEY is not set"; exit 1; }
           [ -n "$FREE_LLM_MASTER_KEY" ] || { echo "FREE_LLM_MASTER_KEY is not set"; exit 1; }
-          echo "Required research secrets are present."
+          node scripts/research/providers.mjs --check
 
       - name: Verify pinned catalog checksum
         run: echo "8e2d013cf5c490876efafb84a5a60689406dcd302815b599934fa335a10e87dc  data/vendor/free-llm-catalog.json" | sha256sum -c -
@@ -67,13 +66,18 @@ jobs:
         env:
           FREE_LLM_HOME: ${{ runner.temp }}/free-llm
           ROUTER_LOG: ${{ runner.temp }}/free-llm-router.log
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
+          REQUESTY_API_KEY: ${{ secrets.REQUESTY_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          FREEINFERENCE_API_KEY: ${{ secrets.FREEINFERENCE_API_KEY }}
         run: |
           mkdir -p "$FREE_LLM_HOME"
           cp data/vendor/free-llm-catalog.json "$FREE_LLM_HOME/catalog.json"
           touch "$FREE_LLM_HOME/catalog.json"
-          cat > "$FREE_LLM_HOME/config.json" <<'JSON'
-          {"version":1,"log_requests":false,"fallback_to_auto":false,"catalog":{"url":"https://free-llm.com/catalog.json","refresh_hours":8760},"providers":{"google-ai-studio":{"enabled":false,"guest":false}}}
-          JSON
+          node scripts/research/providers.mjs --write "$FREE_LLM_HOME/config.json"
 
       - name: Start router
         env:
@@ -87,6 +91,7 @@ jobs:
           REQUESTY_API_KEY: ${{ secrets.REQUESTY_API_KEY }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          FREEINFERENCE_API_KEY: ${{ secrets.FREEINFERENCE_API_KEY }}
         run: |
           ./node_modules/.bin/free-llm start --daemon > "$ROUTER_LOG" 2>&1
           for i in $(seq 1 40); do
@@ -100,6 +105,13 @@ jobs:
           FREE_LLM_HOME: ${{ runner.temp }}/free-llm
           ROUTER_LOG: ${{ runner.temp }}/free-llm-router.log
           FREE_LLM_API_KEY: ${{ secrets.FREE_LLM_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          KILO_API_KEY: ${{ secrets.KILO_API_KEY }}
+          REQUESTY_API_KEY: ${{ secrets.REQUESTY_API_KEY }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          FREEINFERENCE_API_KEY: ${{ secrets.FREEINFERENCE_API_KEY }}
         run: |
           MAX_MODELS="${{ github.event.inputs.max_models || '5' }}"
           DRY="${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}"

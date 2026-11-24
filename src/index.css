@@ -1451,3 +1451,107 @@ details.table-disclosure summary:hover {
   color: var(--text-muted);
   font-family: var(--font-mono);
 }
+
+/* Dismissible chart explanations */
+.info {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.info-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.info-trigger:hover,
+.info-trigger[aria-expanded='true'] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.info-panel {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 6px);
+  left: 0;
+  width: min(360px, calc(100vw - 48px));
+  padding: 12px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.28);
+  text-align: left;
+  white-space: normal;
+}
+
+.info-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.info-panel-body {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.info-panel-body p {
+  margin: 0 0 6px;
+}
+
+.info-panel-body p:last-child {
+  margin-bottom: 0;
+}
+
+.info-panel-body ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.info-panel-body li {
+  margin-bottom: 3px;
+}
+
+.info-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.info-close:hover {
+  color: var(--text);
+}
+
+@media (max-width: 720px) {
+  .info-panel {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    top: auto;
+    width: auto;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+}
