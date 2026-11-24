@@ -69,10 +69,12 @@ export async function runResearch({
         })
         if (!page) {
           reject('fetch-failed')
+          console.warn(redact(`Fetch failed: ${result.url}`))
           continue
         }
         if (!mentionsBenchmark(page.text, gap.benchmark)) {
           reject('page-missing-benchmark')
+          console.warn(redact(`Page missing benchmark ${gap.benchmark.label}: ${result.url}`))
           continue
         }
 
