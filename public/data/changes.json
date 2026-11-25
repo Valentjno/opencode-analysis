@@ -1,8 +1,40 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-25T06:56:16.327Z",
+  "updatedAt": "2026-11-25T21:01:01.531Z",
   "baseline": false,
   "events": [
+    {
+      "at": "2026-11-25T21:01:01.531Z",
+      "type": "privacy",
+      "id": "kimi-k3.1-pro",
+      "name": "Kimi K3.1 Pro",
+      "message": "Kimi K3.1 Pro privacy terms changed.",
+      "field": "privacy",
+      "from": {
+        "training": false,
+        "zdr": false
+      },
+      "to": {
+        "training": false,
+        "zdr": true
+      }
+    },
+    {
+      "at": "2026-11-25T21:01:01.531Z",
+      "type": "privacy",
+      "id": "kimi-k3",
+      "name": "Kimi K3",
+      "message": "Kimi K3 privacy terms changed.",
+      "field": "privacy",
+      "from": {
+        "training": false,
+        "zdr": false
+      },
+      "to": {
+        "training": false,
+        "zdr": true
+      }
+    },
     {
       "at": "2026-11-25T06:56:16.327Z",
       "type": "allowance",
