@@ -1,8 +1,50 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-24T21:54:32.740Z",
+  "updatedAt": "2026-11-25T06:56:16.327Z",
   "baseline": false,
   "events": [
+    {
+      "at": "2026-11-25T06:56:16.327Z",
+      "type": "allowance",
+      "id": "kimi-k3.1-pro",
+      "name": "Kimi K3.1 Pro",
+      "message": "Kimi K3.1 Pro Go monthly allowance changed from $15 to $60.",
+      "field": "monthly.go",
+      "from": 15,
+      "to": 60
+    },
+    {
+      "at": "2026-11-25T06:56:16.327Z",
+      "type": "privacy",
+      "id": "kimi-k3.1-pro",
+      "name": "Kimi K3.1 Pro",
+      "message": "Kimi K3.1 Pro privacy terms changed.",
+      "field": "privacy",
+      "from": {
+        "training": false,
+        "zdr": true
+      },
+      "to": {
+        "training": false,
+        "zdr": false
+      }
+    },
+    {
+      "at": "2026-11-25T06:56:16.327Z",
+      "type": "privacy",
+      "id": "kimi-k3",
+      "name": "Kimi K3",
+      "message": "Kimi K3 privacy terms changed.",
+      "field": "privacy",
+      "from": {
+        "training": false,
+        "zdr": true
+      },
+      "to": {
+        "training": false,
+        "zdr": false
+      }
+    },
     {
       "at": "2026-11-24T21:54:32.740Z",
       "type": "score",
