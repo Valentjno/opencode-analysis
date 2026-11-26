@@ -1,8 +1,22 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-25T21:01:01.531Z",
+  "updatedAt": "2026-11-26T06:47:19.856Z",
   "baseline": false,
   "events": [
+    {
+      "at": "2026-11-26T06:47:19.856Z",
+      "type": "added",
+      "id": "seaglass-alpha-free",
+      "name": "Seaglass Alpha Free",
+      "message": "Seaglass Alpha Free was added to the free tier."
+    },
+    {
+      "at": "2026-11-26T06:47:19.856Z",
+      "type": "removed",
+      "id": "tidepool-alpha-free",
+      "name": "Tidepool Alpha Free",
+      "message": "Tidepool Alpha Free was removed."
+    },
     {
       "at": "2026-11-25T21:01:01.531Z",
       "type": "privacy",
